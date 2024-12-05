@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+
 export async function Connect_DB() {
   try {
     await mongoose.connect(`${process.env.MONGODB_URI}/Clikn`);
