@@ -6,9 +6,16 @@ const auth2Client = new google.auth.OAuth2(
   "postmessage"
 );
 const userRegistration = asyncHandler(async (req, res) => {
+  console.log("req.body",req.body)
+  console.log("req.query",req.query)
   const { code } = req?.query;
   const googleRes = await auth2Client.getToken(code);
-  auth2Client.setCredentials(googleRes.tokens);
+  // const accessToken = googleRes.tokens.access_token;
+  // const refreshToken = googleRes.tokens.refresh_token;
+  // console.log(googleRes);
+  // console.log("Access Token:", accessToken);
+  // console.log("Refresh Token:", refreshToken);
+  // auth2Client.setCredentials(googleRes.tokens);
   const userRes = await fetch(
     `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${googleRes.tokens.access_token}`
   )
