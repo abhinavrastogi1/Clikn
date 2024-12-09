@@ -14,7 +14,7 @@ const analyticsSchema = new Schema(
             type: Date,
             required: true,
           },
-          deviceName: {
+          browser: {
             type: String,
             required: true,
           },

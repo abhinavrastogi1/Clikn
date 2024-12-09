@@ -17,6 +17,7 @@ const userSchema = new Schema(
     email: {
       type: String,
       required: true,
+      index: true,
       unique: true,
     },
     password: {
@@ -27,7 +28,7 @@ const userSchema = new Schema(
       },
     },
     profilePic: String,
-    refershToken: String,
+    refreshToken: String,
   },
 
   { timestamps: true }
