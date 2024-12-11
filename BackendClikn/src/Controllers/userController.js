@@ -39,7 +39,6 @@ const options = {
 const userRegistration = asyncHandler(async (req, res) => {
   const { code } = req?.query;
   const reqBody = req?.body;
-
   if (!code && !Object.keys(reqBody).length > 0) {
     // checking if one of the value  exist or not
     throw new apiError(400, "Missing Required Data");

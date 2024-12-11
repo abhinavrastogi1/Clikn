@@ -7,6 +7,10 @@ const urlSchema = new Schema(
       ref: "User",
       required: true,
     },
+    title: {
+      type: "String",
+      required: true,
+    },
     urlId: {
       type: String,
       required: true,

@@ -1,7 +1,6 @@
 import express, { Router } from "express";
-import { userRegistration } from "../Controllers/userController.js";
-
+import { userLogin, userRegistration } from "../Controllers/userController.js";
 const userRouter = Router();
-userRouter.get("/auth", userRegistration);
-
+userRouter.get("/registration", userRegistration);
+userRouter.get("/login", userLogin);
 export default userRouter;

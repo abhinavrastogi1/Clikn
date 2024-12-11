@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import userRouter from "./Routes/userRoutes.js";
-import { errorHandler } from "./MiddleWares/errorHandler.js";
+import { errorHandler } from "./MiddleWares/errorHandlerMiddleWare.js";
 export const app = express();
 
 app.use(cors({ origin: process.env.CORS, credentials: true }));
