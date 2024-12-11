@@ -6,7 +6,7 @@ import DeviceDetector from "device-detector-js";
 import { User } from "../Models/userModel.js";
 import apiError from "../Utils/apiError.js";
 import apiResponse from "../Utils/apiResponse.js";
-
+import axios from "axios";
 const auth2Client = new google.auth.OAuth2(
   process.env.GOOGLE_CLIENT_ID,
   process.env.GOOGLE_CLIENT_SECRET,
@@ -39,7 +39,7 @@ const options = {
 const userRegistration = asyncHandler(async (req, res) => {
   const { code } = req?.query;
   const reqBody = req?.body;
-  if (!code && !Object.keys(reqBody).length > 0) {
+  if (!code && Object.keys(reqBody).length === 0) {
     // checking if one of the value  exist or not
     throw new apiError(400, "Missing Required Data");
   }
@@ -65,6 +65,7 @@ const userRegistration = asyncHandler(async (req, res) => {
       email,
       password,
     });
+
     if (!user) {
       throw new apiError(500, "something went wrong while registering user");
     }
@@ -75,7 +76,7 @@ const userRegistration = asyncHandler(async (req, res) => {
     // google registration
 
     const googleRes = await auth2Client.getToken(code);
-    const googleUserRes = await fetch(
+    const googleUserRes = await axios.get(
       `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${googleRes.tokens.access_token}`
     );
 
@@ -108,7 +109,12 @@ const userRegistration = asyncHandler(async (req, res) => {
   if (!accessToken || !refreshToken) {
     throw new apiError(500, "Something went wrong while generating  tokens");
   }
-
+  user = await User.findById(user._id).select(
+    " -password -refreshToken -createdAt -updatedAt -__v -_id "
+  );
+  if (!user) {
+    throw new apiError(500, "something went wrong while Creating  user");
+  }
   res
     .status(200)
     .cookie("accessToken", accessToken, options)

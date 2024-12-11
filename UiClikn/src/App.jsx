@@ -10,7 +10,7 @@ function App() {
   async function googleResponse(authresult) {
     try {
       if (authresult["code"]) {
-        await axios.get("/user/auth", {
+        await axios.post("/user/registration", {inside:"one"},{
           params: {
             code: authresult.code,
           },

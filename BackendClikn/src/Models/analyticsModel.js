@@ -4,10 +4,10 @@ const analyticsSchema = new Schema(
   {
     urlId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Url",
+      ref: "Link",
       required: true,
     },
-    clikedUrl: {
+    clikedLink: {
       type: [
         {
           date: {

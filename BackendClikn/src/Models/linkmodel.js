@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
-const urlSchema = new Schema(
+const linkSchema = new Schema(
   {
     user: {
       type: mongoose.Schema.Types.ObjectId,
@@ -11,11 +11,11 @@ const urlSchema = new Schema(
       type: "String",
       required: true,
     },
-    urlId: {
+    shortId: {
       type: String,
       required: true,
     },
-    originalUrl: {
+    originalLink: {
       type: String,
       required: true,
     },
@@ -25,4 +25,4 @@ const urlSchema = new Schema(
   }
 );
 
-export const Url = mongoose.model("Url", urlSchema);
+export const Link = mongoose.model("Link", linkSchema);
