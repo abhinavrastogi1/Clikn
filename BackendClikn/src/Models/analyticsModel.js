@@ -2,7 +2,7 @@ import mongoose, { Schema } from "mongoose";
 
 const analyticsSchema = new Schema(
   {
-    urlId: {
+    linkId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Link",
       required: true,
@@ -16,15 +16,18 @@ const analyticsSchema = new Schema(
           },
           browser: {
             type: String,
-            required: true,
           },
           device: {
             type: String,
-            required: true,
           },
-          location: {
+          country: {
             type: String,
-            required: true,
+          },
+          state: {
+            type: String,
+          },
+          city: {
+            type: String,
           },
         },
       ],

@@ -2,11 +2,12 @@ import asyncHandler from "../Utils/asyncHandler.js";
 import apiError from "../Utils/apiError.js";
 import axios from "axios";
 import * as cheerio from "cheerio";
-
+import DeviceDetector from "device-detector-js";
 import { Link } from "../Models/linkmodel.js";
 import apiResponse from "../Utils/apiResponse.js";
 
 import mongoose from "mongoose";
+import { Analytics } from "../Models/analyticsModel.js";
 const generateShortLink = asyncHandler(async (req, res) => {
   const { originalLink } = req?.query;
   let { title } = req?.query || null;
@@ -138,6 +139,43 @@ const getOriginalLink = asyncHandler(async (req, res) => {
     res.status(400).send(htmlContent); // Send 400 status for a bad request
     return;
   }
+  const deviceDetector = new DeviceDetector();
+  const userAgent = req.headers["user-agent"];
+
+  const browserInfo = deviceDetector.parse(userAgent);
+
+  const ipAddress =
+    req.headers["x-forwarded-for"] || // Check for proxies
+    req.socket.remoteAddress || // Fallback to remoteAddress
+    "Unknown IP";
+  const locationApiRes = await axios.get(`http://ip-api.com/json/${ipAddress}`);
+  const date = new Date();
+  const analyticsData = {
+    date: date.toString(),
+    browser: browserInfo?.client?.name || null,
+    device: browserInfo?.device?.type || null,
+    country: locationApiRes?.data?.country || null,
+    state: locationApiRes?.data?.regionName || null,
+    city: locationApiRes?.data?.city || null,
+  };
+
+  console.log(analyticsData);
+  let anlaytics = await Analytics.findOne({ linkId: link._id });
+  if (!anlaytics) {
+    anlaytics = await Analytics.create({
+      linkId: new mongoose.Types.ObjectId(link._id),
+      clikedLink: [analyticsData],
+    });
+  } else {
+    // If Analytics document exists, push the new analyticsData into the clickedLink array
+    await Analytics.findOneAndUpdate(
+      {
+        linkId: link._id,
+      },
+      { $push: { clikedLink: analyticsData } }
+    );
+  }
+
   const originalLink = link.originalLink;
   res.status(301).redirect(originalLink);
 });
