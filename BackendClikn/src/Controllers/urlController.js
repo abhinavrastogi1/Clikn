@@ -144,14 +144,14 @@ const getOriginalLink = asyncHandler(async (req, res) => {
 
   const browserInfo = deviceDetector.parse(userAgent);
 
-  const ipAddress =
-    req.headers["x-forwarded-for"] || // Check for proxies
+  const ipAddress = req.ip;
+  req.headers["x-forwarded-for"] || // Check for proxies
     req.socket.remoteAddress || // Fallback to remoteAddress
     "Unknown IP";
   const locationApiRes = await axios.get(`http://ip-api.com/json/${ipAddress}`);
-  const date = new Date();
+  let date = new Date();
   const analyticsData = {
-    date: date.toString(),
+    date: date.toLocaleString(),
     browser: browserInfo?.client?.name || null,
     device: browserInfo?.device?.type || null,
     country: locationApiRes?.data?.country || null,
@@ -159,7 +159,6 @@ const getOriginalLink = asyncHandler(async (req, res) => {
     city: locationApiRes?.data?.city || null,
   };
 
-  console.log(analyticsData);
   let anlaytics = await Analytics.findOne({ linkId: link._id });
   if (!anlaytics) {
     anlaytics = await Analytics.create({
