@@ -15,6 +15,10 @@ const linkSchema = new Schema(
       type: String,
       required: true,
     },
+    qrCodeLink:{
+      type:String,
+      required:true,
+    },
     originalLink: {
       type: String,
       required: true,

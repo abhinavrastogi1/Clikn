@@ -47,9 +47,11 @@ const generateShortLink = asyncHandler(async (req, res) => {
       break;
     }
   }
+  const qrCodeLink = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://clikn.in/${generateShortId}`;
   const link = await Link.create({
     user: new mongoose.Types.ObjectId(userId),
     title: title,
+    qrCodeLink: qrCodeLink,
     shortId: generateShortId,
     originalLink: originalLink,
   });
@@ -61,7 +63,7 @@ const generateShortLink = asyncHandler(async (req, res) => {
       200,
       {
         title: link.title,
-
+        qrCodeLink: link.qrCodeLink,
         shortId: link.shortId,
 
         originalLink: link.originalLink,
