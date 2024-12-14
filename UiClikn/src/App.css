@@ -5,5 +5,11 @@
 
 :root {
   --custom-pink: #ff4262;
-  --custom-orange: #FF4B2B;
+  --custom-orange: #ff4b2b;
+}
+
+@media screen and (max-width: 625px) {
+  .below-sm {
+    width: 320px;
+  }
 }

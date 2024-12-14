@@ -6,14 +6,20 @@ function Login() {
 
   return (
     <div className="flex flex-col min-h-screen w-full justify-center items-center gap-5 p-4 ">
-      <img src="/cliknLogo.png" alt="clikn logo" className="h-10 w-20" />
-      <div className=" grid grid-rows-2 sm:grid-rows-none sm:grid-cols-2 shadow-2xl ">
+      <img
+        src="/cliknLogo.png"
+        alt="clikn logo"
+        className="h-10 w-20 sm:h-20 sm:w-40"
+      />
+      <div className=" grid grid-rows-2 sm:grid-rows-none  sm:grid-cols-2 shadow-2xl ">
         <div
-          className={` transition transform ease-in-out duration-1000 h-[390px] sm:h-[500px] ${
-            leftpannel
-              ? " translate-y-full sm:translate-y-0 sm:translate-x-full "
-              : " -translate-y-0  sm:-translate-x-0  "
-          }`}
+          className={` transition transform ease-in-out duration-1000 
+            flex justify-center items-center
+            h-[390px] sm:h-[500px] below-sm ${
+              leftpannel
+                ? " translate-y-full sm:translate-y-0 sm:translate-x-full "
+                : " -translate-y-0  sm:-translate-x-0  "
+            }`}
         >
           {signUp ? (
             <div className=" flex flex-col items-center gap-4 p-10">
@@ -31,7 +37,7 @@ function Login() {
                   type="email"
                   name="email"
                   placeholder="Email"
-                  className="text-black sm:w-80 bg-slate-100 border-2 border-black/50 rounded-md p-1 text-base font-medium"
+                  className="text-black sm:w-60  md:w-80 bg-slate-100 border-2 border-black/50 rounded-md p-1 text-base font-medium"
                   autoComplete="on"
                   required
                 />
@@ -39,7 +45,7 @@ function Login() {
                   type="Password"
                   name="email"
                   placeholder="Password"
-                  className="text-black sm:w-80 bg-slate-100 border-2 border-black/50 rounded-md p-1 text-base font-medium"
+                  className="text-black sm:w-60  md:w-80 bg-slate-100 border-2 border-black/50 rounded-md p-1 text-base font-medium"
                   autoComplete="on"
                   required
                 />
@@ -67,12 +73,13 @@ function Login() {
               </span>
 
               <form className="flex flex-col gap-2 sm:gap-5 items-center">
-                <div className=" gap-1 flex flex-col sm:flex-row">
+                <div className=" gap-2 md:gap-1  flex flex-col sm:flex-row">
                   <input
                     type="text"
                     name="firstName"
                     placeholder="First Name"
-                    className="text-black sm:w-40 bg-slate-100 border-2 border-black/50 rounded-md p-1 text-base font-medium"
+                    className="text-black sm:w-28 md:w-40 bg-slate-100 border-2 border-black/50 rounded-md
+                     p-1 text-base font-medium"
                     autoComplete="on"
                     required
                   />
@@ -80,7 +87,7 @@ function Login() {
                     type="text"
                     name="secondName"
                     placeholder="Second Name"
-                    className="text-black sm:w-40 bg-slate-100 border-2  border-black/50 rounded-md p-1 text-base font-medium"
+                    className="text-black sm:w-28 md:w-40 bg-slate-100 border-2  border-black/50 rounded-md p-1 text-base font-medium"
                     autoComplete="on"
                   />
                 </div>
@@ -88,7 +95,7 @@ function Login() {
                   type="email"
                   name="email"
                   placeholder="Email"
-                  className="text-black sm:w-80 bg-slate-100 border-2 border-black/50 rounded-md p-1 text-base font-medium"
+                  className="text-black sm:w-60 md:w-80 bg-slate-100 border-2 border-black/50 rounded-md p-1 text-base font-medium"
                   autoComplete="on"
                   required
                 />
@@ -96,12 +103,12 @@ function Login() {
                   type="Password"
                   name="email"
                   placeholder="Password"
-                  className="text-black sm:w-80 bg-slate-100 border-2 border-black/50 rounded-md p-1 text-base font-medium"
+                  className="text-black sm:w-60 md:w-80 bg-slate-100 border-2 border-black/50 rounded-md p-1 text-base font-medium"
                   autoComplete="on"
                   required
                 />
                 <button
-                  className="bg-orange h-10 w-36 content-center rounded-3xl text-white font-semibold"
+                  className="bg-orange h-10 w-36  content-center rounded-3xl text-white font-semibold"
                   type="submit"
                 >
                   SIGN UP
