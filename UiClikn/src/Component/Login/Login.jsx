@@ -111,7 +111,7 @@ function Login() {
           )}
         </div>
         <div
-          className={` bg-pink  transition transform duration-1000 ease-in-out  ${
+          className={` bg-pink  transition transform duration-1000 ease-in-out p-2  ${
             leftpannel
               ? "-translate-y-full sm:translate-y-0 sm:-translate-x-full "
               : "  -translate-y-0  translate-x-0  "
