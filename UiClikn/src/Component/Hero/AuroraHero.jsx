@@ -77,7 +77,7 @@ export const AuroraHero = () => {
               >
                 <input
                   type="url"
-                  className="text-white border-2 rounded-md p-2 md:p-3 bg-transparent w-80 md:w-96 "
+                  className="text-white border-2 rounded-md p-2 md:p-3 bg-transparent w-64 sm:w-80 md:w-96 "
                   placeholder="https://example.com"
                   required
                 />
@@ -90,7 +90,7 @@ export const AuroraHero = () => {
                     scale: 0.985,
                   }}
                   className="flex group font-semibold border-2 border-white rounded-xl  
-                   p-1 md:p-2 w-[42%] md:w-[35%] justify-between items-center  "
+                   p-1 md:p-2 w-[50%] sm:w-[42%] md:w-[35%] justify-between items-center  "
                 >
                   Get your link
                   <span>
