@@ -10,7 +10,6 @@ const userSchema = new Schema(
     },
     secondName: {
       type: String,
-      required: true,
       trim: true,
     },
     googleId: String,

@@ -88,7 +88,7 @@ const userRegistration = asyncHandler(async (req, res) => {
     if (!userExists) {
       user = await User.create({
         firstName: userResponse?.given_name,
-        secondName: userResponse?.family_name,
+        secondName: userResponse?.family_name||null,
         email: userResponse?.email,
         profilePic: userResponse?.picture,
         googleId: userResponse?.id,

@@ -4,12 +4,29 @@ import { FaUserCircle } from "react-icons/fa";
 
 function Header() {
   return (
-    <div className=" fixed z-50   inset-0    h-[10vh] w-full px-48 ">
+    <div
+      className=" fixed z-50   inset-0    h-[5vh] sm:h-[7vh] md:h-[8vh]
+     lg:h-[9vh] xl:h-[10vh] w-full px-4 my-6 sm:px-10  md:px-20 lg:px-30 xl:px-48"
+    >
       <div className="flex h-full  justify-between items-center">
-        <img src={cliknLogo} alt=" clikn logo" className="h-full " />
-        <div className=" flex gap-10">
-          <button className="h-10 w-28 bg-white">Log in</button>
-          <button className="h-10 w-28 bg-white">Sign up</button>
+        <img
+          src={cliknLogo}
+          alt=" clikn logo"
+          className="h-full w-[25%]  md:w-[20%]  lg:w-[15%] "
+        />
+        <div className=" flex gap-5 sm:gap-6 md:gap-7 lg:gap-8 xl:gap-10">
+          <button
+            className="h-full p-[2px] sm:p-1 md:p-2 w-20 sm:w-24 md:w-28 rounded-lg  text-white bg-transparent 
+          border-2 border-white "
+          >
+            Log in
+          </button>
+          <button
+            className=" h-full p-[2px] sm:p-1 md:p-2 w-20 sm:w-24 md:w-28   rounded-lg  text-white bg-transparent 
+          border-2 border-white  "
+          >
+            Sign up
+          </button>
         </div>
       </div>
     </div>
