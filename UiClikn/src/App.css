@@ -4,12 +4,12 @@
 }
 
 :root {
-  --custom-pink: #ff4262;
-  --custom-orange: #ff4b2b;
+  --custom-blue:  #4395B1;
+  --custom-orange: #f26204;
 }
 
 @media screen and (max-width: 625px) {
   .below-sm {
-    width: 320px;
+    width: 300px;
   }
 }

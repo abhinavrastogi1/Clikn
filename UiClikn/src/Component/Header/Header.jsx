@@ -1,8 +1,10 @@
 import React from "react";
 import cliknLogo from "/cliknLogo.png";
-import { FaUserCircle } from "react-icons/fa";
+
+import { useNavigate } from "react-router-dom";
 
 function Header() {
+  const navigate = useNavigate();
   return (
     <div
       className=" fixed z-50   inset-0    h-[5vh] sm:h-[7vh] md:h-[8vh]
@@ -16,12 +18,19 @@ function Header() {
         />
         <div className=" flex gap-5 sm:gap-6 md:gap-7 lg:gap-8 xl:gap-10">
           <button
+            onClick={() => {
+              navigate("/Login");
+            }}
             className="h-full p-[2px] sm:p-1 md:p-2 w-20 sm:w-24 md:w-28 rounded-lg  text-white bg-transparent 
           border-2 border-white "
           >
             Log in
           </button>
+
           <button
+            onClick={() => {
+              navigate("/Signup");
+            }}
             className=" h-full p-[2px] sm:p-1 md:p-2 w-20 sm:w-24 md:w-28   rounded-lg  text-white bg-transparent 
           border-2 border-white  "
           >
