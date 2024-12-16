@@ -12,16 +12,16 @@ import QrCodes from "./Component/QrCode/QrCodes.jsx";
 import Analytics from "./Component/Analytics/Analytics.jsx";
 const router = createBrowserRouter([
   { path: "/", element: <AuroraHero /> },
-  { path: "/Login", element: <Login /> },
-  { path: "/Signup", element: <Login /> },
+  { path: "/login", element: <Login /> },
+  { path: "/signup", element: <Login /> },
   {
-    path: "/Home",
+    path: "/home",
     element: <App />,
     children: [
-      { path: "/Home", element: <Home /> },
-      { path: "/Home/Links", element: <Links /> },
-      { path: "/Home/Qrcodes", element: <QrCodes /> },
-      { path: "/Home/Analytics", element: <Analytics /> },
+      { path: "/home", element: <Home /> },
+      { path: "/home/links", element: <Links /> },
+      { path: "/home/qrcodes", element: <QrCodes /> },
+      { path: "/home/analytics", element: <Analytics /> },
     ],
   },
 ]);
