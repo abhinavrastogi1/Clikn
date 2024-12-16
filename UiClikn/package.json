@@ -3,7 +3,6 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "heropage": "https://app.clikn.in",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
