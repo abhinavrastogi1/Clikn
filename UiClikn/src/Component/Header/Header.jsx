@@ -8,7 +8,8 @@ function Header() {
   return (
     <div
       className=" fixed z-50   inset-0    h-[5vh] sm:h-[7vh] md:h-[8vh]
-     lg:h-[9vh] xl:h-[10vh] w-full px-4 my-6 sm:px-10  md:px-20 lg:px-30 xl:px-48"
+     lg:h-[9vh] xl:h-[10vh] w-full px-4 my-6 sm:px-10  md:px-20 lg:px-30 xl:px-48 
+     "
     >
       <div className="flex h-full  justify-between items-center">
         <img

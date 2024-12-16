@@ -20,7 +20,8 @@ function MainHeader() {
   }, [theme]);
 
   return (
-    <header className="pb-6  lg:pb-0 border-b-2 dark:border-white border-slate-500 ">
+    <header className="pb-6  lg:pb-0 shadow-2xl dark:shadow-white dark:shadow-md border-slate-500 
+     px-2 sm:px-10 md:px-20 lg:px-30 xl:px-48">
       <div className="px-4 mx-auto  sm:px-6 lg:px-8">
         <nav className="flex items-center justify-between h-16 lg:h-20">
           <div className="flex-shrink-0">
@@ -56,9 +57,9 @@ function MainHeader() {
                 setHideNav(!hideNav);
               }}
               type="button"
-              className="inline-flex p-2 text-black dark:text-white
+              className="inline-flex p-2 text-gray-900 dark:text-white
              transition-all duration-200 rounded-md lg:hidden  hover:bg-gray-100"
-            > 
+            >
               <TfiMenuAlt className="font-semibold text-xl md:text-2xl" />
             </button>
           </div>
@@ -67,7 +68,8 @@ function MainHeader() {
             <a
               href="#"
               title=""
-              className="text-base flex justify-center items-center gap-2 font-medium text-black  dark:text-white transition-all duration-200 hover:text-blue focus:text-blue"
+              className="text-base flex justify-center items-center gap-2 font-medium text-gray-900  dark:text-white transition-all duration-200
+               hover:text-blue focus:text-blue dark:hover:text-blue"
             >
               {" "}
               <IoIosLink />
@@ -77,7 +79,7 @@ function MainHeader() {
             <a
               href="#"
               title=""
-              className="text-base  flex justify-center items-center gap-2 font-medium text-black  dark:text-white transition-all duration-200 hover:text-blue focus:text-blue"
+              className="text-base  dark:hover:text-blue flex justify-center items-center gap-2 font-medium text-gray-900  dark:text-white transition-all duration-200 hover:text-blue focus:text-blue"
             >
               <FaQrcode />
               Qr Code
@@ -86,7 +88,7 @@ function MainHeader() {
             <a
               href="#"
               title=""
-              className="text-base flex justify-center items-center gap-2 font-medium text-black dark:text-white transition-all duration-200 hover:text-blue focus:text-blue"
+              className="text-base flex dark:hover:text-blue justify-center items-center gap-2 font-medium text-gray-900 dark:text-white transition-all duration-200 hover:text-blue focus:text-blue"
             >
               <IoStatsChartSharp />
               Analytics
@@ -134,7 +136,7 @@ function MainHeader() {
                 <a
                   href="#"
                   title=""
-                  className="inline-flex py-2 text-base font-medium text-black transition-all duration-200 hover:text-blue focus:text-blue"
+                  className="inline-flex py-2 text-base font-medium text-gray-900 transition-all duration-200 hover:text-blue focus:text-blue"
                 >
                   {" "}
                   Features{" "}
@@ -143,7 +145,7 @@ function MainHeader() {
                 <a
                   href="#"
                   title=""
-                  className="inline-flex py-2 text-base font-medium text-black transition-all duration-200 hover:text-blue focus:text-blue"
+                  className="inline-flex py-2 text-base font-medium text-gray-900 transition-all duration-200 hover:text-blue focus:text-blue"
                 >
                   {" "}
                   Solutions{" "}
@@ -152,7 +154,7 @@ function MainHeader() {
                 <a
                   href="#"
                   title=""
-                  className="inline-flex py-2 text-base font-medium text-black transition-all duration-200 hover:text-blue focus:text-blue"
+                  className="inline-flex py-2 text-base font-medium text-gray-900 transition-all duration-200 hover:text-blue focus:text-blue"
                 >
                   {" "}
                   Resources{" "}
@@ -161,7 +163,7 @@ function MainHeader() {
                 <a
                   href="#"
                   title=""
-                  className="inline-flex py-2 text-base font-medium text-black transition-all duration-200 hover:text-blue focus:text-blue"
+                  className="inline-flex py-2 text-base font-medium text-gray-900 transition-all duration-200 hover:text-blue focus:text-blue"
                 >
                   {" "}
                   Pricing{" "}

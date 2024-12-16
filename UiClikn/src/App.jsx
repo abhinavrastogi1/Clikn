@@ -7,7 +7,7 @@ import MainHeader from "./Component/Header/MainHeader.jsx";
 function App() {
   return (
     <>
-      <div className="  relative  bg-[#fffff4] dark:bg-DB  px-2 sm:px-10 md:px-20 lg:px-30 xl:px-48">
+      <div className="  relative  bg-[#fffff4] dark:bg-DB  ">
         <MainHeader />
         <Outlet />
         <Footer />

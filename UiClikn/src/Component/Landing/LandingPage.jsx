@@ -12,7 +12,7 @@ import Header from "../Header/Header";
 
 const COLORS_TOP = ["#13FFAA", "#1E67C6", "#CE84CF", "#DD335C"];
 
-export const AuroraHero = () => {
+export const LandingPage = () => {
   const color = useMotionValue(COLORS_TOP[0]);
 
   useEffect(() => {
