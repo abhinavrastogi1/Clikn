@@ -54,7 +54,7 @@ function LinkCard() {
         </div>
       </div>
 
-      <div className="  flex justify-end m-4  gap-3 flex-wrap ">
+      <div className="  flex justify-end p-2 sm:p-4  gap-3 flex-wrap ">
         <button className="p-1 border-[1px] h-10 w-24   border-gray-200 flex gap-2 dark:bg-white rounded-md font-bold justify-center items-center">
           <MdContentCopy />
           <span>Copy</span>
@@ -63,9 +63,9 @@ function LinkCard() {
           <IoMdShare />
           Share
         </button>
-        <button className="p-1 border-[1px] h-10 w-24 border-gray-200 text-red-600 flex  gap-2 dark:bg-white rounded-md font-bold justify-center items-center">
-          <MdDelete className="text-xl" />
-          Delete
+        <button className="p-1 border-[1px] h-10 w-10 sm:w-24 border-gray-200 text-red-600 flex  gap-2 dark:bg-white rounded-md font-bold justify-center items-center">
+          <MdDelete className="text-2xl lg-text-xl " />
+          <span className="hidden sm:block">Delete</span>
         </button>
       </div>
     </div>
