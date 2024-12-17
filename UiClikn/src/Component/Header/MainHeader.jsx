@@ -20,8 +20,10 @@ function MainHeader() {
   }, [theme]);
 
   return (
-    <header className="pb-6  lg:pb-0 shadow-2xl dark:shadow-white dark:shadow-md border-slate-500 
-     px-2 sm:px-10 md:px-20 lg:px-30 xl:px-48">
+    <header
+      className="pb-6  lg:pb-0 shadow-2xl dark:shadow-white dark:shadow-md border-slate-500 
+     px-2 sm:px-10 md:px-20 lg:px-30 xl:px-48"
+    >
       <div className="px-4 mx-auto  sm:px-6 lg:px-8">
         <nav className="flex items-center justify-between h-16 lg:h-20">
           <div className="flex-shrink-0">
@@ -73,7 +75,7 @@ function MainHeader() {
             >
               {" "}
               <IoIosLink />
-              Link
+              Links
             </a>
 
             <a
@@ -82,7 +84,7 @@ function MainHeader() {
               className="text-base  dark:hover:text-blue flex justify-center items-center gap-2 font-medium text-gray-900  dark:text-white transition-all duration-200 hover:text-blue focus:text-blue"
             >
               <FaQrcode />
-              Qr Code
+              QR Code
             </a>
 
             <a
@@ -117,8 +119,8 @@ function MainHeader() {
             href="#"
             title=""
             className="items-center justify-center hidden dark:text-white px-4 py-3
-             ml-10 text-base font-semibold text-white transition-all duration-200 bg-blue border
-              border-transparent rounded-md lg:inline-flex hover:bg-blue focus:bg-blue"
+             ml-10 text-base font-semibold text-white bg-blue border
+              border-transparent rounded-md lg:inline-flex hover:bg-blue focus:bg-blue transition transform ease-in-out duration-700 hover:scale-110"
             role="button"
           >
             {" "}

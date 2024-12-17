@@ -22,6 +22,7 @@ function LinkCard() {
             className=" h-10 w-10 bg-white rounded-full p-2 border-gray-200 border-[1px]"
           />
           <div>
+           
             <h2 className="dark:text-white font-bold text-xl capitalize">
               {linkName}
             </h2>
@@ -55,16 +56,29 @@ function LinkCard() {
       </div>
 
       <div className="  flex justify-end p-2 sm:p-4  gap-3 flex-wrap ">
-        <button className="p-1 border-[1px] h-10 w-24   border-gray-200 flex gap-2 dark:bg-white rounded-md font-bold justify-center items-center">
+        <button
+          className="p-1 border-[1px]
+         h-10 w-24   border-gray-200 flex gap-2 dark:bg-white rounded-md font-bold justify-center 
+         items-center transition transform ease-in-out duration-700 hover:scale-110"
+        >
           <MdContentCopy />
           <span>Copy</span>
         </button>
-        <button className="p-1 border-[1px] h-10 w-24  border-gray-200 flex gap-2 dark:bg-white rounded-md font-bold justify-center items-center">
+        <button
+          className="p-1
+         border-[1px] h-10 w-24  border-gray-200 flex gap-2
+          dark:bg-white rounded-md font-bold justify-center items-center
+          transition transform ease-in-out duration-700 hover:scale-110"
+        >
           <IoMdShare />
-          Share
+          <span>Share</span>
         </button>
-        <button className="p-1 border-[1px] h-10 w-10 sm:w-24 border-gray-200 text-red-600 flex  gap-2 dark:bg-white rounded-md font-bold justify-center items-center">
-          <MdDelete className="text-2xl lg-text-xl " />
+        <button
+          className="p-1 border-[1px] h-10 w-10 sm:w-24
+         border-gray-200 text-red-600 flex  gap-2 dark:bg-white rounded-md
+          font-bold justify-center items-center transition transform ease-in-out duration-700 hover:scale-110"
+        >
+          <MdDelete className="text-2xl lg:text-xl " />
           <span className="hidden sm:block">Delete</span>
         </button>
       </div>

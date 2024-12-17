@@ -5,7 +5,6 @@ import * as cheerio from "cheerio";
 import DeviceDetector from "device-detector-js";
 import { Link } from "../Models/linkmodel.js";
 import apiResponse from "../Utils/apiResponse.js";
-
 import mongoose from "mongoose";
 import { Analytics } from "../Models/analyticsModel.js";
 const generateShortLink = asyncHandler(async (req, res) => {
@@ -173,8 +172,32 @@ const getOriginalLink = asyncHandler(async (req, res) => {
       { $push: { clikedLink: analyticsData } }
     );
   }
-
   const originalLink = link.originalLink;
   res.status(301).redirect(originalLink);
 });
-export { generateShortLink, getOriginalLink };
+
+const deleteOriginalLink = asyncHandler(async (req, res) => {
+  const { shortId } = req?.query;
+  if(!shortId){
+    throw new apiError(401,"short Id is Required")
+  }
+  const link = await Link.findOne({ shortId: shortId });
+  if (!link) {
+    throw new apiError(404, "link does not exist");
+  }
+
+  const deleteAnalytics = await Analytics.deleteOne({ linkId: link._id });
+  if (deleteAnalytics.deletedCount===0) {
+    throw new apiError(
+      500,
+      "something went wrong while deleting analytics for the url"
+    );
+  }
+
+  const deleteLink = await Link.deleteOne({ _id: link._id });
+  if(deleteLink.deletedCount===0){
+    throw new apiError(500,"something went wrong while deleting link")
+  }
+  res.status(200).json(new apiResponse(200,{},"successfully deleted link"))
+});
+export { generateShortLink, getOriginalLink,deleteOriginalLink };

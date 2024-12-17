@@ -14,6 +14,7 @@ const linkSchema = new Schema(
     shortId: {
       type: String,
       required: true,
+      index:true
     },
     qrCodeLink:{
       type:String,

@@ -9,7 +9,7 @@ function Links() {
           <h1 className="dark:text-white text-gray-900  content-center  text-xl  md:text-3xl lg:text-4xl font-bold">
             Clikn Links
           </h1>
-          <button className="bg-blue   w-24 h-10 sm:w-28 p-2 sm:h-10 text-white rounded-md ">
+          <button className="bg-blue   w-24 h-10 sm:w-28 p-2 sm:h-10 text-white rounded-md  transition transform ease-in-out duration-700 hover:scale-110">
             Create link
           </button>
         </div>
