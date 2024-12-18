@@ -2,17 +2,30 @@ import React, { useEffect } from "react";
 import "./App.css";
 
 import Footer from "./Component/Footer/Footer.jsx";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import MainHeader from "./Component/Header/MainHeader.jsx";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { verifyLogin } from "./Store/Api/LoginApiActions/loginApiSlice.js";
 function App() {
   const { loggedIn } = useSelector((state) => state.loginSlice);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { status } = useSelector((state) => state.LoginApiSlice);
+  const location = useLocation();
   useEffect(() => {
     if (!loggedIn) {
-      navigate("/login");
+      dispatch(verifyLogin());
     }
   }, [loggedIn]);
+  useEffect(() => {
+    if (status === "error") {
+      navigate("/links");
+    }
+    if (status === "success") {
+      navigate(`${location.pathname}`);
+    }
+  }, [status]);
+
   return (
     <>
       {loggedIn && (

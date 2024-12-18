@@ -7,13 +7,13 @@ const loginSlice = createSlice({
     loggedIn: false,
   },
   reducers: {
-    loginPage: (state, action) => {
+    loginPageReducer: (state, action) => {
       state.loginPage = action.payload;
     },
-    loggedIn: (state, action) => {
+    loggedInReducer: (state, action) => {
       state.loggedIn = action.payload;
     },
   },
 });
-export const { loginPage, loggedIn } = loginSlice.actions;
+export const { loginPageReducer, loggedInReducer } = loginSlice.actions;
 export default loginSlice.reducer;

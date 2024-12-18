@@ -11,11 +11,18 @@ import Links from "./Component/Link/Links.jsx";
 import QrCodes from "./Component/QrCode/QrCodes.jsx";
 import Analytics from "./Component/Analytics/Analytics.jsx";
 import store from "./Store/index.js";
-import {Provider} from "react-redux"
+import { Provider } from "react-redux";
+import LandingPageApp from "./Component/Landing/LandingPageApp.jsx";
 const router = createBrowserRouter([
-  { path: "/", element: <LandingPage /> },
-  { path: "/login", element: <Login /> },
-  { path: "/signup", element: <Login /> },
+  {
+    path: "/",
+    element: <LandingPageApp />,
+    children: [
+      { path: "/", element: <LandingPage /> },
+      { path: "/login", element: <Login /> },
+      { path: "/signup", element: <Login /> },
+    ],
+  },
   {
     path: "/home",
     element: <App />,
@@ -29,10 +36,10 @@ const router = createBrowserRouter([
 ]);
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <Provider store ={store}>
-    <GoogleOAuthProvider clientId="280979623482-3rgbmvo5eljje6k8o43acd2cssmqhcqv.apps.googleusercontent.com">
-      <RouterProvider router={router} />
-    </GoogleOAuthProvider>
+    <Provider store={store}>
+      <GoogleOAuthProvider clientId="280979623482-3rgbmvo5eljje6k8o43acd2cssmqhcqv.apps.googleusercontent.com">
+        <RouterProvider router={router} />
+      </GoogleOAuthProvider>
     </Provider>
   </StrictMode>
 );

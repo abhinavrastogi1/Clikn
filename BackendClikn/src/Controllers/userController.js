@@ -104,7 +104,7 @@ const userRegistration = asyncHandler(async (req, res) => {
     }
 
     if (!user) {
-      throw new apiError(500, "something went wrong while registering user");
+      throw new apiError(500, "Something went wrong while registering user");
     }
   }
 
@@ -113,7 +113,7 @@ const userRegistration = asyncHandler(async (req, res) => {
     throw new apiError(500, "Something went wrong while generating  tokens");
   }
   user = await User.findById(user._id).select(
-    " -password -refreshToken -createdAt -updatedAt -__v -_id "
+    " -password -refreshToken -createdAt -updatedAt -__v -_id -googleId"
   );
   if (!user) {
     throw new apiError(500, "something went wrong while Creating  user");
@@ -142,7 +142,7 @@ const userLogin = asyncHandler(async (req, res) => {
     );
   }
   const loggedInUser = await User.findById(userExists._id).select(
-    "-password -refreshToken -createdAt -updatedAt -__v -_id "
+    "-password -refreshToken -createdAt -updatedAt -__v -_id -googleId"
   );
   const isPasswordCorrect = userExists.isPasswordCorrect(password);
   if (!isPasswordCorrect) {
@@ -161,4 +161,20 @@ const userLogin = asyncHandler(async (req, res) => {
     );
 });
 
-export { userRegistration, userLogin };
+const verifyUser = asyncHandler(async (req, res) => {
+  const { userId } = req?.user;
+  if (!userId) {
+    throw new apiError(401, "Required data is missing ");
+  }
+  const user = await User.findById(userId).select(
+    "-refreshToken -createdAt -updatedAt -__v -_id -googleId"
+  );
+  if (!user) {
+    throw new apiError(404, "User not found");
+  }
+  res
+    .status(200)
+    .json(new apiResponse(200, user, "User successfully verified"));
+});
+
+export { userRegistration, userLogin, verifyUser };

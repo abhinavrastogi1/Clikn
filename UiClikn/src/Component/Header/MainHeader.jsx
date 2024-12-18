@@ -19,11 +19,11 @@ function MainHeader() {
   }, [theme]);
   return (
     <header
-      className="pb-6  lg:pb-0 shadow-2xl dark:shadow-white dark:shadow-md border-slate-500 
-     px-2 sm:px-10 md:px-20 lg:px-30 xl:px-48"
+      className="  lg:pb-0 shadow-2xl dark:shadow-white dark:shadow-md border-slate-500  h-[10vh]
+     px-2 sm:px-10 md:px-16 lg:px-20 xl:px-48  "
     >
-      <div className="px-4 mx-auto  sm:px-6 lg:px-8">
-        <nav className="flex items-center justify-between h-16 lg:h-20">
+      <div className="px-4 mx-auto  h-full sm:px-6 lg:px-8">
+        <nav className="flex items-center justify-between h-full lg:h-full">
           <div className="flex-shrink-0">
             <img
               className="w-auto h-8 sm:h-10   md:h-12 lg:h-16 "
@@ -128,7 +128,7 @@ function MainHeader() {
 
         {hideNav && (
           <nav
-            className={` pt-4 pb-6 bg-white border border-gray-200 rounded-md shadow-md lg:hidden
+            className={` pt-4 pb-6 bg-white border border-gray-200   rounded-md shadow-md lg:hidden 
       }`}
           >
             <div className="flow-root">

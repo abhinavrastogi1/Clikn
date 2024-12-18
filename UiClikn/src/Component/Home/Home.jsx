@@ -2,13 +2,12 @@ import React from "react";
 
 function Home() {
   return (
-    <div className="min-h-screen w-full  text-white px-2 sm:px-10 md:px-20 lg:px-30 xl:px-48   ">
+    <div className="min-h-screen w-full  text-white px-2 sm:px-10 md:px-16 lg:px-20 xl:px-48   ">
       <div className="px-4 mx-auto  sm:px-6 lg:px-8 ">
         <div className="">
           <h1 className="dark:text-white text-gray-900   mx-2 my-6 sm:my-8   sm:mx-8 md:mx-10 text-xl sm:text-3xl md:text-4xl lg:text-5xl font-bold">
             Your Connections Platform
           </h1>
-
           <div className="grid dark:bg-slate-800  grid-rows-3 lg:grid-rows-none lg:grid-cols-3 gap-2 p-6 rounded-md shadow-2xl dark:shadow-lg dark:shadow-gray-700 ">
             <div className=" rounded-xl  grid grid-cols-2  bg-white  border-2 border-gray-300 ">
               <div className=" flex    h-full justify-center items-center bg-slate-200 rounded-tl-md  rounded-bl-md ">

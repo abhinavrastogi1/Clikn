@@ -12,7 +12,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useGoogleLogin } from "@react-oauth/google";
-import { loggedIn } from "../../Store/UiActions/loginSlice.js";
+import { loggedInReducer } from "../../Store/UiActions/loginSlice.js";
 function Login() {
   const { loginPage } = useSelector((state) => state.loginSlice);
   const [leftpannel, setLeftPannel] = useState(false);
@@ -60,7 +60,8 @@ function Login() {
           }
         );
         if (response.status === 200) {
-          dispatch(loggedIn(true));
+          console.log(response);
+          dispatch(loggedInReducer(true));
           navigate("/home");
         }
       }
@@ -74,6 +75,7 @@ function Login() {
     onerror: googleResponse,
     flow: "auth-code",
   });
+  
   useEffect(() => {
     // Start the transition
     const addMsgTransition = setTimeout(() => {
