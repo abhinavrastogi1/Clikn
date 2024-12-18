@@ -9,7 +9,6 @@ import { GoSun } from "react-icons/go";
 import { GoMoon } from "react-icons/go";
 function MainHeader() {
   const [hideNav, setHideNav] = useState(false);
-
   const [theme, setTheme] = useState("dark");
   useEffect(() => {
     if (theme === "dark") {
@@ -18,7 +17,6 @@ function MainHeader() {
       document.documentElement.classList.remove("dark");
     }
   }, [theme]);
-
   return (
     <header
       className="pb-6  lg:pb-0 shadow-2xl dark:shadow-white dark:shadow-md border-slate-500 

@@ -10,6 +10,8 @@ import Home from "./Component/Home/Home.jsx";
 import Links from "./Component/Link/Links.jsx";
 import QrCodes from "./Component/QrCode/QrCodes.jsx";
 import Analytics from "./Component/Analytics/Analytics.jsx";
+import store from "./Store/index.js";
+import {Provider} from "react-redux"
 const router = createBrowserRouter([
   { path: "/", element: <LandingPage /> },
   { path: "/login", element: <Login /> },
@@ -27,8 +29,10 @@ const router = createBrowserRouter([
 ]);
 createRoot(document.getElementById("root")).render(
   <StrictMode>
+    <Provider store ={store}>
     <GoogleOAuthProvider clientId="280979623482-3rgbmvo5eljje6k8o43acd2cssmqhcqv.apps.googleusercontent.com">
       <RouterProvider router={router} />
     </GoogleOAuthProvider>
+    </Provider>
   </StrictMode>
 );

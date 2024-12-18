@@ -2,21 +2,37 @@ import React, { useEffect, useState } from "react";
 import Google from "../../assets/Google.svg";
 import { Stars } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
-
+import axios from "axios";
 import {
   useMotionTemplate,
   useMotionValue,
   motion,
   animate,
 } from "framer-motion";
-
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useGoogleLogin } from "@react-oauth/google";
+import { loggedIn } from "../../Store/UiActions/loginSlice.js";
 function Login() {
+  const { loginPage } = useSelector((state) => state.loginSlice);
   const [leftpannel, setLeftPannel] = useState(false);
   const [signUp, setSignUp] = useState(true);
+  const [errorMsg, setErrorMsg] = useState(false);
+  const [errorMsgTransition, setErrorMsgTransition] = useState(false);
+  const location = useLocation();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (
+      !loginPage ||
+      location.pathname === "/signup" ||
+      location.pathname === "/Signup"
+    ) {
+      setLeftPannel(true), setSignUp(false);
+    }
+  }, [loginPage]);
   const COLORS_TOP = ["#13FFAA", "#1E67C6", "#CE84CF", "#DD335C"];
-
   const color = useMotionValue(COLORS_TOP[0]);
-
   useEffect(() => {
     animate(color, COLORS_TOP, {
       ease: "easeInOut",
@@ -29,6 +45,56 @@ function Login() {
   const backgroundImage = useMotionTemplate`radial-gradient(125% 125% at 50% 0%, #020617 50%, ${color})`;
   const border = useMotionTemplate`1px solid ${color}`;
   const boxShadow = useMotionTemplate`0px 4px 24px ${color}`;
+
+  async function googleResponse(authresult) {
+    try {
+      setErrorMsg(false);
+      if (authresult["code"]) {
+        const response = await axios.post(
+          "/user/registration",
+          {},
+          {
+            params: {
+              code: authresult.code,
+            },
+          }
+        );
+        if (response.status === 200) {
+          dispatch(loggedIn(true));
+          navigate("/home");
+        }
+      }
+    } catch (error) {
+      console.error("something went wrong while logging in", error);
+      setErrorMsg(true);
+    }
+  }
+  const googlelogin = useGoogleLogin({
+    onSuccess: googleResponse,
+    onerror: googleResponse,
+    flow: "auth-code",
+  });
+  useEffect(() => {
+    // Start the transition
+    const addMsgTransition = setTimeout(() => {
+      setErrorMsgTransition(true); // End the transition
+    }, 100);
+
+    const removeMsgTransition = setTimeout(() => {
+      setErrorMsgTransition(false); // End the transition
+    }, 3000);
+
+    const removeMsg = setTimeout(() => {
+      setErrorMsg(false); // Remove the message
+    }, 4000);
+
+    return () => {
+      clearTimeout(removeMsg); // Clear the removal of the message
+      clearTimeout(removeMsgTransition);
+      clearTimeout(addMsgTransition);
+    };
+  }, [errorMsg]);
+
   return (
     <div>
       <motion.section
@@ -37,6 +103,25 @@ function Login() {
         }}
         className="relative grid min-h-screen place-content-center overflow-hidden bg-gray-950 px-4 py-24 text-gray-200"
       >
+        <div className=" mb-10 flex justify-center items-center w-full h-20 absolute -top-10 md:-top-16">
+          {errorMsg && (
+            <div
+              className={`border-2 border-blue rounde-md p-3 text-center   w-64
+              transition    transform    ease-in-out font-bold duration-1000 delay-300 z-10 
+                        ${
+                          errorMsgTransition
+                            ? " translate-y-16 opacity-100 sm:translate-y-20 md:translate-y-24 lg:translate-y-32 "
+                            : "translate-y-0 opacity-0"
+                        }`}
+            >
+              <h2 className="text-blue text-sm md:text-base">{`${
+                signUp
+                  ? "Unable to log in. Please try again"
+                  : "Unable to sign up. Please try again"
+              }`}</h2>
+            </div>
+          )}
+        </div>
         <div className="flex flex-col  w-full justify-center items-center gap-5  z-50  bg-DB">
           <img
             src="/cliknLogo.png"
@@ -65,6 +150,9 @@ function Login() {
                     <button
                       className=" p-2 rounded-full border-gray-300 border-2 hover:scale-110
           h-10 w-10 shadow-2xl"
+                      onClick={() => {
+                        googlelogin();
+                      }}
                     >
                       <img
                         src={Google}
@@ -107,6 +195,9 @@ function Login() {
                     <button
                       className=" p-2 rounded-full border-gray-300 border-2 hover:scale-110
           h-10 w-10 shadow-2xl"
+                      onClick={() => {
+                        googlelogin();
+                      }}
                     >
                       <img
                         src={Google}

@@ -69,7 +69,6 @@ console.log(url)
       document.body.appendChild(link); // Append the link to the body
       link.click(); // Trigger the download
       document.body.removeChild(link); // Remove the link after downloading
-
       // Revoke the Blob URL after download
       window.URL.revokeObjectURL(url);
     } catch (error) {

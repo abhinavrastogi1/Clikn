@@ -45,7 +45,6 @@ const userRegistration = asyncHandler(async (req, res) => {
   }
 
   let user;
-
   if (Object.keys(reqBody).length > 0) {
     // if user used form to register
     const { firstName, secondName, email, password } = reqBody;
@@ -80,15 +79,18 @@ const userRegistration = asyncHandler(async (req, res) => {
       `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${googleRes.tokens.access_token}`
     );
 
-    if (!googleUserRes.ok) {
+    if (googleUserRes?.status !== 200) {
       throw new apiError(401, `HTTP error! status: ${response.status}`);
     }
-    const userResponse = await googleUserRes.json();
-    const userExists = await User.findOne({ email: userResponse.email });
+
+    const userResponse = await googleUserRes?.data;
+
+    const userExists = await User.findOne({ email: userResponse?.email });
+
     if (!userExists) {
       user = await User.create({
         firstName: userResponse?.given_name,
-        secondName: userResponse?.family_name||null,
+        secondName: userResponse?.family_name || null,
         email: userResponse?.email,
         profilePic: userResponse?.picture,
         googleId: userResponse?.id,
@@ -100,6 +102,7 @@ const userRegistration = asyncHandler(async (req, res) => {
         user = userExists;
       }
     }
+
     if (!user) {
       throw new apiError(500, "something went wrong while registering user");
     }
@@ -115,6 +118,7 @@ const userRegistration = asyncHandler(async (req, res) => {
   if (!user) {
     throw new apiError(500, "something went wrong while Creating  user");
   }
+
   res
     .status(200)
     .cookie("accessToken", accessToken, options)

@@ -2,9 +2,12 @@ import React from "react";
 import cliknLogo from "/cliknLogo.png";
 
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { loginPage } from "../../Store/UiActions/loginSlice.js";
 
 function Header() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   return (
     <div
       className=" fixed z-50   inset-0    h-[5vh] sm:h-[7vh] md:h-[8vh]
@@ -30,6 +33,7 @@ function Header() {
 
           <button
             onClick={() => {
+              dispatch(loginPage(false));
               navigate("/Signup");
             }}
             className=" h-full p-[2px] sm:p-1 md:p-2 w-20 sm:w-24 md:w-28   rounded-lg  text-white bg-transparent 
