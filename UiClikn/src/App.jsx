@@ -16,12 +16,11 @@ function App() {
     if (!loggedIn) {
       dispatch(verifyLogin());
     }
-  }, [loggedIn]);
+  }, []);
   useEffect(() => {
     if (status === "error") {
-      navigate("/links");
-    }
-    if (status === "success") {
+      navigate("/login");
+    } else if (status === "success") {
       navigate(`${location.pathname}`);
     }
   }, [status]);

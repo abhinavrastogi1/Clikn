@@ -31,6 +31,7 @@ function Login() {
       setLeftPannel(true), setSignUp(false);
     }
   }, [loginPage]);
+  const { loggedIn } = useSelector((state) => state.loginSlice);
   const COLORS_TOP = ["#13FFAA", "#1E67C6", "#CE84CF", "#DD335C"];
   const color = useMotionValue(COLORS_TOP[0]);
   useEffect(() => {
@@ -57,12 +58,10 @@ function Login() {
             params: {
               code: authresult.code,
             },
-          }
+          },
         );
         if (response.status === 200) {
-          console.log(response);
           dispatch(loggedInReducer(true));
-          navigate("/home");
         }
       }
     } catch (error) {
@@ -75,27 +74,26 @@ function Login() {
     onerror: googleResponse,
     flow: "auth-code",
   });
-  
   useEffect(() => {
     // Start the transition
     const addMsgTransition = setTimeout(() => {
       setErrorMsgTransition(true); // End the transition
     }, 100);
-
     const removeMsgTransition = setTimeout(() => {
       setErrorMsgTransition(false); // End the transition
     }, 3000);
-
     const removeMsg = setTimeout(() => {
       setErrorMsg(false); // Remove the message
     }, 4000);
-
     return () => {
       clearTimeout(removeMsg); // Clear the removal of the message
       clearTimeout(removeMsgTransition);
       clearTimeout(addMsgTransition);
     };
   }, [errorMsg]);
+  useEffect(() => {
+    if (loggedIn === true) navigate("/home");
+  }, [loggedIn]);
 
   return (
     <div>

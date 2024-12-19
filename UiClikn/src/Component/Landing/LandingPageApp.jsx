@@ -1,24 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Outlet, useNavigate } from "react-router-dom";
-import { verifyLogin } from "../../Store/Api/LoginApiActions/loginApiSlice.js";
+import { verifyLogin } from "../../Store/Api/LoginApiActions/loginApiSlice";
 function LandingPageApp() {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { loggedIn } = useSelector((state) => state.loginSlice);
-  const { status } = useSelector((state) => state.LoginApiSlice);
-  const [showLandingPage, setShowLandingPage] = useState(false);
+  const dispatch = useDispatch();
+  const { status, showLandingPage } = useSelector(
+    (state) => state.LoginApiSlice
+  );
   useEffect(() => {
-    setShowLandingPage(false);
-    if (!loggedIn) {
-      dispatch(verifyLogin());
-    }
-    if (status === "success") {
-      navigate("/home");
-    }
-    setShowLandingPage(true);
+    dispatch(verifyLogin());
   }, []);
-
+  useEffect(()=>{
+    if(status==="success"){
+      navigate("/home")
+    }
+  })
   return <>{showLandingPage && <Outlet />}</>;
 }
 
