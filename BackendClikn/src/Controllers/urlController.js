@@ -10,19 +10,20 @@ import { Analytics } from "../Models/analyticsModel.js";
 const generateShortLink = asyncHandler(async (req, res) => {
   const { originalLink } = req?.query;
   let { title } = req?.query || null;
-
   const { userId } = req?.user;
   if (!originalLink) {
     throw new apiError(400, "Missing Required Data");
   }
   if (!title) {
     const { data } = await axios.get(originalLink);
-    if (!data) {
-      throw new apiError(500, "something went wrong while fetching data");
+    if (data) {
+      const $ = cheerio.load(data);
+      title = $("title").text();
     }
     // Use $ as a constant bcz it is common way in jQuery
-    const $ = cheerio.load(data);
-    title = $("title").text();
+    else {
+      title = "unknown";
+    }
   }
   if (!title) {
     userId;
@@ -178,8 +179,8 @@ const getOriginalLink = asyncHandler(async (req, res) => {
 
 const deleteOriginalLink = asyncHandler(async (req, res) => {
   const { shortId } = req?.query;
-  if(!shortId){
-    throw new apiError(401,"short Id is Required")
+  if (!shortId) {
+    throw new apiError(401, "short Id is Required");
   }
   const link = await Link.findOne({ shortId: shortId });
   if (!link) {
@@ -187,7 +188,7 @@ const deleteOriginalLink = asyncHandler(async (req, res) => {
   }
 
   const deleteAnalytics = await Analytics.deleteOne({ linkId: link._id });
-  if (deleteAnalytics.deletedCount===0) {
+  if (deleteAnalytics.deletedCount === 0) {
     throw new apiError(
       500,
       "something went wrong while deleting analytics for the url"
@@ -195,9 +196,9 @@ const deleteOriginalLink = asyncHandler(async (req, res) => {
   }
 
   const deleteLink = await Link.deleteOne({ _id: link._id });
-  if(deleteLink.deletedCount===0){
-    throw new apiError(500,"something went wrong while deleting link")
+  if (deleteLink.deletedCount === 0) {
+    throw new apiError(500, "something went wrong while deleting link");
   }
-  res.status(200).json(new apiResponse(200,{},"successfully deleted link"))
+  res.status(200).json(new apiResponse(200, {}, "successfully deleted link"));
 });
-export { generateShortLink, getOriginalLink,deleteOriginalLink };
+export { generateShortLink, getOriginalLink, deleteOriginalLink };

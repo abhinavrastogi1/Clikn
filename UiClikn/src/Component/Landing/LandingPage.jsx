@@ -1,6 +1,6 @@
 import { Stars } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { FiArrowRight } from "react-icons/fi";
 import {
   useMotionTemplate,
@@ -9,6 +9,12 @@ import {
   animate,
 } from "framer-motion";
 import Header from "../Header/Header";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addUrl,
+  
+} from "../../Store/Api/LoginApiActions/loginApiSlice";
 const COLORS_TOP = ["#13FFAA", "#1E67C6", "#CE84CF", "#DD335C"];
 
 export const LandingPage = () => {
@@ -21,11 +27,17 @@ export const LandingPage = () => {
       repeatType: "mirror",
     });
   }, []);
-
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [url, seturl] = useState("");
   const backgroundImage = useMotionTemplate`radial-gradient(125% 125% at 50% 0%, #020617 50%, ${color})`;
   const border = useMotionTemplate`1px solid ${color}`;
   const boxShadow = useMotionTemplate`0px 4px 24px ${color}`;
-
+  function createShortLink(e) {
+    e.preventDefault();
+    dispatch(addUrl(url));
+    navigate("/login");
+  }
   return (
     <>
       <div>
@@ -64,9 +76,16 @@ export const LandingPage = () => {
                 <h3 className="font-semibold text-base md:text-lg">
                   Paste your long link here
                 </h3>
-                <form className="flex flex-col gap-4" onSubmit={() => {}}>
+                <form
+                  className="flex flex-col gap-4"
+                  onSubmit={createShortLink}
+                >
                   <input
                     type="url"
+                    value={url}
+                    onChange={(e) => {
+                      seturl(e.target.value);
+                    }}
                     className="text-white border-2 rounded-md p-2 md:p-3 bg-transparent w-64 sm:w-80 md:w-96 "
                     placeholder="https://example.com"
                     required

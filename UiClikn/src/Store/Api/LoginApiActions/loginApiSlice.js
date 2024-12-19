@@ -21,7 +21,7 @@ export const verifyLogin = createAsyncThunk(
 const LoginApiSlice = createSlice({
   name: "LoginApiSlice",
   initialState: {
-    url: "",
+    formUrl: "",
     showLandingPage: false,
     user: {},
     status: "idle",
@@ -29,7 +29,7 @@ const LoginApiSlice = createSlice({
   },
   reducers: {
     addUrl: (state, action) => {
-      state.url = action.payload;
+      state.formUrl = action.payload;
     },
     setLandingPage: (state, action) => {
       state.showLandingPage = action.payload;
@@ -51,5 +51,5 @@ const LoginApiSlice = createSlice({
       });
   },
 });
-export const { addUrl } = LoginApiSlice.actions;
+export const { addUrl, setLandingPage } = LoginApiSlice.actions;
 export default LoginApiSlice.reducer;
