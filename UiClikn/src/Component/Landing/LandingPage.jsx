@@ -11,10 +11,7 @@ import {
 import Header from "../Header/Header";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  addUrl,
-  
-} from "../../Store/Api/LoginApiActions/loginApiSlice";
+import { addUrl } from "../../Store/Api/LoginApiActions/loginApiSlice";
 const COLORS_TOP = ["#13FFAA", "#1E67C6", "#CE84CF", "#DD335C"];
 
 export const LandingPage = () => {
@@ -33,10 +30,16 @@ export const LandingPage = () => {
   const backgroundImage = useMotionTemplate`radial-gradient(125% 125% at 50% 0%, #020617 50%, ${color})`;
   const border = useMotionTemplate`1px solid ${color}`;
   const boxShadow = useMotionTemplate`0px 4px 24px ${color}`;
+  const [isUrlWrong, setIsUrlWrong] = useState(false);
   function createShortLink(e) {
     e.preventDefault();
-    dispatch(addUrl(url));
-    navigate("/login");
+    try {
+       new URL(url);
+      dispatch(addUrl(url));
+      navigate("/login");
+    } catch (error) {
+      setIsUrlWrong(true);
+    }
   }
   return (
     <>
@@ -84,12 +87,29 @@ export const LandingPage = () => {
                     type="url"
                     value={url}
                     onChange={(e) => {
+                      setIsUrlWrong(false);
                       seturl(e.target.value);
                     }}
-                    className="text-white border-2 rounded-md p-2 md:p-3 bg-transparent w-64 sm:w-80 md:w-96 "
+                    className={`focus:outline-none  text-white border-2 rounded-md p-2 md:p-3 bg-transparent w-64 sm:w-80 md:w-96  
+                      ${
+                        isUrlWrong
+                          ? "text-red-500 border-red-500"
+                          : "text-white border-white"
+                      }`}
                     placeholder="https://example.com"
                     required
                   />
+                  <div>
+                    {isUrlWrong && (
+                      <h2
+                        className={` text-sm ${
+                          isUrlWrong ? "text-red-500" : "text-white"
+                        }`}
+                      >
+                        Please enter a valid URL{" "}
+                      </h2>
+                    )}
+                  </div>
                   <motion.button
                     type="submit"
                     whileHover={{
@@ -110,7 +130,6 @@ export const LandingPage = () => {
               </div>
             </motion.div>
           </div>
-
           <div className="absolute inset-0 z-0">
             <Canvas>
               <Stars radius={50} count={2500} factor={4} fade speed={2} />

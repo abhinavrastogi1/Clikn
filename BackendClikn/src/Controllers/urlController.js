@@ -7,12 +7,13 @@ import { Link } from "../Models/linkmodel.js";
 import apiResponse from "../Utils/apiResponse.js";
 import mongoose from "mongoose";
 import { Analytics } from "../Models/analyticsModel.js";
+import { User } from "../Models/userModel.js";
 const generateShortLink = asyncHandler(async (req, res) => {
   const { originalLink } = req?.query;
   let { title } = req?.query || null;
   const { userId } = req?.user;
   if (!originalLink) {
-    throw new apiError(400, "Missing Required Data");
+    throw new apiError(400, "Missing required data");
   }
   if (!title) {
     const { data } = await axios.get(originalLink);
@@ -65,17 +66,16 @@ const generateShortLink = asyncHandler(async (req, res) => {
         title: link.title,
         qrCodeLink: link.qrCodeLink,
         shortId: link.shortId,
-
         originalLink: link.originalLink,
       },
-      "link is successfully generated"
+      "Link  successfully generated"
     )
   );
 });
 const getOriginalLink = asyncHandler(async (req, res) => {
   const { shortId } = req?.params;
   if (!shortId) {
-    throw new apiError(400, "Missing Required Data");
+    throw new apiError(400, "Missing required data");
   }
   const link = await Link.findOne({ shortId: shortId });
   if (!link) {
@@ -178,27 +178,67 @@ const getOriginalLink = asyncHandler(async (req, res) => {
 });
 
 const deleteOriginalLink = asyncHandler(async (req, res) => {
-  const { shortId } = req?.query;
+  const { _id } = req?.query;
   if (!shortId) {
-    throw new apiError(401, "short Id is Required");
+    throw new apiError(401, "ShortId is Required");
   }
-  const link = await Link.findOne({ shortId: shortId });
+  const link = await Link.findById(_id);
   if (!link) {
-    throw new apiError(404, "link does not exist");
+    throw new apiError(404, "Link does not exist");
   }
 
   const deleteAnalytics = await Analytics.deleteOne({ linkId: link._id });
   if (deleteAnalytics.deletedCount === 0) {
     throw new apiError(
       500,
-      "something went wrong while deleting analytics for the url"
+      "Something went wrong while deleting analytics for the url"
     );
   }
 
   const deleteLink = await Link.deleteOne({ _id: link._id });
   if (deleteLink.deletedCount === 0) {
-    throw new apiError(500, "something went wrong while deleting link");
+    throw new apiError(500, "Something went wrong while deleting link");
   }
-  res.status(200).json(new apiResponse(200, {}, "successfully deleted link"));
+  res.status(200).json(new apiResponse(200, {}, "Successfully deleted link"));
 });
-export { generateShortLink, getOriginalLink, deleteOriginalLink };
+const getuserLinks = asyncHandler(async (req, res) => {
+  const { userId } = req?.user;
+  const { page } = req?.query;
+  if (!userId && !page) {
+    throw new apiError(400, "Missing required data");
+  }
+
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new apiError(404, "User does not exist");
+  }
+
+  const userLinks = await Link.aggregate([
+    {
+      $match: {
+        user: new mongoose.Types.ObjectId(userId),
+      },
+    },
+    {
+      $sort: {
+        createdAt: -1,
+      },
+    },
+    {
+      $skip: 0,
+    },
+    {
+      $limit: 10,
+    },
+    {
+      $project: {
+        title: 1,
+        shortId: 1,
+        originalLink: 1,
+        qrCodeLink: 1,
+      },
+    },
+  ]);
+  res.status(200).json(new apiResponse(200, userLinks, "User links "));
+});
+export { generateShortLink, getOriginalLink, deleteOriginalLink, getuserLinks };

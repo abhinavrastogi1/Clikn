@@ -13,6 +13,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useGoogleLogin } from "@react-oauth/google";
 import { loggedInReducer } from "../../Store/UiActions/loginSlice.js";
+import {
+  loginViaForm,
+  setLoadingLogin,
+  signUpViaForm,
+} from "../../Store/Api/LoginApiActions/loginApiSlice.js";
+import { createShortLinkApi } from "../../Store/Api/ShortLinkActions/createShortLinkSlice.js";
 function Login() {
   const { loginPage } = useSelector((state) => state.loginSlice);
   const [leftpannel, setLeftPannel] = useState(false);
@@ -22,6 +28,16 @@ function Login() {
   const location = useLocation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [loginForm, setLoginForm] = useState({
+    email: "",
+    password: "",
+  });
+  const [signUpFrom, setSignUpFrom] = useState({
+    firstName: "",
+    secondName: "",
+    email: "",
+    password: "",
+  });
   useEffect(() => {
     if (
       !loginPage ||
@@ -32,6 +48,7 @@ function Login() {
     }
   }, [loginPage]);
   const { loggedIn } = useSelector((state) => state.loginSlice);
+  const { loadingLogin } = useSelector((state) => state.loginApiSlice);
   const COLORS_TOP = ["#13FFAA", "#1E67C6", "#CE84CF", "#DD335C"];
   const color = useMotionValue(COLORS_TOP[0]);
   useEffect(() => {
@@ -42,14 +59,13 @@ function Login() {
       repeatType: "mirror",
     });
   }, []);
-
   const backgroundImage = useMotionTemplate`radial-gradient(125% 125% at 50% 0%, #020617 50%, ${color})`;
   const border = useMotionTemplate`1px solid ${color}`;
   const boxShadow = useMotionTemplate`0px 4px 24px ${color}`;
-
   async function googleResponse(authresult) {
     try {
       setErrorMsg(false);
+      dispatch(setLoadingLogin(true));
       if (authresult["code"]) {
         const response = await axios.post(
           "/user/registration",
@@ -58,16 +74,21 @@ function Login() {
             params: {
               code: authresult.code,
             },
-          },
+          }
         );
         if (response.status === 200) {
           dispatch(loggedInReducer(true));
+        
+
         }
       }
     } catch (error) {
+      if (response.status === 409) {
+      }
       console.error("something went wrong while logging in", error);
       setErrorMsg(true);
     }
+    dispatch(setLoadingLogin(false));
   }
   const googlelogin = useGoogleLogin({
     onSuccess: googleResponse,
@@ -94,6 +115,38 @@ function Login() {
   useEffect(() => {
     if (loggedIn === true) navigate("/home");
   }, [loggedIn]);
+  function loginform(e) {
+    e.preventDefault();
+    dispatch(loginViaForm(loginForm));
+    setLoginForm({
+      email: "",
+      password: "",
+    });
+  }
+  function signUpform(e) {
+    e.preventDefault();
+    dispatch(signUpViaForm(signUpFrom));
+    setSignUpFrom({
+      firstName: "",
+      secondName: "",
+      email: "",
+      password: "",
+    });
+  }
+  function onChangeLoginForm(e) {
+    const { name, value } = e.target;
+    setLoginForm({
+      ...loginForm,
+      [name]: value,
+    });
+  }
+  function onChangesignUpForm(e) {
+    const { name, value } = e.target;
+    setSignUpFrom({
+      ...signUpFrom,
+      [name]: value,
+    });
+  }
 
   return (
     <div>
@@ -162,10 +215,15 @@ function Login() {
                     </button>
                     <span className="text-black">or use your account</span>
 
-                    <form className="flex flex-col gap-5 items-center">
+                    <form
+                      className="flex flex-col gap-5 items-center"
+                      onSubmit={loginform}
+                    >
                       <input
                         type="email"
                         name="email"
+                        value={loginForm.email}
+                        onChange={onChangeLoginForm}
                         placeholder="Email"
                         className="text-black sm:w-60  md:w-80 bg-slate-100 border-2 border-black/50 rounded-md p-1 text-base font-medium"
                         autoComplete="on"
@@ -173,17 +231,23 @@ function Login() {
                       />
                       <input
                         type="Password"
-                        name="email"
+                        name="password"
+                        value={loginForm.password}
+                        onChange={onChangeLoginForm}
                         placeholder="Password"
                         className="text-black sm:w-60  md:w-80 bg-slate-100 border-2 border-black/50 rounded-md p-1 text-base font-medium"
                         autoComplete="on"
                         required
                       />
                       <button
-                        className="bg-blue h-10 w-36  rounded-3xl content-center text-white font-semibold"
+                        className="bg-blue h-10 w-36  flex rounded-3xl justify-center items-center text-white font-semibold"
                         type="submit"
                       >
                         LOG IN
+                        <div
+                          className={`border-t-[2px] ml-2 border-white transition-all animate-spin  h-4 w-4 rounded-full 
+                          ${!loadingLogin && "hidden"}`}
+                        ></div>{" "}
                       </button>
                     </form>
                   </div>
@@ -208,13 +272,17 @@ function Login() {
                     <span className="text-black leading-loose">
                       or use your email for sign up
                     </span>
-
-                    <form className="flex flex-col gap-2 sm:gap-5 items-center">
+                    <form
+                      className="flex flex-col gap-2 sm:gap-5 items-center"
+                      onSubmit={signUpform}
+                    >
                       <div className=" gap-2 md:gap-1  flex flex-col sm:flex-row">
                         <input
                           type="text"
                           name="firstName"
+                          value={signUpFrom.firstName}
                           placeholder="First Name"
+                          onChange={onChangesignUpForm}
                           className="text-black sm:w-28 md:w-40 bg-slate-100 border-2 border-black/50 rounded-md
                      p-1 text-base font-medium"
                           autoComplete="on"
@@ -223,6 +291,8 @@ function Login() {
                         <input
                           type="text"
                           name="secondName"
+                          value={signUpFrom.secondName}
+                          onChange={onChangesignUpForm}
                           placeholder="Second Name"
                           className="text-black sm:w-28 md:w-40 bg-slate-100 border-2  border-black/50 rounded-md p-1 text-base font-medium"
                           autoComplete="on"
@@ -231,6 +301,8 @@ function Login() {
                       <input
                         type="email"
                         name="email"
+                        value={signUpFrom.email}
+                        onChange={onChangesignUpForm}
                         placeholder="Email"
                         className="text-black sm:w-60 md:w-80 bg-slate-100 border-2 border-black/50 rounded-md p-1 text-base font-medium"
                         autoComplete="on"
@@ -238,17 +310,23 @@ function Login() {
                       />
                       <input
                         type="Password"
-                        name="email"
+                        name="password"
+                        value={signUpFrom.password}
+                        onChange={onChangesignUpForm}
                         placeholder="Password"
                         className="text-black sm:w-60 md:w-80 bg-slate-100 border-2 border-black/50 rounded-md p-1 text-base font-medium"
                         autoComplete="on"
                         required
                       />
                       <button
-                        className="bg-orange h-10 w-36  content-center rounded-3xl text-white font-semibold"
+                        className="bg-orange h-10 w-36 flex justify-center items-center rounded-3xl text-white font-semibold"
                         type="submit"
                       >
                         SIGN UP
+                        <div
+                          className={`border-t-[2px] ml-2 border-white transition-all animate-spin  h-4 w-4 rounded-full 
+                          ${!loadingLogin && "hidden"}`}
+                        ></div>
                       </button>
                     </form>
                   </div>
@@ -284,7 +362,7 @@ function Login() {
                         return () => clearTimeout(delay);
                       }}
                     >
-                      Sign UP
+                      SIGN UP
                     </button>
                   </div>
                 ) : (

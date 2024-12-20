@@ -6,7 +6,7 @@ function LandingPageApp() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { status, showLandingPage } = useSelector(
-    (state) => state.LoginApiSlice
+    (state) => state.loginApiSlice
   );
   useEffect(() => {
     dispatch(verifyLogin());

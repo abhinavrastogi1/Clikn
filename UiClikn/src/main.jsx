@@ -35,11 +35,9 @@ const router = createBrowserRouter([
   },
 ]);
 createRoot(document.getElementById("root")).render(
- 
-    <Provider store={store}>
-      <GoogleOAuthProvider clientId="280979623482-3rgbmvo5eljje6k8o43acd2cssmqhcqv.apps.googleusercontent.com">
-        <RouterProvider router={router} />
-      </GoogleOAuthProvider>
-    </Provider>
-  
+  <Provider store={store}>
+    <GoogleOAuthProvider clientId="280979623482-3rgbmvo5eljje6k8o43acd2cssmqhcqv.apps.googleusercontent.com">
+      <RouterProvider router={router} />
+    </GoogleOAuthProvider>
+  </Provider>
 );

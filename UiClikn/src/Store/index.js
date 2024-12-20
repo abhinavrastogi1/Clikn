@@ -1,10 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
 import loginSlice from "./UiActions/loginSlice.js";
-import LoginApiSlice from "./Api/LoginApiActions/loginApiSlice.js"
+import loginApiSlice from "./Api/LoginApiActions/loginApiSlice.js"
+import  createShortLink  from "./Api/ShortLinkActions/createShortLinkSlice.js";
 const store = configureStore({
   reducer: {
     loginSlice: loginSlice,
-    LoginApiSlice:LoginApiSlice
+    loginApiSlice:loginApiSlice,
+    createShortLink:createShortLink
   },
 });
 

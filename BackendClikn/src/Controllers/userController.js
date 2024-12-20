@@ -12,7 +12,6 @@ const auth2Client = new google.auth.OAuth2(
   process.env.GOOGLE_CLIENT_SECRET,
   "postmessage"
 );
-
 async function generateTokens(userId) {
   try {
     //genrate access and refresh token
@@ -43,19 +42,18 @@ const userRegistration = asyncHandler(async (req, res) => {
     // checking if one of the value  exist or not
     throw new apiError(400, "Missing Required Data");
   }
-
   let user;
   if (Object.keys(reqBody).length > 0) {
     // if user used form to register
     const { firstName, secondName, email, password } = reqBody;
 
     if (firstName == "" || secondName == "" || email == "" || password == "") {
-      throw new apiError(409, "All fields are required");
+      throw new apiError(400, "All fields are required");
     }
 
     const userExits = await User.findOne({ email: email });
     if (userExits) {
-      throw new apiError(409, "Email is already in use.");
+      throw new apiError(409, "Email is already in use.login via form");
     }
 
     user = await User.create({
@@ -73,16 +71,13 @@ const userRegistration = asyncHandler(async (req, res) => {
   //if user used google to register
   else if (code) {
     // google registration
-
     const googleRes = await auth2Client.getToken(code);
     const googleUserRes = await axios.get(
       `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${googleRes.tokens.access_token}`
     );
-
     if (googleUserRes?.status !== 200) {
       throw new apiError(401, `HTTP error! status: ${response.status}`);
     }
-
     const userResponse = await googleUserRes?.data;
 
     const userExists = await User.findOne({ email: userResponse?.email });
@@ -97,17 +92,15 @@ const userRegistration = asyncHandler(async (req, res) => {
       });
     } else {
       if (userExists?.password) {
-        throw new apiError(400, "Email is already in use. login via form");
+        throw new apiError(409, "Email is already in use. login via form");
       } else if (userExists?.googleId) {
         user = userExists;
       }
     }
-
     if (!user) {
       throw new apiError(500, "Something went wrong while registering user");
     }
   }
-
   const { accessToken, refreshToken } = await generateTokens(user?._id);
   if (!accessToken || !refreshToken) {
     throw new apiError(500, "Something went wrong while generating  tokens");
@@ -133,18 +126,18 @@ const userLogin = asyncHandler(async (req, res) => {
   }
   const userExists = await User.findOne({ email: email });
   if (!userExists) {
-    throw new apiError(401, "Invalid email or password");
+    throw new apiError(400, "Invalid email or password");
   }
   if (userExists?.googleId) {
     throw new apiError(
-      400,
+      409,
       "This email is linked to Google login. Please log in via Google."
     );
   }
   const loggedInUser = await User.findById(userExists._id).select(
     "-password -refreshToken -createdAt -updatedAt -__v -_id -googleId"
   );
-  const isPasswordCorrect = userExists.isPasswordCorrect(password);
+  const isPasswordCorrect = await userExists.isPasswordCorrect(password);
   if (!isPasswordCorrect) {
     throw new apiError(401, "Unauthorized request");
   }
@@ -164,7 +157,7 @@ const userLogin = asyncHandler(async (req, res) => {
 const verifyUser = asyncHandler(async (req, res) => {
   const { userId } = req?.user;
   if (!userId) {
-    throw new apiError(401, "Required data is missing ");
+    throw new apiError(400, "Required data is missing ");
   }
   const user = await User.findById(userId).select(
     "-refreshToken -createdAt -updatedAt -__v -_id -googleId"

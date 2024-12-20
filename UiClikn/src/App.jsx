@@ -1,16 +1,17 @@
 import React, { useEffect } from "react";
 import "./App.css";
-
 import Footer from "./Component/Footer/Footer.jsx";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import MainHeader from "./Component/Header/MainHeader.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import { verifyLogin } from "./Store/Api/LoginApiActions/loginApiSlice.js";
+import { createShortLinkApi } from "./Store/Api/ShortLinkActions/createShortLinkSlice.js";
+import { getUserLinkApi } from "./Store/Api/ShortLinkActions/getUserLinksSlice.js";
 function App() {
   const { loggedIn } = useSelector((state) => state.loginSlice);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { status } = useSelector((state) => state.LoginApiSlice);
+  const { status, formUrl } = useSelector((state) => state.loginApiSlice);
   const location = useLocation();
   useEffect(() => {
     if (!loggedIn) {
@@ -24,7 +25,12 @@ function App() {
       navigate(`${location.pathname}`);
     }
   }, [status]);
-
+  useEffect(() => {
+    if (formUrl) {
+      dispatch(createShortLinkApi({ originalLink: formUrl }));
+    }
+    dispatch(getUserLinkApi(0));
+  }, []);
   return (
     <>
       {loggedIn && (
