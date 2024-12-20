@@ -4,12 +4,37 @@
 }
 
 :root {
-  --custom-blue:  #4395B1;
+  --custom-blue: #4395b1;
   --custom-orange: #f26204;
+  --custom-light-blue: #c7e4eed1;
 }
 
 @media screen and (max-width: 625px) {
   .below-sm {
     width: 300px;
+  }
+}
+
+.left-loader {
+  animation: leftLoader  3s infinite alternate;
+}
+
+.right-loader {
+  animation: rightLoader  3s infinite alternate;
+}
+@keyframes leftLoader {
+  0% {
+    transform: translateX(-50vw);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+@keyframes rightLoader {
+  0% {
+    transform: translateX(50vw);
+  }
+  100% {
+    transform: translateX(0%);
   }
 }

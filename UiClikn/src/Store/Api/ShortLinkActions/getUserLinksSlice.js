@@ -1,19 +1,23 @@
 import { createAsyncThunk, createSlice, original } from "@reduxjs/toolkit";
 import axios from "axios";
+import { setLoadingBar } from "../../UiActions/LoadingBarSlice";
 
 export const getUserLinkApi = createAsyncThunk(
-  "createShortLink/getUserLinkApi",
-  async (page) => {
+  "getUserLinkSlice/getUserLinkApi",
+  async (skip, { dispatch }) => {
+    dispatch(setLoadingBar(true));
     try {
       const response = await axios.get("/user/url/getuserLinks", {
         params: {
-          page: 0,
+          skip: skip,
         },
       });
-      console.log(response.data.data);
+      dispatch(setLoadingBar(false));
+      return response.data.data;
     } catch (error) {
+      dispatch(setLoadingBar(false));
       console.error("Something went wrong while fetching data", error);
-      throw error
+      throw error;
     }
   }
 );
@@ -22,14 +26,14 @@ const getUserLinkSlice = createSlice({
   initialState: {
     status: "idle",
     error: null,
-    linkData: [],
+    userlinks: [],
   },
   reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(getUserLinkApi.fulfilled, (state, action) => {
         state.status = "success";
-        state.linkData = action.payload;
+        state.userlinks.push(...action.payload);
       })
       .addCase(getUserLinkApi.pending, (state) => {
         state.status = "pending";

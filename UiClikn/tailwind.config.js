@@ -7,6 +7,7 @@ export default {
       colors: {
         blue: "var(--custom-blue)",
         orange: "var(--custom-orange)",
+        lightblue:"var(--custom-light-blue)",
         DB: "#020617",
       },
     },

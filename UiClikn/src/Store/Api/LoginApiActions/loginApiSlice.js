@@ -2,9 +2,11 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { loggedInReducer } from "../../UiActions/loginSlice.js";
 import axios from "axios";
 import { createShortLinkApi } from "../ShortLinkActions/createShortLinkSlice.js";
+import { setLoadingBar } from "../../UiActions/LoadingBarSlice.js";
 export const verifyLogin = createAsyncThunk(
   "loginApiSlice/verifyLogin",
   async (_, { dispatch }) => {
+    dispatch(setLoadingBar(true));
     try {
       const response = await axios.get("/user/userVerification", {
         withCredentials: true,
@@ -12,14 +14,15 @@ export const verifyLogin = createAsyncThunk(
       if (response.status === 200) {
         dispatch(loggedInReducer(true));
       }
+      dispatch(setLoadingBar(false));
       return response.data.data;
     } catch (error) {
       console.error("User not verified", error);
+      dispatch(setLoadingBar(false));
       throw error;
     }
   }
 );
-
 export const loginViaForm = createAsyncThunk(
   "loginApiSlice/loginViaForm",
   async (loginForm, { dispatch }) => {
@@ -27,7 +30,6 @@ export const loginViaForm = createAsyncThunk(
       const response = await axios.post("/user/login", loginForm);
       if (response.status === 200) {
         dispatch(loggedInReducer(true));
-
       }
       return response.data.data;
     } catch (error) {

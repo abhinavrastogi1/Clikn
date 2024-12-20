@@ -203,8 +203,9 @@ const deleteOriginalLink = asyncHandler(async (req, res) => {
 });
 const getuserLinks = asyncHandler(async (req, res) => {
   const { userId } = req?.user;
-  const { page } = req?.query;
-  if (!userId && !page) {
+  const { skip } = req?.query;
+
+  if (!userId && !skip) {
     throw new apiError(400, "Missing required data");
   }
 
@@ -225,7 +226,7 @@ const getuserLinks = asyncHandler(async (req, res) => {
       },
     },
     {
-      $skip: 0,
+      $skip: Number(skip),
     },
     {
       $limit: 10,
@@ -236,6 +237,7 @@ const getuserLinks = asyncHandler(async (req, res) => {
         shortId: 1,
         originalLink: 1,
         qrCodeLink: 1,
+        createdAt:1
       },
     },
   ]);

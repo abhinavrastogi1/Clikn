@@ -1,7 +1,10 @@
 import React from "react";
 
 import QrCodeCard from "../Cards/QrCodeCard.jsx";
+import { useSelector } from "react-redux";
 function QrCodes() {
+  const { userlinks } = useSelector((state) => state.getUserLinkSlice);
+
   return (
     <div className="min-h-screen  px-2 sm:px-10 md:px-20 lg:px-30 xl:px-48  ">
       <div className="px-4 mx-auto  sm:px-6 lg:px-8">
@@ -14,9 +17,9 @@ function QrCodes() {
           </button>
         </div>
         <div className="flex flex-col gap-10">
-          <QrCodeCard/>
-          <QrCodeCard/>
-          <QrCodeCard/>
+        {userlinks?.map((linkData) => (
+            <QrCodeCard linkData={linkData} key={linkData?.shortId}  />
+          ))}
         </div>
       </div>
     </div>

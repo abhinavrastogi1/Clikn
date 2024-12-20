@@ -1,15 +1,17 @@
 import { createAsyncThunk, createSlice, original } from "@reduxjs/toolkit";
 import axios from "axios";
+import { setLoadingBar } from "../../UiActions/LoadingBarSlice";
 
 export const createShortLinkApi = createAsyncThunk(
-  "createShortLink/createShortLinkApi",
-  async (urlData, { getState }) => {
+  "createShortLinkSlice/createShortLinkApi",
+  async (urlData, { dispatch }) => {
     let originalLink = "";
     let title = null;
     if (urlData) {
       (originalLink = urlData.originalLink), (title = urlData?.title);
     }
     try {
+      dispatch(setLoadingBar(true));
       const response = await axios.post(
         "/user/url/generateShortLink",
         {},
@@ -21,14 +23,17 @@ export const createShortLinkApi = createAsyncThunk(
           withCredentials: true,
         }
       );
+      dispatch(setLoadingBar(false));
       return response.data.data;
     } catch (error) {
       console.error("Failed to create the link. Please try again", error);
+      dispatch(setLoadingBar(false));
+      throw error
     }
   }
 );
-const createShortLink = createSlice({
-  name: "createShortLink",
+const createShortLinkSlice = createSlice({
+  name: "createShortLinkSlice",
   initialState: {
     status: "idle",
     error: null,
@@ -50,4 +55,4 @@ const createShortLink = createSlice({
       });
   },
 });
-export default createShortLink.reducer;
+export default createShortLinkSlice.reducer;
