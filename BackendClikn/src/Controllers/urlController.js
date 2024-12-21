@@ -143,14 +143,12 @@ const getOriginalLink = asyncHandler(async (req, res) => {
   }
   const deviceDetector = new DeviceDetector();
   const userAgent = req.headers["user-agent"];
-
   const browserInfo = deviceDetector.parse(userAgent);
-
   const ipAddress = req?.ip;
   const locationApiRes = await axios.get(`http://ip-api.com/json/${ipAddress}`);
   let date = new Date();
   const analyticsData = {
-    date: date.toLocaleString(),
+    date: date,
     browser: browserInfo?.client?.name || null,
     device: browserInfo?.device?.type || null,
     country: locationApiRes?.data?.country || null,

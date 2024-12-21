@@ -17,6 +17,10 @@ function App() {
     if (!loggedIn) {
       dispatch(verifyLogin());
     }
+    if (formUrl) {
+      dispatch(createShortLinkApi({ originalLink: formUrl }));
+    }
+    dispatch(getUserLinkApi(0));
   }, []);
   useEffect(() => {
     if (status === "error") {
@@ -25,13 +29,7 @@ function App() {
       navigate(`${location.pathname}`);
     }
   }, [status]);
-  useEffect(() => {
-    if (formUrl) {
-      dispatch(createShortLinkApi({ originalLink: formUrl }));
-    }
-    dispatch(getUserLinkApi(0));
-  }, []);
-  
+
   return (
     <>
       {loggedIn && (

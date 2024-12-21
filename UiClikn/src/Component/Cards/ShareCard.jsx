@@ -13,17 +13,17 @@ import {
 
 function ShareCard() {
   return ReactDOM.createPortal(
-    <RemoveScroll>
-      <div
-        className="min-h-screen min-w-screen inset-0 flex justify-center items-center absolute 
-        bg-opacity-50
-       bg-black  z-20 "
-      >
-        <div className="h-96 w-96 bg-white  z-30">
-          dfdk
-        </div>
-      </div>
-    </RemoveScroll>,
+    // <RemoveScroll>
+    //   <div
+    //     className="min-h-screen min-w-screen inset-0 flex justify-center items-center absolute 
+    //     bg-opacity-50
+    //    bg-black  z-20 "
+    //   >
+    //     <div className="h-96 w-96 bg-white  z-30">
+    //       dfdk
+    //     </div>
+    //   </div>
+    // </RemoveScroll>,
     document.body
   );
 }
