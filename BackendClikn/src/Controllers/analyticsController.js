@@ -1,12 +1,12 @@
 import mongoose from "mongoose";
-import { Analytics } from "../Models/analyticsModel";
-import { Link } from "../Models/linkmodel";
-import apiError from "../Utils/apiError";
-import asyncHandler from "../Utils/asyncHandler";
-
+import { Analytics } from "../Models/analyticsModel.js";
+import { Link } from "../Models/linkmodel.js";
+import apiError from "../Utils/apiError.js";
+import asyncHandler from "../Utils/asyncHandler.js";
+import apiResponse from "../Utils/apiResponse.js";
 const getDateAnalytics = asyncHandler(async (req, res) => {
   const { date, year, month, range, shortId } = req?.query;
-  if (date || year || month || range) {
+  if (!date && !year && !month && !range) {
     throw new apiError(400, "Missing required data");
   }
   if (!shortId) {
@@ -17,6 +17,7 @@ const getDateAnalytics = asyncHandler(async (req, res) => {
     throw new apiError(400, "link does not exist");
   }
   let analyticsData;
+
   if (date) {
     const month = date?.month;
     const year = date?.year;
@@ -64,7 +65,7 @@ const getDateAnalytics = asyncHandler(async (req, res) => {
       },
       {
         $facet: {
-          cliks: [
+          clicks: [
             {
               $project: {
                 hour: { $hour: "$clikedLink.date" },
@@ -75,7 +76,7 @@ const getDateAnalytics = asyncHandler(async (req, res) => {
             {
               $group: {
                 _id: "$hour",
-                count: {
+                clicks: {
                   $sum: 1,
                 },
               },
@@ -103,7 +104,7 @@ const getDateAnalytics = asyncHandler(async (req, res) => {
             {
               $group: {
                 _id: "$clikedLink.browser",
-                count: {
+                clicks: {
                   $sum: 1,
                 },
               },
@@ -120,7 +121,7 @@ const getDateAnalytics = asyncHandler(async (req, res) => {
             },
             {
               $sort: {
-                count: 1,
+                clicks: 1,
               },
             },
           ],
@@ -133,7 +134,7 @@ const getDateAnalytics = asyncHandler(async (req, res) => {
             {
               $group: {
                 _id: "$clikedLink.device",
-                count: {
+                clicks: {
                   $sum: 1,
                 },
               },
@@ -150,7 +151,7 @@ const getDateAnalytics = asyncHandler(async (req, res) => {
             },
             {
               $sort: {
-                count: 1,
+                clicks: 1,
               },
             },
           ],
@@ -163,7 +164,7 @@ const getDateAnalytics = asyncHandler(async (req, res) => {
             {
               $group: {
                 _id: "$clikedLink.country",
-                count: {
+                clicks: {
                   $sum: 1,
                 },
               },
@@ -180,7 +181,7 @@ const getDateAnalytics = asyncHandler(async (req, res) => {
             },
             {
               $sort: {
-                count: 1,
+                clicks: 1,
               },
             },
           ],
@@ -193,7 +194,7 @@ const getDateAnalytics = asyncHandler(async (req, res) => {
             {
               $group: {
                 _id: "$clikedLink.city",
-                count: {
+                clicks: {
                   $sum: 1,
                 },
               },
@@ -210,15 +211,14 @@ const getDateAnalytics = asyncHandler(async (req, res) => {
             },
             {
               $sort: {
-                count: 1,
+                clicks: 1,
               },
             },
           ],
         },
       },
     ]);
-  } 
-  else if (year) {
+  } else if (year) {
     analyticsData = await Analytics.aggregate([
       {
         $match: {
@@ -242,35 +242,35 @@ const getDateAnalytics = asyncHandler(async (req, res) => {
       },
       {
         $facet: {
-            cliks: [
-                {
-                  $project: {
-                    month: { $month: "$clikedLink.date" },
-                    _id: 0,
-                  },
+          clicks: [
+            {
+              $project: {
+                month: { $month: "$clikedLink.date" },
+                _id: 0,
+              },
+            },
+            {
+              $group: {
+                _id: "$month",
+                clicks: {
+                  $sum: 1,
                 },
-                {
-                  $group: {
-                    _id: "$month",
-                    count: {
-                      $sum: 1,
-                    },
-                  },
-                },
-                {
-                  $addFields: {
-                    month: "$_id",
-                  },
-                },
-                {
-                  $project: {
-                    _id: 0,
-                  },
-                },
-                {
-                  $sort: { month: 1 },
-                },
-              ],
+              },
+            },
+            {
+              $addFields: {
+                month: "$_id",
+              },
+            },
+            {
+              $project: {
+                _id: 0,
+              },
+            },
+            {
+              $sort: { month: 1 },
+            },
+          ],
           browser: [
             {
               $match: {
@@ -280,7 +280,7 @@ const getDateAnalytics = asyncHandler(async (req, res) => {
             {
               $group: {
                 _id: "$clikedLink.browser",
-                count: {
+                clicks: {
                   $sum: 1,
                 },
               },
@@ -297,7 +297,7 @@ const getDateAnalytics = asyncHandler(async (req, res) => {
             },
             {
               $sort: {
-                count: 1,
+                clicks: 1,
               },
             },
           ],
@@ -310,7 +310,7 @@ const getDateAnalytics = asyncHandler(async (req, res) => {
             {
               $group: {
                 _id: "$clikedLink.device",
-                count: {
+                clicks: {
                   $sum: 1,
                 },
               },
@@ -327,7 +327,7 @@ const getDateAnalytics = asyncHandler(async (req, res) => {
             },
             {
               $sort: {
-                count: 1,
+                clicks: 1,
               },
             },
           ],
@@ -340,7 +340,7 @@ const getDateAnalytics = asyncHandler(async (req, res) => {
             {
               $group: {
                 _id: "$clikedLink.country",
-                count: {
+                clicks: {
                   $sum: 1,
                 },
               },
@@ -357,7 +357,7 @@ const getDateAnalytics = asyncHandler(async (req, res) => {
             },
             {
               $sort: {
-                count: 1,
+                clicks: 1,
               },
             },
           ],
@@ -370,7 +370,7 @@ const getDateAnalytics = asyncHandler(async (req, res) => {
             {
               $group: {
                 _id: "$clikedLink.city",
-                count: {
+                clicks: {
                   $sum: 1,
                 },
               },
@@ -387,17 +387,16 @@ const getDateAnalytics = asyncHandler(async (req, res) => {
             },
             {
               $sort: {
-                count: 1,
+                clicks: 1,
               },
             },
           ],
         },
       },
     ]);
-  } 
-  else if (month) {
-    const month = month?.month;
-    const year = month?.year;
+  } else if (month) {
+    const monthValue = month?.month;
+    const yearValue = month?.year;
     analyticsData = await Analytics.aggregate([
       {
         $match: {
@@ -416,7 +415,7 @@ const getDateAnalytics = asyncHandler(async (req, res) => {
                   {
                     $year: "$clikedLink.date",
                   },
-                  Number(year),
+                  Number(yearValue),
                 ],
               },
               {
@@ -424,7 +423,7 @@ const getDateAnalytics = asyncHandler(async (req, res) => {
                   {
                     $month: "$clikedLink.date",
                   },
-                  Number(month),
+                  Number(monthValue),
                 ],
               },
             ],
@@ -433,7 +432,7 @@ const getDateAnalytics = asyncHandler(async (req, res) => {
       },
       {
         $facet: {
-          cliks: [
+          clicks: [
             {
               $project: {
                 day: { $dayOfMonth: "$clikedLink.date" },
@@ -443,7 +442,7 @@ const getDateAnalytics = asyncHandler(async (req, res) => {
             {
               $group: {
                 _id: "$day",
-                count: {
+                clicks: {
                   $sum: 1,
                 },
               },
@@ -471,7 +470,7 @@ const getDateAnalytics = asyncHandler(async (req, res) => {
             {
               $group: {
                 _id: "$clikedLink.browser",
-                count: {
+                clicks: {
                   $sum: 1,
                 },
               },
@@ -488,7 +487,7 @@ const getDateAnalytics = asyncHandler(async (req, res) => {
             },
             {
               $sort: {
-                count: 1,
+                clicks: 1,
               },
             },
           ],
@@ -501,7 +500,7 @@ const getDateAnalytics = asyncHandler(async (req, res) => {
             {
               $group: {
                 _id: "$clikedLink.device",
-                count: {
+                clicks: {
                   $sum: 1,
                 },
               },
@@ -518,7 +517,7 @@ const getDateAnalytics = asyncHandler(async (req, res) => {
             },
             {
               $sort: {
-                count: 1,
+                clicks: 1,
               },
             },
           ],
@@ -531,7 +530,7 @@ const getDateAnalytics = asyncHandler(async (req, res) => {
             {
               $group: {
                 _id: "$clikedLink.country",
-                count: {
+                clicks: {
                   $sum: 1,
                 },
               },
@@ -548,7 +547,7 @@ const getDateAnalytics = asyncHandler(async (req, res) => {
             },
             {
               $sort: {
-                count: 1,
+                clicks: 1,
               },
             },
           ],
@@ -561,7 +560,7 @@ const getDateAnalytics = asyncHandler(async (req, res) => {
             {
               $group: {
                 _id: "$clikedLink.city",
-                count: {
+                clicks: {
                   $sum: 1,
                 },
               },
@@ -578,7 +577,7 @@ const getDateAnalytics = asyncHandler(async (req, res) => {
             },
             {
               $sort: {
-                count: 1,
+                clicks: 1,
               },
             },
           ],
@@ -586,9 +585,213 @@ const getDateAnalytics = asyncHandler(async (req, res) => {
       },
     ]);
   } else if (range) {
+    startDate = range.startDate + "T00:00:00Z";
+    endDate = range.endDate + "T00:00:00Z";
+    analyticsData = await Analytics.aggregate([
+      {
+        $match: {
+          linkId: new mongoose.Types.ObjectId(link?._id),
+        },
+      },
+      {
+        $unwind: "$clikedLink",
+      },
+      {
+        $match: {
+          $expr: {
+            $and: [
+              {
+                $gte: [
+                  {
+                    $toDate: "$clikedLink.date",
+                  },
+                  ISODate(startDate),
+                ],
+              },
+              {
+                $lte: [
+                  {
+                    $toDate: "$clikedLink.date",
+                  },
+                  ISODate(endDate),
+                ],
+              },
+            ],
+          },
+        },
+      },
+      {
+        $sort: {
+          "clikedLink.date": 1,
+        },
+      },
+      {
+        $facet: {
+          clicks: [
+            {
+              $project: {
+                date: {
+                  $arrayElemAt: [
+                    {
+                      $split: [
+                        {
+                          $toString: "$clikedLink.date",
+                        },
+                        "T",
+                      ],
+                    },
+                    0,
+                  ],
+                },
+              },
+            },
+            {
+              $group: {
+                _id: "$date",
+                clicks: {
+                  $sum: 1,
+                },
+              },
+            },
+            {
+              $project: {
+                clicks: 1,
+                date: "$_id",
+                _id: 0,
+              },
+            },
+            {
+              $sort: {
+                date: 1,
+              },
+            },
+          ],
+          browser: [
+            {
+              $match: {
+                "clikedLink.browser": { $ne: null },
+              },
+            },
+            {
+              $group: {
+                _id: "$clikedLink.browser",
+                clicks: {
+                  $sum: 1,
+                },
+              },
+            },
+            {
+              $addFields: {
+                browser: "$_id",
+              },
+            },
+            {
+              $project: {
+                _id: 0,
+              },
+            },
+            {
+              $sort: {
+                clicks: 1,
+              },
+            },
+          ],
+          device: [
+            {
+              $match: {
+                "clikedLink.device": { $ne: null },
+              },
+            },
+            {
+              $group: {
+                _id: "$clikedLink.device",
+                clicks: {
+                  $sum: 1,
+                },
+              },
+            },
+            {
+              $addFields: {
+                device: "$_id",
+              },
+            },
+            {
+              $project: {
+                _id: 0,
+              },
+            },
+            {
+              $sort: {
+                clicks: 1,
+              },
+            },
+          ],
+          country: [
+            {
+              $match: {
+                "clikedLink.country": { $ne: null },
+              },
+            },
+            {
+              $group: {
+                _id: "$clikedLink.country",
+                clicks: {
+                  $sum: 1,
+                },
+              },
+            },
+            {
+              $addFields: {
+                country: "$_id",
+              },
+            },
+            {
+              $project: {
+                _id: 0,
+              },
+            },
+            {
+              $sort: {
+                clicks: 1,
+              },
+            },
+          ],
+          city: [
+            {
+              $match: {
+                "clikedLink.city": { $ne: null },
+              },
+            },
+            {
+              $group: {
+                _id: "$clikedLink.city",
+                clicks: {
+                  $sum: 1,
+                },
+              },
+            },
+            {
+              $addFields: {
+                city: "$_id",
+              },
+            },
+            {
+              $project: {
+                _id: 0,
+              },
+            },
+            {
+              $sort: {
+                clicks: 1,
+              },
+            },
+          ],
+        },
+      },
+    ]);
+  } else {
+    throw new apiError(401, "Requested data is not supported");
   }
-  else{
-    throw new apiError(401,"Requested data is not supported")
-  }
-  res.status(200).json(200,analyticsData,"Analytics Data ")
+  res.status(200).json(new apiResponse(200, analyticsData, "Link Analytics"));
 });
+export { getDateAnalytics };

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { IoIosArrowForward } from "react-icons/io";
@@ -7,14 +7,34 @@ import "react-date-range/dist/styles.css"; // main style file
 import "react-date-range/dist/theme/default.css"; // theme css file
 import { Calendar, DateRangePicker, DateRange } from "react-date-range";
 import { FaSlidersH } from "react-icons/fa";
-import { useSelector } from "react-redux";
-
+import { useDispatch, useSelector } from "react-redux";
+import { analyticsApiCall } from "../../Store/Api/AnalyticsApiActions/AnalyticsApiActions";
+import {
+  CartesianGrid,
+  Cell,
+  Legend,
+  Line,
+  LineChart,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 function Analytics() {
+  const { analytics } = useSelector((state) => state.analyticsSlice);
+  console.log(analytics);
+  const dispatch = useDispatch();
   const [selectionRange, setSelectionRange] = useState({
     startDate: new Date(),
     endDate: new Date(),
     key: "selection",
   });
+  useEffect(() => {
+    dispatch(analyticsApiCall());
+  }, []);
+  const [location, setLocation] = useState(true);
   const handleSelect = (ranges) => {
     // The ranges object contains the updated selection
     setSelectionRange(ranges.selection);
@@ -22,6 +42,8 @@ function Analytics() {
   const startDate = selectionRange.startDate.toLocaleDateString();
   const endDate = selectionRange.endDate.toLocaleDateString();
   const { userlinks } = useSelector((state) => state.getUserLinkSlice);
+
+  const COLORS = ["#8884d8", "#82ca9d", "#ffc658", "#ff8042", "#8dd1e1"];
 
   return (
     <div className="min-h-screen  px-2 sm:px-10 md:px-16 lg:px-20 xl:px-48 overflow-hidden ">
@@ -59,7 +81,7 @@ function Analytics() {
             </div>
 
             <div className="flex justify-between items-center w-[100%] lg:[60%]">
-            <div className="flex flex-row ">
+              <div className="flex flex-row ">
                 <div className="dark:text-white flex ">
                   Filter
                   <span>
@@ -78,13 +100,99 @@ function Analytics() {
               <div className=" flex  ">
                 <h2 className="dark:text-white">Link:</h2>
                 <select>
-                  {userlinks.map((link) => (
+                  {userlinks?.map((link) => (
                     <option>{link.shortId}</option>
                   ))}
                 </select>
               </div>
-              
             </div>
+          </div>
+        </div>
+      </div>
+      <div className="px-4 mx-auto  sm:px-6 lg:px-8 my-3 sm:my-4 p-4   ">
+        <div className="flex flex-col ">
+          <div className=" shadow-white shadow-lg">
+            <ResponsiveContainer width="100%" height={400}>
+              <LineChart
+                data={analytics?.clicks}
+                margin={{ top: 20, right: 30, bottom: 20, left: 0 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis
+                  dataKey="day"
+                  label={{ value: "day", position: "insideBottom" }}
+                />
+                <YAxis label={{ value: "Clicks", position: "insideBottom" }} />
+                <Tooltip />
+                <Line
+                  type="monotone"
+                  dataKey="clicks"
+                  stroke="#8884d8"
+                  strokeWidth={2}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+
+          <div className="flex flex-col lg:flex-row w-full">
+            <div className="w-full">
+              <ResponsiveContainer width="100%" height={400}>
+                <PieChart width={730} height={250}>
+                  <Pie
+                    data={analytics?.browser}
+                    dataKey="clicks"
+                    nameKey="browser"
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={150}
+                    label
+                  >
+                    {analytics?.browser?.map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+
+            <div className="w-full">
+              <ResponsiveContainer width="100%" height={400}>
+                <PieChart width={730} height={250}>
+                  <Pie
+                    data={analytics?.device}
+                    dataKey="clicks"
+                    nameKey="device"
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={150}
+                    label
+                  >
+                    {analytics?.device?.map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+          <div className="max-h-[60vh] min-h-[20vh] flex flex-row w-full  border-md p-2">
+            <div className="w-[50%] flex h-full border-md shadow-md shadow-white  overflow-y-auto">
+              <div className="w-[50%] border-md ">
+                {analytics?.country?.map(countryObj=>(
+                  <h1 className="text-white">{countryObj.country}</h1>
+                ))}
+              </div>
+              <div className="w-[50%] border-md  ">s</div>
+            </div>
+            <div className="w-[50%] h-full overflow-y-auto">s</div>
           </div>
         </div>
       </div>
