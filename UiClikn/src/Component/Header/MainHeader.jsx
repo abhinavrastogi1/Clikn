@@ -22,7 +22,7 @@ function MainHeader() {
   return (
     <>
       <header
-        className="  lg:pb-0 shadow-2xl  dark:shadow-md border-slate-500  h-[10vh]
+        className="  lg:pb-0 shadow-xl  dark:shadow-md border-slate-500  h-[10vh]
      px-2 sm:px-10 md:px-16 lg:px-20 xl:px-48  "
       >
         <div className="px-4 mx-auto  h-full sm:px-6 lg:px-8">
