@@ -5,11 +5,13 @@ import { FaQrcode } from "react-icons/fa";
 import { IoStatsChartSharp } from "react-icons/io5";
 import { GoSun } from "react-icons/go";
 import { GoMoon } from "react-icons/go";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { IoIosLogOut } from "react-icons/io";
 import { IoPersonCircleSharp } from "react-icons/io5";
 import { IoIosMail } from "react-icons/io";
+import { FiHome } from "react-icons/fi";
+import { logoutApiCall } from "../../Store/Api/LogoutApiActions/logoutSlice";
 
 function MainHeader() {
   const [hideNav, setHideNav] = useState(false);
@@ -22,8 +24,9 @@ function MainHeader() {
     }
   }, [theme]);
   const { loading } = useSelector((state) => state.loadingBarSlice);
-  const { user } = useSelector((state) => state.loginApiSlice);
+  const { user = {} } = useSelector((state) => state.loginApiSlice);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { email, firstName, secondName } = user;
   const [showProfile, setShowProfile] = useState(false);
   const [showNavigation, setShowNavigation] = useState(false);
@@ -66,7 +69,12 @@ function MainHeader() {
       >
         <div className="px-4 mx-auto  h-full sm:px-6 lg:px-8 ">
           <nav className="flex items-center justify-between h-full lg:h-full  w-full  ">
-            <div className="flex-shrink-0">
+            <div
+              className="flex-shrink-0 cursor-pointer"
+              onClick={() => {
+                navigate("/home");
+              }}
+            >
               <img
                 className="w-auto h-8 sm:h-10   md:h-12 lg:h-16 "
                 src="/cliknLogo.png"
@@ -110,8 +118,10 @@ function MainHeader() {
                   <div className="absolute top-16 border-[1px] dark:shadow-white dark:shadow-md right-1 dark:bg-DB bg-offwhite shadow-xl z-50 border-rounded rounded-md p-2 ">
                     <div className=" border-rounded rounded-md p-2 flex ">
                       <ul className="border-rounded flex flex-col gap-2 dark:text-white content-stretch">
-                        <li className="border-[1px] content-stretch p-2 font-bold text-md  flex flex-col gap-2
-                         justify-center rounded-lg  ">
+                        <li
+                          className="border-[1px] content-stretch p-2 font-bold text-md  flex flex-col gap-2
+                         justify-center rounded-lg  "
+                        >
                           <div className="flex justify-start">
                             <span>
                               <IoPersonCircleSharp className="text-2xl gap-2" />
@@ -123,32 +133,59 @@ function MainHeader() {
                             </span>
                           </div>
                           <div className="flex gap-2">
-                          <span>
-                          <IoIosMail className="text-2xl" />
-                        </span>{" "}
-                        <span>{email}</span>
+                            <span>
+                              <IoIosMail className="text-2xl" />
+                            </span>{" "}
+                            <span>{email}</span>
                           </div>
                         </li>
-                        <li className="border-[1px] p-2 font-bold text-md rounded-lg hover:text-blue duration-300 flex items-center gap-2"
-                        role="button"
-                        onClick={()=>{navigate("/home/links")}}
+                        <li
+                          className="border-[1px] p-2 font-bold text-md rounded-lg hover:text-blue duration-300 flex items-center gap-2"
+                          role="button"
+                          onClick={() => {
+                            navigate("/home");
+                            setShowNavigation(false);
+                          }}
+                        >
+                          <span>
+                            <FiHome className="text-xl" />
+                          </span>{" "}
+                          <span>Home</span>
+                        </li>
+                        <li
+                          className="border-[1px] p-2 font-bold text-md rounded-lg hover:text-blue duration-300 flex items-center gap-2"
+                          role="button"
+                          onClick={() => {
+                            navigate("/home/links");
+                            setShowNavigation(false);
+                          }}
                         >
                           <span>
                             <IoIosLink className="text-xl" />
                           </span>{" "}
                           <span>Link</span>
                         </li>
-                        <li className="border-[1px] p-2 font-bold text-md flex gap-2 items-center rounded-lg hover:text-blue duration-300 "
-                        role="button"
-                        onClick={()=>{navigate("/home/qrcodes")}}>
+                        <li
+                          className="border-[1px] p-2 font-bold text-md flex gap-2 items-center rounded-lg hover:text-blue duration-300 "
+                          role="button"
+                          onClick={() => {
+                            navigate("/home/qrcodes");
+                            setShowNavigation(false);
+                          }}
+                        >
                           <span>
                             <FaQrcode className="text-xl" />
                           </span>{" "}
                           <span>QR Code</span>
                         </li>
-                        <li className="border-[1px] p-2 font-bold text-md flex gap-2 items-center rounded-lg hover:text-blue duration-300 "
-                        role="button"
-                        onClick={()=>{navigate("/home/analytics")}}>
+                        <li
+                          className="border-[1px] p-2 font-bold text-md flex gap-2 items-center rounded-lg hover:text-blue duration-300 "
+                          role="button"
+                          onClick={() => {
+                            navigate("/home/analytics");
+                            setShowNavigation(false);
+                          }}
+                        >
                           <span>
                             <IoStatsChartSharp className="text-xl" />
                           </span>{" "}
@@ -159,6 +196,9 @@ function MainHeader() {
                           className="flex items-center gap-2 text-red-700 border-[1px] p-2 font-bold text-md rounded-lg 
                        transition transform ease-in-out duration-700 hover:scale-105"
                           role="button"
+                          onClick={() => {
+                            dispatch(logoutApiCall());
+                          }}
                         >
                           <span>Sign out</span>
                           <span>
@@ -172,6 +212,16 @@ function MainHeader() {
               </div>
             </div>
             <div className="hidden   lg:flex lg:items-center lg:ml-auto lg:space-x-10 ">
+              <button
+                className="text-base flex   justify-center items-center gap-2 font-medium text-gray-900  dark:text-white transition-all duration-200
+               hover:text-blue focus:text-blue dark:hover:text-blue"
+                onClick={() => {
+                  navigate("/home");
+                }}
+              >
+                <FiHome />
+                Home
+              </button>
               <button
                 className="text-base flex justify-center items-center gap-2 font-medium text-gray-900  dark:text-white transition-all duration-200
                hover:text-blue focus:text-blue dark:hover:text-blue"
@@ -226,7 +276,7 @@ function MainHeader() {
               {" "}
               <div
                 className="items-center justify-center hidden dark:text-white px-5 py-[6px]
-             ml-10  text-white bg-blue 
+             ml-5  text-white bg-blue 
                rounded-md lg:inline-flex hover:bg-blue
                focus:bg-blue transition transform ease-in-out duration-700 hover:scale-105"
                 role="button"
@@ -264,6 +314,9 @@ function MainHeader() {
                         className="flex items-center gap-2 text-red-700 border-[1px] p-2 font-bold text-lg rounded-lg 
                        transition transform ease-in-out duration-700 hover:scale-105"
                         role="button"
+                        onClick={() => {
+                          dispatch(logoutApiCall());
+                        }}
                       >
                         <span>Sign out</span>
                         <span>

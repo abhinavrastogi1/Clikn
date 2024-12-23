@@ -6,6 +6,8 @@ import { CiCalendar } from "react-icons/ci";
 import { IoStatsChartSharp } from "react-icons/io5";
 import browser from "../../assets/browser.png";
 import ShareCard from "./ShareCard.jsx"
+import { deleteLinkCall } from "../../Store/Api/DeleteAPiActions/deleteLinkSlice.js";
+import { useDispatch } from "react-redux";
 function LinkCard({ linkData }) {
   const originalUrl = linkData?.originalLink;
   const shortLink = `clikn.in/${linkData?.shortId}`;
@@ -16,6 +18,8 @@ function LinkCard({ linkData }) {
   const year = date.getFullYear();
   const [urlLogo, seturlLogo] = useState(`${originalUrl}/favicon.ico`);
   const[showShareComponent,setShareComponent]=useState(false)
+  const _id=linkData?._id
+  const dispatch=useDispatch()
   return (
 
     <div className=" grid grid-rows-3 sm:grid-rows-1 sm:grid-cols-3 dark:bg-slate-800  shadow-2xl dark:shadow-lg dark:shadow-gray-700 rounded-md relative">
@@ -87,6 +91,9 @@ function LinkCard({ linkData }) {
           className="p-1 border-[1px] h-10 w-10 sm:w-24
          border-gray-200 text-red-600 flex  gap-2 dark:bg-white rounded-md
           font-bold justify-center items-center transition transform ease-in-out duration-700 hover:scale-110"
+          onClick={()=>{
+            dispatch(deleteLinkCall(_id))
+          }}
         >
           <MdDelete className="text-2xl lg:text-xl " />
           <span className="hidden sm:block">Delete</span>

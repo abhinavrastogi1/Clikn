@@ -174,26 +174,23 @@ const getOriginalLink = asyncHandler(async (req, res) => {
   const originalLink = link.originalLink;
   res.status(301).redirect(originalLink);
 });
-
 const deleteOriginalLink = asyncHandler(async (req, res) => {
   const { _id } = req?.query;
-  if (!shortId) {
-    throw new apiError(401, "ShortId is Required");
+  if (!_id) {
+    throw new apiError(401, "_id is Required");
   }
   const link = await Link.findById(_id);
   if (!link) {
     throw new apiError(404, "Link does not exist");
   }
-
-  const deleteAnalytics = await Analytics.deleteOne({ linkId: link._id });
+  const deleteAnalytics = await Analytics.deleteOne({ linkId: link?._id });
   if (deleteAnalytics.deletedCount === 0) {
     throw new apiError(
       500,
       "Something went wrong while deleting analytics for the url"
     );
   }
-
-  const deleteLink = await Link.deleteOne({ _id: link._id });
+  const deleteLink = await Link.deleteOne({ _id: link?._id });
   if (deleteLink.deletedCount === 0) {
     throw new apiError(500, "Something went wrong while deleting link");
   }
@@ -235,7 +232,7 @@ const getuserLinks = asyncHandler(async (req, res) => {
         shortId: 1,
         originalLink: 1,
         qrCodeLink: 1,
-        createdAt:1
+        createdAt: 1,
       },
     },
   ]);

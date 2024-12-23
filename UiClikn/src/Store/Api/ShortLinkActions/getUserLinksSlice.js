@@ -33,7 +33,7 @@ const getUserLinkSlice = createSlice({
     builder
       .addCase(getUserLinkApi.fulfilled, (state, action) => {
         state.status = "success";
-        state.userlinks.push(...action.payload);
+        state.userlinks = action.payload;
       })
       .addCase(getUserLinkApi.pending, (state) => {
         state.status = "pending";

@@ -1,6 +1,7 @@
 import React from "react";
-
+import {useNavigate} from "react-router-dom"
 function Home() {
+  const navigate=useNavigate()
   return (
     <div className="min-h-screen w-full  text-white px-2 sm:px-10 md:px-16 lg:px-20 xl:px-48   ">
       <div className="px-4 mx-auto  sm:px-6 lg:px-8 ">
@@ -11,14 +12,15 @@ function Home() {
           <div className="grid dark:bg-slate-800  grid-rows-3 lg:grid-rows-none lg:grid-cols-3 gap-2 p-6 rounded-md shadow-2xl dark:shadow-lg dark:shadow-gray-700 ">
             <div className=" rounded-xl  grid grid-cols-2  bg-white  border-2 border-gray-300 ">
               <div className=" flex    h-full justify-center items-center bg-slate-200 rounded-tl-md  rounded-bl-md ">
-                <div className=" flex h-8 w-36 bg-white justify-center items-center border-2  rounded-tl-md  rounded-bl-md ">
+                <div className=" flex h-8 w-36 bg-white justify-center items-center border-2 
+                 rounded-md   ">
                   <div className="  text-black p-2 rounded-md ">
                     {" "}
-                    <h3 className="text-gray-900 text-sm sm:text-lg">
+                    <h3 className="text-gray-900 text-sm sm:text-lg rounded-md">
                       clikn.in/link
                     </h3>
                   </div>
-                  <img src="/link.png" alt="link img" className="h-6 auto" />
+                  <img src="/link.png" alt="link img" className="h-6 auto rounded-md" />
                 </div>
               </div>
               <div className="bg-white rounded-md p-1">
@@ -27,6 +29,7 @@ function Home() {
                   <button
                     className="text-blue border-2 text-sm sm:text-base
                 border-blue hover:bg-sky-100 rounded-md w-28 sm:w-32 p-1 "
+                onClick={()=>{navigate("/home/links")}}
                   >
                     {" "}
                     Go to links
@@ -36,7 +39,7 @@ function Home() {
             </div>
             <div className=" rounded-xl  grid grid-cols-2  bg-white  border-2 border-gray-300 ">
               <div className=" flex    h-full justify-center items-center bg-slate-200 rounded-tl-md  rounded-bl-md ">
-                <div className=" flex h-8 w-36 bg-white justify-center items-center border-2  rounded-tl-md  rounded-bl-md ">
+                <div className=" flex h-8 w-36 bg-white justify-center items-center border-2 rounded-md  ">
                   <div className="  text-black p-2 rounded-md ">
                     {" "}
                     <h3 className="text-gray-900 text-sm sm:text-lg">
@@ -52,6 +55,8 @@ function Home() {
                   <button
                     className="text-blue border-2 w-28 sm:w-32 p-1
                 border-blue hover:bg-sky-100 rounded-md text-sm sm:text-base "
+                onClick={()=>{navigate("/home/qrcodes")}}
+
                   >
                     {" "}
                     Go to codes
@@ -61,7 +66,7 @@ function Home() {
             </div>
             <div className=" rounded-xl  grid grid-cols-2  bg-white  border-2 border-gray-300 ">
               <div className=" flex    h-full justify-center items-center bg-slate-200 rounded-tl-md  rounded-bl-md ">
-                <div className=" flex h-8 w-36 bg-white justify-center items-center border-2  rounded-tl-md  rounded-bl-md ">
+                <div className=" flex h-8 w-36 bg-white justify-center items-center border-2  rounded-md ">
                   <div className="  text-black p-2 rounded-md ">
                     {" "}
                     <h3 className="text-gray-900  text-sm sm:text-lg">
@@ -81,6 +86,7 @@ function Home() {
                   <button
                     className="text-blue border-2 w-28 sm:w-32 p-1
                 border-blue hover:bg-sky-100 rounded-md text-sm sm:text-base "
+                onClick={()=>{navigate("/home/analytics")}}
                   >
                     {" "}
                     Go to analytics

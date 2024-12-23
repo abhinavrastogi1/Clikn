@@ -5,6 +5,8 @@ import  createShortLinkSlice  from "./Api/ShortLinkActions/createShortLinkSlice.
 import loadingBarSlice from "./UiActions/LoadingBarSlice.js"
 import getUserLinkSlice from "./Api/ShortLinkActions/getUserLinksSlice.js"
 import analyticsSlice from "./Api/AnalyticsApiActions/AnalyticsApiActions.js"
+import deleteLinkSlice from "./Api/DeleteAPiActions/deleteLinkSlice.js"
+import logoutSlice from "./Api/LogoutApiActions/logoutSlice.js"
 const store = configureStore({
   reducer: {
     loginSlice: loginSlice,
@@ -12,7 +14,9 @@ const store = configureStore({
     createShortLinkSlice:createShortLinkSlice,
     getUserLinkSlice:getUserLinkSlice,
     loadingBarSlice:loadingBarSlice,
-    analyticsSlice:analyticsSlice
+    analyticsSlice:analyticsSlice,
+    deleteLinkSlice:deleteLinkSlice,
+    logoutSlice:logoutSlice,
   },
 });
 
