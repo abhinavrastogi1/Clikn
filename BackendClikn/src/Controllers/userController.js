@@ -40,7 +40,7 @@ const userRegistration = asyncHandler(async (req, res) => {
   const reqBody = req?.body;
   if (!code && Object.keys(reqBody).length === 0) {
     // checking if one of the value  exist or not
-    throw new apiError(400, "Missing Required Data");
+    throw new apiError(400, "Missing required rata");
   }
   let user;
   if (Object.keys(reqBody).length > 0) {
@@ -64,7 +64,7 @@ const userRegistration = asyncHandler(async (req, res) => {
     });
 
     if (!user) {
-      throw new apiError(500, "something went wrong while registering user");
+      throw new apiError(500, "Something went wrong while registering user");
     }
   }
 
@@ -122,7 +122,7 @@ const userRegistration = asyncHandler(async (req, res) => {
 const userLogin = asyncHandler(async (req, res) => {
   const { email, password } = req?.body;
   if (!email || !password) {
-    throw new apiError(400, "Missing  Required Data");
+    throw new apiError(400, "Missing  required data");
   }
   const userExists = await User.findOne({ email: email });
   if (!userExists) {
@@ -160,7 +160,7 @@ const verifyUser = asyncHandler(async (req, res) => {
     throw new apiError(400, "Required data is missing ");
   }
   const user = await User.findById(userId).select(
-    "-refreshToken -createdAt -updatedAt -__v -_id -googleId"
+    "-refreshToken -createdAt -updatedAt -__v -_id -googleId -password"
   );
   if (!user) {
     throw new apiError(404, "User not found");
@@ -169,5 +169,33 @@ const verifyUser = asyncHandler(async (req, res) => {
     .status(200)
     .json(new apiResponse(200, user, "User successfully verified"));
 });
+const userLogout = asyncHandler(async (req, res) => {
+  const { userId } = req.user;
+  if (!userId) {
+    throw new apiError(400, " Missing required data");
+  }
+  await User.findByIdAndUpdate(
+    userId,
+    {
+      $unset: {
+        refreshToken: 1,
+      },
+    },
+    {
+      new: true,
+    }
+  );
+  const options = {
+    httpOnly: true,
+    secure: true,
+    sameSite: "None",
+  };
+  res
+    .status(201)
+    .clearCookie("accessToken", options)
+    .clearCookie("refreshToken", options)
+    .json(new apiResponse(201, {}, "user logged out successfully"));
+  res.status(200).cookie();
+});
 
-export { userRegistration, userLogin, verifyUser };
+export { userRegistration, userLogin, verifyUser,userLogout };

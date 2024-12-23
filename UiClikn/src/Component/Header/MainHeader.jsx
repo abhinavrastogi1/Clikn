@@ -18,7 +18,18 @@ function MainHeader() {
     }
   }, [theme]);
   const { loading } = useSelector((state) => state.loadingBarSlice);
+  const { user } = useSelector((state) => state.loginApiSlice);
   const navigate = useNavigate();
+  console.log(user);
+  const { email, firstName, profilePic, secondName } = user;
+  const firstAlpha = firstName?.[0].toUpperCase();
+  const secondAlpha = secondName?.[0].toUpperCase();
+  const [showProfile, setShowProfile] = useState(true);
+
+  function capitalizeWord(str){
+ return str?.charAt(0).toUpperCase()+str?.slice(1)
+  }
+
   return (
     <>
       <header
@@ -61,12 +72,11 @@ function MainHeader() {
                 }}
                 type="button"
                 className="inline-flex p-2 text-gray-900 dark:text-white
-             transition-all duration-200 rounded-md lg:hidden  hover:bg-gray-100"
+             transition-all duration-200 rounded-md lg:hidden   hover:bg-gray-100"
               >
                 <TfiMenuAlt className="font-semibold text-xl md:text-2xl" />
               </button>
             </div>
-
             <div className="hidden lg:flex lg:items-center lg:ml-auto lg:space-x-10 ">
               <button
                 className="text-base flex justify-center items-center gap-2 font-medium text-gray-900  dark:text-white transition-all duration-200
@@ -118,22 +128,35 @@ function MainHeader() {
                 </div>
               </button>
             </div>
-            <a
-              href="#"
-              title=""
-              className="items-center justify-center hidden dark:text-white px-4 py-3
-             ml-10 text-base font-semibold text-white bg-blue border
-              border-transparent rounded-md lg:inline-flex hover:bg-blue focus:bg-blue transition transform ease-in-out duration-700 hover:scale-110"
-              role="button"
-            >
+            <div className="relative">
               {" "}
-              Get started now{" "}
-            </a>
+              <div
+                className="items-center justify-center hidden dark:text-white px-5 py-[6px]
+             ml-10  text-white bg-blue 
+               rounded-md lg:inline-flex hover:bg-blue
+               focus:bg-blue transition transform ease-in-out duration-700 hover:scale-110"
+                role="button"
+              >
+                <h1 className="h-10 w-10 rounded-full p-1 font-bold text-lg border-[1px]    text-center content-center">
+                  {firstAlpha}
+                  {secondAlpha}
+                </h1>
+                <h2 className="ml-2 font-bold text-lg"> Profile</h2>
+              </div>
+              <div className="absolute z-50">
+                <div className="bg-white">
+                  <ul>
+                    <li>{capitalizeWord(firstName)} {capitalizeWord(secondName)}</li>
+                    <li>{email}</li>
+                    <li>Logout</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
           </nav>
-
           {hideNav && (
             <nav
-              className={` pt-4 pb-6 bg-white border border-gray-200   rounded-md shadow-md lg:hidden 
+              className={` pt-4 pb-6 bg-white border border-gray-200    rounded-md shadow-md lg:hidden  !z-50
       }`}
             >
               <div className="flow-root">

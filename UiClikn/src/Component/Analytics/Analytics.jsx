@@ -327,12 +327,13 @@ function Analytics() {
                 </div>
               )}
               {filter === "Date" && (
-                <div className="">
+                <div >
                   <DatePicker
                     selected={selectDate}
                     onChange={(date) => {
                       setSelectDate(date);
                     }}
+                    popperPlacement="bottom-start"
                     className=" bg-transparent dark:text-white font-bold outline-none border-[1px]
                      px-3 py-1 flex rounded-md w-28 justify-center items-center ml-1"
                   />
@@ -344,6 +345,7 @@ function Analytics() {
                     selected={selectDate}
                     showMonthYearPicker
                     dateFormat="YYYY-MMM"
+                    popperPlacement="bottom-start"
                     onChange={(date) => {
                       setSelectDate(date);
                     }}
@@ -358,6 +360,7 @@ function Analytics() {
                     selected={selectDate}
                     showYearPicker
                     dateFormat="YYYY"
+                    popperPlacement="bottom-start"
                     onChange={(date) => {
                       setSelectDate(date);
                     }}
@@ -414,7 +417,7 @@ function Analytics() {
                 <div className=" flex  sm:flex-row gap-3">
                   <div className="flex gap-2 " ref={linksRef}>
                     <h2 className="dark:text-white font-bold  items-center flex justify-center text-xl">
-                      Link:
+                      Links:
                     </h2>
                     <div className="bg-transparent relative ">
                       <div

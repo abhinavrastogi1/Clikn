@@ -67,31 +67,65 @@ const getDateAnalytics = asyncHandler(async (req, res) => {
           clicks: [
             {
               $project: {
-                hour: { $hour: "$clikedLink.date" },
-                minute: { $minute: "$clikedLink.date" },
+                globalHour: {
+                  $mod: [
+                    {
+                      $add: [
+                        {
+                          $hour: "$clikedLink.date",
+                        },
+                        5,
+                      ],
+                    },
+                    24,
+                  ],
+                },
+                globalMinInHour: {
+                  $floor: [
+                    {
+                      $divide: [
+                        {
+                          $add: [
+                            {
+                              $minute: "$clikedLink.date",
+                            },
+                            30,
+                          ],
+                        },
+                        60,
+                      ],
+                    },
+                  ],
+                },
                 _id: 0,
               },
             },
             {
+              $project: {
+                localHour: {
+                  $add: ["$globalHour", "$globalMinInHour"],
+                },
+              },
+            },
+            {
               $group: {
-                _id: "$hour",
+                _id: "$localHour",
                 clicks: {
                   $sum: 1,
                 },
               },
             },
             {
-              $addFields: {
-                hour: "$_id",
-              },
-            },
-            {
               $project: {
+                hour: "$_id",
                 _id: 0,
+                clicks: 1,
               },
             },
             {
-              $sort: { hour: 1 },
+              $sort: {
+                hour: 1,
+              },
             },
           ],
           browser: [
