@@ -7,6 +7,7 @@
   --custom-blue: #4395b1;
   --custom-orange: #f26204;
   --custom-light-blue: #c7e4eed1;
+  --custom-off-white: #fffff4;
 }
 
 @media screen and (max-width: 625px) {
@@ -37,4 +38,14 @@
   100% {
     transform: translateX(0%);
   }
+}
+
+.rdrCalendarWrapper {
+  border-radius: 8px; /* Adjust the value as needed */
+  overflow: hidden; /* Ensures child elements respect the border radius */
+  width:350px;
+  
+}
+.custom-date-range .rdrCalendarWrapper {
+  border-radius: 8px !important;
 }

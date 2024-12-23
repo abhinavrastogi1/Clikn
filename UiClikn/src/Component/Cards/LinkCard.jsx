@@ -27,7 +27,7 @@ function LinkCard({ linkData }) {
             onError={() => {
               seturlLogo(browser);
             }}
-            className=" h-10 w-10 bg-white rounded-full p-2 border-gray-200 border-[1px]"
+            className=" h-10 w-10 bg-white rounded-full p-1 border-gray-200 border-[1px]"
           />
           <div>
             <h2 className="dark:text-white font-bold text-xl capitalize">

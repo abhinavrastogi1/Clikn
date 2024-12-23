@@ -1,18 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { IoIosArrowForward } from "react-icons/io";
 import { CiCalendar } from "react-icons/ci";
 import "react-date-range/dist/styles.css"; // main style file
 import "react-date-range/dist/theme/default.css"; // theme css file
-import { Calendar, DateRangePicker, DateRange } from "react-date-range";
+import { DateRange } from "react-date-range";
 import { FaSlidersH } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { analyticsApiCall } from "../../Store/Api/AnalyticsApiActions/AnalyticsApiActions";
 import {
   CartesianGrid,
   Cell,
-  Legend,
   Line,
   LineChart,
   Pie,
@@ -22,27 +21,26 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+
 function Analytics() {
+  useEffect(() => {
+    dispatch(analyticsApiCall());
+  }, []);
   const { analytics } = useSelector((state) => state.analyticsSlice);
-  console.log(analytics);
+  const { userlinks } = useSelector((state) => state.getUserLinkSlice);
   const dispatch = useDispatch();
   const [selectionRange, setSelectionRange] = useState({
     startDate: new Date(),
     endDate: new Date(),
     key: "selection",
   });
-  useEffect(() => {
-    dispatch(analyticsApiCall());
-  }, []);
-  const [location, setLocation] = useState(true);
-  const [locationButton, setLocationButton] = useState(true);
   const handleSelect = (ranges) => {
-    // The ranges object contains the updated selection
     setSelectionRange(ranges.selection);
   };
+  const [location, setLocation] = useState(true);
+  const [locationButton, setLocationButton] = useState(true);
   const startDate = selectionRange.startDate.toLocaleDateString();
   const endDate = selectionRange.endDate.toLocaleDateString();
-  const { userlinks } = useSelector((state) => state.getUserLinkSlice);
   const [pieChartheight, setPieChartHeight] = useState(400);
   const [pieChartOuterRadius, setPieChartOuterRadius] = useState(150);
   const COLORS = [
@@ -97,66 +95,287 @@ function Analytics() {
     }
     return null;
   };
+  const [filter, setFilter] = useState("Filter");
+  const [link, setLink] = useState(userlinks?.[0]?.shortId);
+  const [showFilter, setShowFilter] = useState(false);
+  const [showLinks, setShowLinks] = useState(false);
+  const [showcalender, setshowCalender] = useState(false);
+  const filterRef = useRef(null);
+  const linksRef = useRef(null);
+  const rangeRef = useRef(null);
+  const options = [
+    {
+      option: (
+        <h2
+          className="text-lg dark:text-white font-bold  cursor-pointer hover:shadow-md dark:shadow-white px-4 py-2 transition transform ease-in-out duration-700 hover:scale-110"
+          onClick={() => {
+            setFilter("Range");
+            setShowFilter(false);
+          }}
+          key="Range"
+        >
+          Range
+        </h2>
+      ),
+    },
+    {
+      option: (
+        <h2
+          className="text-lg dark:text-white font-bold  cursor-pointer  hover:shadow-md dark:shadow-white px-4 py-2 transition transform ease-in-out duration-700 hover:scale-110"
+          onClick={() => {
+            setFilter("Date");
+            setShowFilter(false);
+          }}
+          key="Date"
+        >
+          Date
+        </h2>
+      ),
+    },
+    {
+      option: (
+        <h2
+          className="text-lg dark:text-white font-bold cursor-pointer hover:shadow-md dark:shadow-white px-4 py-2 transition transform ease-in-out duration-700 hover:scale-110"
+          onClick={() => {
+            setFilter("Month");
+            setShowFilter(false);
+          }}
+          key="Month"
+        >
+          Month
+        </h2>
+      ),
+    },
+    {
+      option: (
+        <h2
+          className="text-lg dark:text-white cursor-pointer font-bold hover:shadow-md dark:shadow-white px-4 py-2 transition transform ease-in-out duration-700 hover:scale-110"
+          onClick={() => {
+            setFilter("Year");
+            setShowFilter(false);
+          }}
+          key="Year"
+        >
+          {" "}
+          Year
+        </h2>
+      ),
+    },
+  ];
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (filterRef.current && !filterRef.current.contains(e.target)) {
+        setShowFilter(false);
+      }
+      if (linksRef.current && !linksRef.current.contains(e.target)) {
+        setShowLinks(false);
+      }
+      if (rangeRef.current && !rangeRef.current.contains(e.target)) {
+        setshowCalender(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+  useEffect(() => {
+    setLink(userlinks?.[0]?.shortId);
+  }, [userlinks]);
+  const [selectDate, setSelectDate] = useState(new Date());
+  console.log(selectDate);
+
+function handleAnalytics(){
+}
+
   return (
     <div className="min-h-screen  px-2 sm:px-10 md:px-16 lg:px-20 xl:px-48 overflow-hidden  ">
       <div className="shadow-xl dark:shadow-md  dark:shadow-white ">
-        <div className="px-4 mx-auto  sm:px-6 lg:px-8  border-b-[1px] border-gray-200 ">
+        <div className="px-2 mx-auto  sm:px-6 lg:px-8  border-b-[1px] border-gray-200 ">
           <div className="flex justify-between my-3 sm:my-4 p-4   px-4 mx-auto  sm:px-6 lg:px-8 ">
             <h1 className="dark:text-white text-gray-900  content-center  text-2xl  md:text-3xl lg:text-4xl font-bold">
               Analytics
             </h1>
-            <button className="bg-blue   w-24 h-10 sm:w-28 p-2 sm:h-10 text-white rounded-md  transition transform ease-in-out duration-700 hover:scale-110">
+            <button
+              className="bg-blue   w-28 h-10  p-2 sm:h-10
+             text-white rounded-md font-bold  text-md flex justify-center  items-center transition transform ease-in-out duration-700 hover:scale-110"
+            >
               Create link
             </button>
           </div>
-          <div className=" mb-2  px-4 mx-auto  sm:px-6 lg:px-8  relative   ">
+          <div className=" mb-2   mx-auto  sm:px-6 lg:px-8  relative   ">
             <div className="flex lg:justify-between flex-col lg:flex-row items-start gap-1 lg:gap-5 lg:items-center">
-              <div className="flex lg:w-[40%] w-full sm:w-[70%] border-[1px] xl:w-[30%] dark:border-white border-black rounded-md justify-center items-center relative ">
-                <div className="flex w-full justify-center items-center p-1">
-                  <CiCalendar className="dark:text-white  h-full w-10 text-lg" />
-                  <div className="w-full bg-transparent dark:text-white   outline-none text-center ">
-                    <h3>{startDate}</h3>
+              {filter === "Range" && (
+                <div
+                  className="flex lg:w-[40%] w-full sm:w-[70%] border-[1px] xl:w-[30%] dark:border-white 
+               rounded-md justify-center items-center relative "
+                >
+                  <div
+                    ref={rangeRef}
+                    className="flex w-full justify-center items-center p-1  cursor-pointer "
+                    onClick={() => {
+                      setshowCalender(!showcalender);
+                    }}
+                  >
+                    <CiCalendar className="dark:text-white  h-full w-10 text-lg" />
+                    <div className="w-full bg-transparent dark:text-white   outline-none text-center ">
+                      <h3 className="font-bold">{startDate}</h3>
+                    </div>
+                    <IoIosArrowForward className="dark:text-white  h-full w-8" />
+                    <div className="w-full bg-transparent dark:text-white  outline-none text-center ">
+                      <h3 className="font-bold">{endDate}</h3>
+                    </div>
                   </div>
-                  <IoIosArrowForward className="dark:text-white  h-full w-8" />
-                  <div className="w-full bg-transparent dark:text-white  outline-none text-center ">
-                    <h3>{endDate}</h3>
+                  {showcalender && (
+                    <div className=" top-10  sm:left-2 absolute  !flex !justify-center !items-center z-10 p-2  rdrCalendarWrapper">
+                      {" "}
+                      <DateRange
+                        ranges={[selectionRange]}
+                        onChange={handleSelect}
+                        rangeColors={["#4395b1"]}
+                        className=" hadow-xl !bg-[#fffff4] !text-white   custom-date-range content-center "
+                      />
+                    </div>
+                  )}
+                </div>
+              )}
+              {filter === "Filter" && (
+                <div className="border-[1px] rounded-md   w-28 flex justify-center items-center ml-1">
+                  <h1 className="dark:text-white font-bold  px-3 py-1 ">
+                    {startDate}
+                  </h1>
+                </div>
+              )}
+              {filter === "Date" && (
+                <div className="">
+                  <DatePicker
+                    selected={selectDate}
+                    onChange={(date) => {
+                      setSelectDate(date);
+                    }}
+                    className=" bg-transparent dark:text-white font-bold outline-none border-[1px]
+                     px-3 py-1 flex rounded-md w-28 justify-center items-center ml-1"
+                  />
+                </div>
+              )}
+              {filter === "Month" && (
+                <div>
+                  <DatePicker
+                    selected={selectDate}
+                    showMonthYearPicker
+                    dateFormat="YYYY-MMM"
+                    onChange={(date) => {
+                      setSelectDate(date);
+                    }}
+                    className=" bg-transparent dark:text-white font-bold outline-none border-[1px]
+                     px-3 py-1 flex rounded-md w-28 justify-center items-center ml-1"
+                  />
+                </div>
+              )}
+              {filter === "Year" && (
+                <div>
+                  <DatePicker
+                    selected={selectDate}
+                    showYearPicker
+                    dateFormat="YYYY"
+                    onChange={(date) => {
+                      setSelectDate(date);
+                    }}
+                    className=" bg-transparent dark:text-white font-bold outline-none border-[1px]
+                     px-3 py-1 flex rounded-md w-28 justify-center items-center ml-1"
+                  />
+                </div>
+              )}
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 w-[100%] lg:[60%]">
+                <div className="flex flex-row gap-4   ">
+                  <div className="bg-transparent dark:text-white p-1 rounded-md outline-none ">
+                    <div className="bg-transparent relative " ref={filterRef}>
+                      <div
+                        onClick={() => {
+                          setShowFilter(!showFilter);
+                        }}
+                        className="rounded-md px-4 py-1 border-[1px] w-28 justify-center items-center "
+                      >
+                        {" "}
+                        {filter === "Filter" ? (
+                          <h2
+                            className="text-lg dark:text-white font-bold flex  cursor-pointer gap-3 justify-center items-center"
+                            onClick={() => {
+                              setFilter("Filter");
+                            }}
+                          >
+                            Filter
+                            <span>
+                              <FaSlidersH />
+                            </span>
+                          </h2>
+                        ) : (
+                          <h2
+                            className="text-lg dark:text-white font-bold flex cursor-pointer justify-center items-center "
+                            onClick={() => {
+                              setFilter(filter);
+                            }}
+                          >
+                            {filter}
+                          </h2>
+                        )}
+                      </div>
+                      {showFilter && (
+                        <div
+                          className="flex flex-col border-[1px] mt-1 
+                         dark:bg-DB bg-offwhite border-white shadow-md dark:shadow-white rounded-md p-2 absolute z-10"
+                        >
+                          {options.map((option) => option.option)}
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
-                {/* <div className=" top-10  sm:left-2 absolute w-full flex justify-center items-center">
-                {" "}
-                <DateRange
-                  ranges={[selectionRange]}
-                  onChange={handleSelect}
-                  rangeColors={["#4395b1"]}
-                  className="   shadow-xl !bg-[#fffff4] !text-white onfocus:!bg-red-500 "
-                />
-              </div> */}
-              </div>
-
-              <div className="flex justify-between items-center w-[100%] lg:[60%]">
-                <div className="flex flex-row ">
-                  <div className="dark:text-white flex ">
-                    Filter
-                    <span>
-                      <FaSlidersH />
-                    </span>
+                <div className=" flex  sm:flex-row gap-3">
+                  <div className="flex gap-2 " ref={linksRef}>
+                    <h2 className="dark:text-white font-bold  items-center flex justify-center text-xl">
+                      Link:
+                    </h2>
+                    <div className="bg-transparent relative ">
+                      <div
+                        onClick={() => {
+                          setShowLinks(!showLinks);
+                        }}
+                        className="rounded-md px-4 py-1 border-[1px]  justify-center items-center "
+                      >
+                        <h2 className="text-lg dark:text-white font-bold flex cursor-pointer justify-center items-center ">
+                          {link}{" "}
+                        </h2>
+                      </div>
+                      {showLinks && (
+                        <div
+                          className="flex flex-col border-[1px] mt-1 
+                         dark:bg-DB bg-offwhite border-white shadow-md dark:shadow-white rounded-md p-2 absolute z-10"
+                        >
+                          {userlinks?.map((link) => (
+                            <h2
+                              className="text-lg dark:text-white font-bold  cursor-pointer hover:shadow-md dark:shadow-white
+                               px-4 py-2 transition transform ease-in-out duration-700 hover:scale-110"
+                              onClick={() => {
+                                setLink(link.shortId);
+                                setShowLinks(false);
+                              }}
+                              key={link.shortId}
+                            >
+                              {link.shortId}
+                            </h2>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                   </div>
-                  <div>
-                    <select className="bg-transparent dark:text-white p-1 rounded-md outline-none border-[1px] border-white">
-                      <option className="bg-transparent">All Time </option>
-                      <option className="bg-transparent text-black">
-                        All Time{" "}
-                      </option>
-                    </select>
-                  </div>
-                </div>
-                <div className=" flex  ">
-                  <h2 className="dark:text-white">Link:</h2>
-                  <select>
-                    {userlinks?.map((link) => (
-                      <option>{link.shortId}</option>
-                    ))}
-                  </select>
+                  <button
+                    className="bg-blue py-1 px-4 w-28 text-white font-bold text-lg rounded-md 
+                   transition transform ease-in-out duration-700 hover:scale-110"
+                   onClick={handleAnalytics}
+                  >
+                    Apply{" "}
+                  </button>
                 </div>
               </div>
             </div>
@@ -191,7 +410,7 @@ function Analytics() {
                 <div className=" w-full  flex justify-center items-center ">
                   <h3 className="dark:text-white w-full  flex justify-center items-center font-bold text-md sm:text-lg ">
                     {" "}
-                     Y-axis: Clicks &nbsp; & &nbsp; X-axis: Month
+                    Y-axis: Clicks &nbsp; & &nbsp; X-axis: Month
                   </h3>{" "}
                 </div>
               </div>
@@ -298,14 +517,20 @@ function Analytics() {
                           <div className="w-[100%] border-b-[1px] border-gray-400 flex flex-row">
                             <div className="flex flex-col w-[75%]">
                               {analytics?.country?.map((countryObj, index) => (
-                                <h1 className="dark:text-white p-2 pr-0 font-semibold text-lg ">
+                                <h1
+                                  className="dark:text-white p-2 pr-0 font-semibold text-lg "
+                                  key={countryObj.country}
+                                >
                                   {index + 1} . {countryObj.country}
                                 </h1>
                               ))}
                             </div>
                             <div className="flex flex-col w-[25%]">
                               {analytics?.country?.map((countryObj) => (
-                                <h1 className=" dark:text-white p-2  font-semibold text-lg ">
+                                <h1
+                                  className=" dark:text-white p-2  font-semibold text-lg "
+                                  key={countryObj.country}
+                                >
                                   {countryObj.clicks}
                                 </h1>
                               ))}
@@ -323,14 +548,20 @@ function Analytics() {
                           <div className="w-[100%] border-b-[1px] border-gray-400 flex flex-row">
                             <div className="flex flex-col w-[75%]">
                               {analytics?.city?.map((cityObj, index) => (
-                                <h1 className="dark:text-white p-2 pr-0 font-semibold text-lg ">
+                                <h1
+                                  className="dark:text-white p-2 pr-0 font-semibold text-lg "
+                                  key={cityObj.city}
+                                >
                                   {index + 1} . {cityObj.city}
                                 </h1>
                               ))}
                             </div>
                             <div className="flex flex-col w-[25%]">
                               {analytics?.city?.map((cityObj) => (
-                                <h1 className=" dark:text-white p-2  font-semibold text-lg ">
+                                <h1
+                                  className=" dark:text-white p-2  font-semibold text-lg "
+                                  key={cityObj.city}
+                                >
                                   {cityObj.clicks}
                                 </h1>
                               ))}
@@ -350,14 +581,20 @@ function Analytics() {
                         <div className="w-[100%] border-b-[1px] border-gray-400 flex flex-row">
                           <div className="flex flex-col w-[75%]">
                             {analytics?.city?.map((cityObj, index) => (
-                              <h1 className="dark:text-white p-2 pr-0 font-semibold text-lg ">
+                              <h1
+                                className="dark:text-white p-2 pr-0 font-semibold text-lg "
+                                key={cityObj.city}
+                              >
                                 {index + 1} . {cityObj.city}
                               </h1>
                             ))}
                           </div>
                           <div className="flex flex-col w-[25%]">
                             {analytics?.city?.map((cityObj) => (
-                              <h1 className=" dark:text-white p-2  font-semibold text-lg ">
+                              <h1
+                                className=" dark:text-white p-2  font-semibold text-lg "
+                                key={cityObj.city}
+                              >
                                 {cityObj.clicks}
                               </h1>
                             ))}

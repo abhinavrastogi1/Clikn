@@ -8,6 +8,7 @@ export default {
         blue: "var(--custom-blue)",
         orange: "var(--custom-orange)",
         lightblue:"var(--custom-light-blue)",
+        offwhite:"var(--custom-off-white)",
         DB: "#020617",
       },
     },
