@@ -30,18 +30,13 @@ function Analytics() {
       const date = new Date();
       dispatch(
         analyticsApiCall({
-          completeDate: {
-            date: date.getDate(),
-            month: date.getMonth() + 1,
-            year: date.getFullYear(),
-          },
+          year: date.getFullYear(),
           shortId: userlinks?.[0]?.shortId,
         })
       );
     }
   }, [status]);
   const { analytics } = useSelector((state) => state.analyticsSlice);
-  console.log(analytics);
   const dispatch = useDispatch();
   const [selectionRange, setSelectionRange] = useState({
     startDate: new Date(),
@@ -86,10 +81,12 @@ function Analytics() {
       if (window.innerWidth < 625) {
         setPieChartHeight(300);
         setPieChartOuterRadius(100);
+      }
+      if (window.innerWidth >= 1024) {
+        setLocationButton(false);
       } else {
         setPieChartHeight(400);
         setPieChartOuterRadius(150);
-        setLocationButton(false);
       }
     }
     handleSizeChange();
@@ -187,7 +184,7 @@ function Analytics() {
     setLink(userlinks?.[0]?.shortId);
   }, [userlinks]);
   const [selectDate, setSelectDate] = useState(new Date());
-  const [lineChartValue, setlineChartValue] = useState("hour");
+  const [lineChartValue, setlineChartValue] = useState("month");
   useEffect(() => {
     if (filter === "Date") {
       setApiCallData({
@@ -229,7 +226,8 @@ function Analytics() {
       });
       setlineChartValue("date");
     }
-  }, [filter, link, selectDate]);
+  }, [filter, link, selectDate, startDate, endDate]);
+
   function capitalizeWords(str) {
     return str
       .split(" ")
@@ -253,11 +251,7 @@ function Analytics() {
       const date = new Date();
       dispatch(
         analyticsApiCall({
-          completeDate: {
-            date: date.getDate(),
-            month: date.getMonth() + 1,
-            year: date.getFullYear(),
-          },
+          year: date.getFullYear(),
           shortId: link,
         })
       );
@@ -286,7 +280,7 @@ function Analytics() {
                 <div
                   className="flex lg:w-[40%] w-full sm:w-[70%] border-[1px] xl:w-[30%] dark:border-white 
                rounded-md justify-center items-center relative "
-               ref={rangeRef}
+                  ref={rangeRef}
                 >
                   <div
                     className="flex w-full justify-center items-center p-1  cursor-pointer "
@@ -321,13 +315,13 @@ function Analytics() {
               )}
               {filter === "Filter" && (
                 <div className="border-[1px] rounded-md   w-28 flex justify-center items-center ml-1">
-                  <h1 className="dark:text-white font-bold  px-3 py-1 ">
-                    {startDate}
+                  <h1 className="dark:text-white font-bold  px-3 py-[6px] ">
+                    {new Date().getFullYear()}
                   </h1>
                 </div>
               )}
               {filter === "Date" && (
-                <div >
+                <div>
                   <DatePicker
                     selected={selectDate}
                     onChange={(date) => {
@@ -335,7 +329,7 @@ function Analytics() {
                     }}
                     popperPlacement="bottom-start"
                     className=" bg-transparent dark:text-white font-bold outline-none border-[1px]
-                     px-3 py-1 flex rounded-md w-28 justify-center items-center ml-1"
+                     px-3 py-[6px] flex rounded-md w-28 justify-center items-center ml-1"
                   />
                 </div>
               )}
@@ -365,7 +359,7 @@ function Analytics() {
                       setSelectDate(date);
                     }}
                     className=" bg-transparent dark:text-white font-bold outline-none border-[1px]
-                     px-3 py-1 flex rounded-md w-28 justify-center items-center ml-1"
+                     px-3 py-[5px] flex rounded-md w-28 justify-center items-center ml-1"
                   />
                 </div>
               )}

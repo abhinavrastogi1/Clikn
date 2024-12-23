@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { TfiMenuAlt } from "react-icons/tfi";
 import { IoIosLink } from "react-icons/io";
 import { FaQrcode } from "react-icons/fa";
@@ -7,6 +7,10 @@ import { GoSun } from "react-icons/go";
 import { GoMoon } from "react-icons/go";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { IoIosLogOut } from "react-icons/io";
+import { IoPersonCircleSharp } from "react-icons/io5";
+import { IoIosMail } from "react-icons/io";
+
 function MainHeader() {
   const [hideNav, setHideNav] = useState(false);
   const [theme, setTheme] = useState("dark");
@@ -20,24 +24,48 @@ function MainHeader() {
   const { loading } = useSelector((state) => state.loadingBarSlice);
   const { user } = useSelector((state) => state.loginApiSlice);
   const navigate = useNavigate();
-  console.log(user);
-  const { email, firstName, profilePic, secondName } = user;
-  const firstAlpha = firstName?.[0].toUpperCase();
-  const secondAlpha = secondName?.[0].toUpperCase();
-  const [showProfile, setShowProfile] = useState(true);
-
-  function capitalizeWord(str){
- return str?.charAt(0).toUpperCase()+str?.slice(1)
+  const { email, firstName, secondName } = user;
+  const [showProfile, setShowProfile] = useState(false);
+  const [showNavigation, setShowNavigation] = useState(false);
+  function capitalizeWord(str) {
+    return str?.charAt(0).toUpperCase() + str?.slice(1);
   }
+  const profileRef = useRef();
+  const navigationRef = useRef();
+
+  useEffect(() => {
+    function handleClick(e) {
+      if (profileRef.current && !profileRef.current.contains(e.target)) {
+        setShowProfile(false);
+      }
+      if (navigationRef.current && !navigationRef.current.contains(e.target)) {
+        setShowNavigation(false);
+      }
+    }
+    function handleResize() {
+      if (window.innerWidth < 1024) {
+        setShowProfile(false);
+      } else {
+        setShowNavigation(false);
+      }
+    }
+    handleResize();
+    document.addEventListener("mousedown", handleClick);
+    window.addEventListener("resize", handleResize);
+    return () => {
+      document.removeEventListener("mousedown", handleClick);
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   return (
     <>
       <header
         className="  lg:pb-0 shadow-xl  dark:shadow-md border-slate-500  h-[10vh]
-     px-2 sm:px-10 md:px-16 lg:px-20 xl:px-48  "
+     px-2 sm:px-10 md:px-16 lg:px-20 xl:px-48 "
       >
-        <div className="px-4 mx-auto  h-full sm:px-6 lg:px-8">
-          <nav className="flex items-center justify-between h-full lg:h-full">
+        <div className="px-4 mx-auto  h-full sm:px-6 lg:px-8 ">
+          <nav className="flex items-center justify-between h-full lg:h-full  w-full  ">
             <div className="flex-shrink-0">
               <img
                 className="w-auto h-8 sm:h-10   md:h-12 lg:h-16 "
@@ -46,9 +74,10 @@ function MainHeader() {
               />
             </div>
 
-            <div className="lg:hidden flex justify-center items-center gap-2">
+            <div className="lg:hidden flex justify-center items-center gap-2 ">
               <button
-                className="bg-slate-200 h-6 w-12 md:h-7 md:w-14 rounded-3xl flex  items-center p-[1px]"
+                className="bg-slate-200 h-6 w-12 md:h-7 md:w-14 rounded-3xl flex 
+                 items-center p-[1px] dark:text-white shadow-sm dark:shadow-white"
                 onClick={() => {
                   if (theme === "dark") {
                     setTheme("light");
@@ -58,26 +87,91 @@ function MainHeader() {
                 }}
               >
                 <div
-                  className={`bg-blue h-6 w-6 md:h-7 md:w-7   rounded-full
+                  className={`bg-blue h-6 w-6 md:h-7 md:w-7   rounded-full 
                     transition transform ease-in-out duration-300 dark:translate-x-full
                     flex justify-center items-center text-white`}
                 >
                   {theme === "dark" ? <GoMoon /> : <GoSun />}
                 </div>
               </button>
+              <div className="relative" ref={navigationRef}>
+                <button
+                  onClick={() => {
+                    setHideNav(!hideNav);
+                    setShowNavigation(!showNavigation);
+                  }}
+                  type="button"
+                  className="inline-flex p-2 text-gray-900 dark:text-white shadow-sm dark:shadow-white
+             transition-all duration-200 rounded-md lg:hidden   hover:bg-gray-100 dark:hover:text-black"
+                >
+                  <TfiMenuAlt className="font-semibold text-xl md:text-2xl" />
+                </button>
+                {showNavigation && (
+                  <div className="absolute top-16 border-[1px] dark:shadow-white dark:shadow-md right-1 dark:bg-DB bg-offwhite shadow-xl z-50 border-rounded rounded-md p-2 ">
+                    <div className=" border-rounded rounded-md p-2 flex ">
+                      <ul className="border-rounded flex flex-col gap-2 dark:text-white content-stretch">
+                        <li className="border-[1px] content-stretch p-2 font-bold text-md  flex flex-col gap-2
+                         justify-center rounded-lg  ">
+                          <div className="flex justify-start">
+                            <span>
+                              <IoPersonCircleSharp className="text-2xl gap-2" />
+                            </span>{" "}
+                            <span className="block truncate w-full">
+                              {" "}
+                              {capitalizeWord(firstName)}{" "}
+                              {capitalizeWord(secondName)}
+                            </span>
+                          </div>
+                          <div className="flex gap-2">
+                          <span>
+                          <IoIosMail className="text-2xl" />
+                        </span>{" "}
+                        <span>{email}</span>
+                          </div>
+                        </li>
+                        <li className="border-[1px] p-2 font-bold text-md rounded-lg hover:text-blue duration-300 flex items-center gap-2"
+                        role="button"
+                        onClick={()=>{navigate("/home/links")}}
+                        >
+                          <span>
+                            <IoIosLink className="text-xl" />
+                          </span>{" "}
+                          <span>Link</span>
+                        </li>
+                        <li className="border-[1px] p-2 font-bold text-md flex gap-2 items-center rounded-lg hover:text-blue duration-300 "
+                        role="button"
+                        onClick={()=>{navigate("/home/qrcodes")}}>
+                          <span>
+                            <FaQrcode className="text-xl" />
+                          </span>{" "}
+                          <span>QR Code</span>
+                        </li>
+                        <li className="border-[1px] p-2 font-bold text-md flex gap-2 items-center rounded-lg hover:text-blue duration-300 "
+                        role="button"
+                        onClick={()=>{navigate("/home/analytics")}}>
+                          <span>
+                            <IoStatsChartSharp className="text-xl" />
+                          </span>{" "}
+                          <span>Analytics</span>
+                        </li>
 
-              <button
-                onClick={() => {
-                  setHideNav(!hideNav);
-                }}
-                type="button"
-                className="inline-flex p-2 text-gray-900 dark:text-white
-             transition-all duration-200 rounded-md lg:hidden   hover:bg-gray-100"
-              >
-                <TfiMenuAlt className="font-semibold text-xl md:text-2xl" />
-              </button>
+                        <li
+                          className="flex items-center gap-2 text-red-700 border-[1px] p-2 font-bold text-md rounded-lg 
+                       transition transform ease-in-out duration-700 hover:scale-105"
+                          role="button"
+                        >
+                          <span>Sign out</span>
+                          <span>
+                            <IoIosLogOut className="text-xl" />
+                          </span>{" "}
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
-            <div className="hidden lg:flex lg:items-center lg:ml-auto lg:space-x-10 ">
+            <div className="hidden   lg:flex lg:items-center lg:ml-auto lg:space-x-10 ">
               <button
                 className="text-base flex justify-center items-center gap-2 font-medium text-gray-900  dark:text-white transition-all duration-200
                hover:text-blue focus:text-blue dark:hover:text-blue"
@@ -128,90 +222,60 @@ function MainHeader() {
                 </div>
               </button>
             </div>
-            <div className="relative">
+            <div className="relative hidden lg:block" ref={profileRef}>
               {" "}
               <div
                 className="items-center justify-center hidden dark:text-white px-5 py-[6px]
              ml-10  text-white bg-blue 
                rounded-md lg:inline-flex hover:bg-blue
-               focus:bg-blue transition transform ease-in-out duration-700 hover:scale-110"
+               focus:bg-blue transition transform ease-in-out duration-700 hover:scale-105"
                 role="button"
+                onClick={() => {
+                  setShowProfile(!showProfile);
+                }}
               >
                 <h1 className="h-10 w-10 rounded-full p-1 font-bold text-lg border-[1px]    text-center content-center">
-                  {firstAlpha}
-                  {secondAlpha}
+                  {capitalizeWord(firstName?.[0].toUpperCase())}
+                  {capitalizeWord(secondName?.[0].toUpperCase())}
                 </h1>
                 <h2 className="ml-2 font-bold text-lg"> Profile</h2>
               </div>
-              <div className="absolute z-50">
-                <div className="bg-white">
-                  <ul>
-                    <li>{capitalizeWord(firstName)} {capitalizeWord(secondName)}</li>
-                    <li>{email}</li>
-                    <li>Logout</li>
-                  </ul>
+              {showProfile && (
+                <div className="absolute top-16 border-[1px] dark:shadow-white dark:shadow-md right-1 dark:bg-DB bg-offwhite shadow-xl z-50 border-rounded rounded-md p-2 ">
+                  <div className=" border-rounded rounded-md p-2">
+                    <ul className="border-rounded flex flex-col gap-2 dark:text-white  ">
+                      <li className="border-[1px] p-2 font-bold text-lg rounded-lg hover:text-blue duration-300 flex items-center gap-2">
+                        <span>
+                          <IoPersonCircleSharp className="text-2xl" />
+                        </span>{" "}
+                        <span>
+                          {" "}
+                          {capitalizeWord(firstName)}{" "}
+                          {capitalizeWord(secondName)}
+                        </span>
+                      </li>
+                      <li className="border-[1px] p-2 font-bold text-lg flex gap-2 items-center rounded-lg hover:text-blue duration-300 ">
+                        <span>
+                          <IoIosMail className="text-2xl" />
+                        </span>{" "}
+                        <span>{email}</span>
+                      </li>
+                      <li
+                        className="flex items-center gap-2 text-red-700 border-[1px] p-2 font-bold text-lg rounded-lg 
+                       transition transform ease-in-out duration-700 hover:scale-105"
+                        role="button"
+                      >
+                        <span>Sign out</span>
+                        <span>
+                          <IoIosLogOut className="text-2xl" />
+                        </span>{" "}
+                      </li>
+                    </ul>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </nav>
-          {hideNav && (
-            <nav
-              className={` pt-4 pb-6 bg-white border border-gray-200    rounded-md shadow-md lg:hidden  !z-50
-      }`}
-            >
-              <div className="flow-root">
-                <div className="flex flex-col px-6 -my-2 space-y-1">
-                  <a
-                    href="#"
-                    title=""
-                    className="inline-flex py-2 text-base font-medium text-gray-900 transition-all duration-200 hover:text-blue focus:text-blue"
-                  >
-                    {" "}
-                    Features{" "}
-                  </a>
-
-                  <a
-                    href="#"
-                    title=""
-                    className="inline-flex py-2 text-base font-medium text-gray-900 transition-all duration-200 hover:text-blue focus:text-blue"
-                  >
-                    {" "}
-                    Solutions{" "}
-                  </a>
-
-                  <a
-                    href="#"
-                    title=""
-                    className="inline-flex py-2 text-base font-medium text-gray-900 transition-all duration-200 hover:text-blue focus:text-blue"
-                  >
-                    {" "}
-                    Resources{" "}
-                  </a>
-
-                  <a
-                    href="#"
-                    title=""
-                    className="inline-flex py-2 text-base font-medium text-gray-900 transition-all duration-200 hover:text-blue focus:text-blue"
-                  >
-                    {" "}
-                    Pricing{" "}
-                  </a>
-                </div>
-              </div>
-
-              <div className="px-6 mt-6">
-                <a
-                  href="#"
-                  title=""
-                  className="inline-flex justify-center px-4 py-3 text-base font-semibold text-white transition-all duration-200 bg-blue border border-transparent rounded-md tems-center hover:bg-blue focus:bg-blue"
-                  role="button"
-                >
-                  {" "}
-                  Get started now{" "}
-                </a>
-              </div>
-            </nav>
-          )}
         </div>
       </header>
       <div className="flex  bg-lightblue h-1 overflow-hidden">
