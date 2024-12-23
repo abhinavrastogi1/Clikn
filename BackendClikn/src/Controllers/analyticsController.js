@@ -5,8 +5,8 @@ import apiError from "../Utils/apiError.js";
 import asyncHandler from "../Utils/asyncHandler.js";
 import apiResponse from "../Utils/apiResponse.js";
 const getDateAnalytics = asyncHandler(async (req, res) => {
-  const { date, year, month, range, shortId } = req?.query;
-  if (!date && !year && !month && !range) {
+  const { completeDate, year, month, range, shortId } = req?.query;
+  if (!completeDate && !year && !month && !range) {
     throw new apiError(400, "Missing required data");
   }
   if (!shortId) {
@@ -17,11 +17,10 @@ const getDateAnalytics = asyncHandler(async (req, res) => {
     throw new apiError(400, "link does not exist");
   }
   let analyticsData;
-
-  if (date) {
-    const month = date?.month;
-    const year = date?.year;
-    const day = date?.day;
+  if (completeDate) {
+    const month = completeDate?.month;
+    const year = completeDate?.year;
+    const date = completeDate?.date;
     analyticsData = await Analytics.aggregate([
       {
         $match: {
@@ -56,7 +55,7 @@ const getDateAnalytics = asyncHandler(async (req, res) => {
                   {
                     $dayOfMonth: "$clikedLink.date",
                   },
-                  Number(day),
+                  Number(date),
                 ],
               },
             ],
@@ -435,13 +434,13 @@ const getDateAnalytics = asyncHandler(async (req, res) => {
           clicks: [
             {
               $project: {
-                day: { $dayOfMonth: "$clikedLink.date" },
+                date: { $dayOfMonth: "$clikedLink.date" },
                 _id: 0,
               },
             },
             {
               $group: {
-                _id: "$day",
+                _id: "$date",
                 clicks: {
                   $sum: 1,
                 },
@@ -449,7 +448,7 @@ const getDateAnalytics = asyncHandler(async (req, res) => {
             },
             {
               $addFields: {
-                day: "$_id",
+                date: "$_id",
               },
             },
             {
@@ -458,7 +457,7 @@ const getDateAnalytics = asyncHandler(async (req, res) => {
               },
             },
             {
-              $sort: { day: 1 },
+              $sort: { date: 1 },
             },
           ],
           browser: [
@@ -585,8 +584,9 @@ const getDateAnalytics = asyncHandler(async (req, res) => {
       },
     ]);
   } else if (range) {
-    startDate = range.startDate + "T00:00:00Z";
-    endDate = range.endDate + "T00:00:00Z";
+    const startDate = new Date(`${range?.startDate}`).toISOString();
+    const endDate = new Date(`${range?.endDate}`).toISOString();
+
     analyticsData = await Analytics.aggregate([
       {
         $match: {
@@ -605,7 +605,7 @@ const getDateAnalytics = asyncHandler(async (req, res) => {
                   {
                     $toDate: "$clikedLink.date",
                   },
-                  ISODate(startDate),
+                  new Date(startDate),
                 ],
               },
               {
@@ -613,7 +613,7 @@ const getDateAnalytics = asyncHandler(async (req, res) => {
                   {
                     $toDate: "$clikedLink.date",
                   },
-                  ISODate(endDate),
+                  new Date(endDate),
                 ],
               },
             ],

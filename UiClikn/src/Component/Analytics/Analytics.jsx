@@ -23,11 +23,25 @@ import {
 } from "recharts";
 
 function Analytics() {
+  const { userlinks, status } = useSelector((state) => state.getUserLinkSlice);
+  const [apiCallData, setApiCallData] = useState({});
   useEffect(() => {
-    dispatch(analyticsApiCall());
-  }, []);
+    if (status === "success") {
+      const date = new Date();
+      dispatch(
+        analyticsApiCall({
+          completeDate: {
+            date: date.getDate(),
+            month: date.getMonth() + 1,
+            year: date.getFullYear(),
+          },
+          shortId: userlinks?.[0]?.shortId,
+        })
+      );
+    }
+  }, [status]);
   const { analytics } = useSelector((state) => state.analyticsSlice);
-  const { userlinks } = useSelector((state) => state.getUserLinkSlice);
+  console.log(analytics);
   const dispatch = useDispatch();
   const [selectionRange, setSelectionRange] = useState({
     startDate: new Date(),
@@ -84,17 +98,7 @@ function Analytics() {
       window.removeEventListener("resize", handleSizeChange);
     };
   }, [window]);
-  const CustomTooltip = ({ active, payload, label }) => {
-    if (active && payload && payload.length) {
-      return (
-        <div className="p-2 dark:bg-DB dark:shadow-sm  shadow-xl bg-white dark:shadow-white text-white rounded ">
-          <p className="font-bold text-orange ">{`Month: ${label}`}</p>
-          <p className="font-bold text-blue">{`Clicks: ${payload[0].value}`}</p>
-        </div>
-      );
-    }
-    return null;
-  };
+
   const [filter, setFilter] = useState("Filter");
   const [link, setLink] = useState(userlinks?.[0]?.shortId);
   const [showFilter, setShowFilter] = useState(false);
@@ -183,11 +187,84 @@ function Analytics() {
     setLink(userlinks?.[0]?.shortId);
   }, [userlinks]);
   const [selectDate, setSelectDate] = useState(new Date());
-  console.log(selectDate);
-
-function handleAnalytics(){
-}
-
+  const [lineChartValue, setlineChartValue] = useState("hour");
+  useEffect(() => {
+    if (filter === "Date") {
+      setApiCallData({
+        completeDate: {
+          date: selectDate.getDate(),
+          month: selectDate.getMonth() + 1,
+          year: selectDate.getFullYear(),
+        },
+        shortId: link,
+      });
+      setlineChartValue("hour");
+    } else if (filter === "Month") {
+      setApiCallData({
+        month: {
+          month: selectDate.getMonth() + 1,
+          year: selectDate.getFullYear(),
+        },
+        shortId: link,
+      });
+      setlineChartValue("date");
+    } else if (filter === "Year") {
+      setApiCallData({
+        year: selectDate.getFullYear(),
+        shortId: link,
+      });
+      setlineChartValue("month");
+    } else if (filter === "Range") {
+      const parseDate = (dateStr) => {
+        const month = dateStr.split("/");
+        const day = dateStr.split("/");
+        const year = dateStr.split("/");
+        return `${year[2]}/${month[0]}/${day[1]}`; // Converts to YYYY/MM/DD format
+      };
+      const rangeStartDate = parseDate(startDate);
+      const rangeEndDate = parseDate(endDate);
+      setApiCallData({
+        range: { startDate: rangeStartDate, endDate: rangeEndDate },
+        shortId: link,
+      });
+      setlineChartValue("date");
+    }
+  }, [filter, link, selectDate]);
+  function capitalizeWords(str) {
+    return str
+      .split(" ")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1));
+  }
+  const CustomTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="p-2 dark:bg-DB dark:shadow-sm  shadow-xl bg-white dark:shadow-white text-white rounded ">
+          <p className="font-bold text-orange ">{`${capitalizeWords(
+            lineChartValue
+          )}: ${label}`}</p>
+          <p className="font-bold text-blue">{`Clicks: ${payload[0].value}`}</p>
+        </div>
+      );
+    }
+    return null;
+  };
+  function handleAnalytics() {
+    if (filter === "Filter") {
+      const date = new Date();
+      dispatch(
+        analyticsApiCall({
+          completeDate: {
+            date: date.getDate(),
+            month: date.getMonth() + 1,
+            year: date.getFullYear(),
+          },
+          shortId: link,
+        })
+      );
+    } else {
+      dispatch(analyticsApiCall(apiCallData));
+    }
+  }
   return (
     <div className="min-h-screen  px-2 sm:px-10 md:px-16 lg:px-20 xl:px-48 overflow-hidden  ">
       <div className="shadow-xl dark:shadow-md  dark:shadow-white ">
@@ -209,9 +286,9 @@ function handleAnalytics(){
                 <div
                   className="flex lg:w-[40%] w-full sm:w-[70%] border-[1px] xl:w-[30%] dark:border-white 
                rounded-md justify-center items-center relative "
+               ref={rangeRef}
                 >
                   <div
-                    ref={rangeRef}
                     className="flex w-full justify-center items-center p-1  cursor-pointer "
                     onClick={() => {
                       setshowCalender(!showcalender);
@@ -227,7 +304,10 @@ function handleAnalytics(){
                     </div>
                   </div>
                   {showcalender && (
-                    <div className=" top-10  sm:left-2 absolute  !flex !justify-center !items-center z-10 p-2  rdrCalendarWrapper">
+                    <div
+                      className=" top-10  sm:left-2 absolute  !flex !justify-center !items-center z-10 p-2  rdrCalendarWrapper
+                    "
+                    >
                       {" "}
                       <DateRange
                         ranges={[selectionRange]}
@@ -372,7 +452,7 @@ function handleAnalytics(){
                   <button
                     className="bg-blue py-1 px-4 w-28 text-white font-bold text-lg rounded-md 
                    transition transform ease-in-out duration-700 hover:scale-110"
-                   onClick={handleAnalytics}
+                    onClick={handleAnalytics}
                   >
                     Apply{" "}
                   </button>
@@ -396,7 +476,7 @@ function handleAnalytics(){
                     margin={{ top: 20, right: 20, bottom: 10, left: -25 }}
                   >
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="month" />
+                    <XAxis dataKey={lineChartValue} />
                     <YAxis dataKey="clicks" />
                     <Tooltip content={<CustomTooltip />} />
                     <Line
@@ -410,7 +490,8 @@ function handleAnalytics(){
                 <div className=" w-full  flex justify-center items-center ">
                   <h3 className="dark:text-white w-full  flex justify-center items-center font-bold text-md sm:text-lg ">
                     {" "}
-                    Y-axis: Clicks &nbsp; & &nbsp; X-axis: Month
+                    Y-axis: Clicks &nbsp; & &nbsp; X-axis:{" "}
+                    {capitalizeWords(lineChartValue)}
                   </h3>{" "}
                 </div>
               </div>
@@ -441,13 +522,38 @@ function handleAnalytics(){
                           />
                         ))}
                       </Pie>
-                      <Tooltip />
+                      <Tooltip
+                        content={({ active, payload }) => {
+                          if (active && payload && payload.length) {
+                            return (
+                              <div className="p-2 dark:bg-DB dark:shadow-sm  shadow-xl bg-white dark:shadow-white text-white rounded ">
+                                <p className="font-bold text-blue">{`${payload[0].name}: ${payload[0].value}`}</p>
+                              </div>
+                            );
+                          }
+                        }}
+                      />
                     </PieChart>
                   </ResponsiveContainer>
+                  <div>
+                    {analytics?.browser?.map((browser, index) => {
+                      const color = COLORS[index % COLORS.length];
+                      return (
+                        <h2
+                          style={{ color: color }}
+                          className="text-lg  font-bold"
+                          key={index}
+                        >
+                          <span>{browser.browser} :</span>{" "}
+                          <span>{browser.clicks}</span>
+                        </h2>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
-              <div className="w-full flex flex-col mt-10 p-4 rounded-md dark:shadow-sm  border-2 border-gray-200 shadow-lg dark:shadow-gray-200">
-                <div className="dark:text-white font-bold text-xl sm:text-2xl md:text-3xl  my-1  sm:my-2 md:my-3 ml-3">
+              <div className="w-full flex flex-col mt-10 p-4 rounded-md dark:shadow-sm  border-2 border-gray-200 shadow-lg dark:shadow-gray-200 ">
+                <div className="dark:text-white font-bold text-xl sm:text-2xl md:text-3xl  my-1  sm:my-2 md:my-3 ml-3 ">
                   {" "}
                   <h1>Clicks + Scans by device</h1>
                 </div>
@@ -470,9 +576,39 @@ function handleAnalytics(){
                           />
                         ))}
                       </Pie>
+                      <Tooltip
+                        content={({ active, payload }) => {
+                          if (active && payload && payload.length) {
+                            return (
+                              <div
+                                className="p-2 dark:bg-DB dark:shadow-sm  shadow-xl
+                                 bg-white dark:shadow-white text-white rounded "
+                              >
+                                <p className="font-bold text-blue">{`${payload[0].name}: ${payload[0].value}`}</p>
+                              </div>
+                            );
+                          }
+                        }}
+                      />
+
                       <Tooltip />
                     </PieChart>
                   </ResponsiveContainer>
+                  <div>
+                    {analytics?.device?.map((browser, index) => {
+                      const color = COLORS[index % COLORS.length];
+                      return (
+                        <h2
+                          style={{ color: color }}
+                          className="text-lg  font-bold"
+                          key={index}
+                        >
+                          <span>{browser.device} :</span>{" "}
+                          <span>{browser.clicks}</span>
+                        </h2>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
             </div>

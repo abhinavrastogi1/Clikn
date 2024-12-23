@@ -2,13 +2,10 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 export const analyticsApiCall = createAsyncThunk(
   "analyticsSlice/analyticsApiCall",
-  async () => {
+  async (apiCallData) => {
     try {
       const response = await axios.get("/user/analytics", {
-        params: {
-          year:2024,
-          shortId: "UnxxPDD",
-        },
+        params: apiCallData,
       });
       return response.data.data;
     } catch (error) {
