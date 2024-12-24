@@ -6,7 +6,7 @@ export const analyticsApiCall = createAsyncThunk(
   async (apiCallData, { dispatch }) => {
     dispatch(setLoadingBar(true));
     try {
-      const response = await axios.get("/user/analytics", {
+      const response = await axios.get("https://clikn.in/analytics", {
         params: apiCallData,
       });
       dispatch(setLoadingBar(false));

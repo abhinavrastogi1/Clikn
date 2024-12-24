@@ -8,7 +8,7 @@ export const deleteLinkCall = createAsyncThunk(
   async (_id, { dispatch }) => {
     dispatch(setLoadingBar(true));
     try {
-      const response = await axios.get("/user/url/deleteLink", {
+      const response = await axios.get("/https://clikn.in/url/deleteLink", {
         params: {
           _id: _id,
         },

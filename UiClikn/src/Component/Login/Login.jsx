@@ -71,7 +71,7 @@ function Login() {
       dispatch(setLoadingLogin(true));
       if (authresult["code"]) {
         const response = await axios.post(
-          "/user/registration",
+          "https://clikn.in/user/registration",
           {},
           {
             params: {
