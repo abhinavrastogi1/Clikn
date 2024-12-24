@@ -7,15 +7,20 @@ export const verifyLogin = createAsyncThunk(
   async (_, { dispatch }) => {
     dispatch(setLoadingBar(true));
     try {
-      const response = await axios.get("https://www.clikn.in/user/userVerification", {
-        withCredentials: true,
-      });
+      const response = await axios.get(
+        "https://www.clikn.in/user/userVerification",
+        {
+          withCredentials: true,
+        }
+      );
       if (response.status === 200) {
         dispatch(loggedInReducer(true));
       }
       dispatch(setLoadingBar(false));
       return response.data.data;
     } catch (error) {
+      dispatch(loggedInReducer(false));
+
       console.error("User not verified", error);
       dispatch(setLoadingBar(false));
       throw error;
@@ -26,7 +31,10 @@ export const loginViaForm = createAsyncThunk(
   "loginApiSlice/loginViaForm",
   async (loginForm, { dispatch }) => {
     try {
-      const response = await axios.post("https://www.clikn.in/user/login", loginForm);
+      const response = await axios.post(
+        "https://www.clikn.in/user/login",
+        loginForm
+      );
       if (response.status === 200) {
         dispatch(loggedInReducer(true));
       }
@@ -50,7 +58,10 @@ export const signUpViaForm = createAsyncThunk(
   "loginApiSlice/signUpViaForm",
   async (signUpFrom, { dispatch }) => {
     try {
-      const response = await axios.post("https://www.clikn.in/user/registration", signUpFrom);
+      const response = await axios.post(
+        "https://www.clikn.in/user/registration",
+        signUpFrom
+      );
       if (response.status === 200) {
         dispatch(loggedInReducer(true));
       }
@@ -63,7 +74,8 @@ export const signUpViaForm = createAsyncThunk(
         dispatch(setLoginMsg("Email is already in use.login via form"));
       } else if (
         error.status === 409 &&
-        error.response.data.message === "Email is already in use.login via google"
+        error.response.data.message ===
+          "Email is already in use.login via google"
       ) {
         dispatch(setLoginMsg("Email is already in use.login via google"));
       }

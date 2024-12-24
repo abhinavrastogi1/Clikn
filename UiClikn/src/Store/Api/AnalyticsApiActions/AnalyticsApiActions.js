@@ -8,6 +8,7 @@ export const analyticsApiCall = createAsyncThunk(
     try {
       const response = await axios.get("https://www.clikn.in/analytics", {
         params: apiCallData,
+        withCredentials: true,
       });
       dispatch(setLoadingBar(false));
       return response.data.data;

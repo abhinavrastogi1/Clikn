@@ -6,7 +6,9 @@ export const logoutApiCall = createAsyncThunk(
   "logoutSlice/logoutApiCall",
   async (_, { dispatch }) => {
     try {
-      const response = await axios.get("https://www.clikn.in/user/logout");
+      const response = await axios.get("https://www.clikn.in/user/logout", {
+        withCredentials: true,
+      });
       dispatch(verifyLogin());
       dispatch(loggedInReducer(false));
     } catch (error) {

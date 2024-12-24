@@ -12,6 +12,8 @@ export const deleteLinkCall = createAsyncThunk(
         params: {
           _id: _id,
         },
+        withCredentials: true,
+
       });
       dispatch(setLoadingBar(false));
       dispatch(getUserLinkApi());

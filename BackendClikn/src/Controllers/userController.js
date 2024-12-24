@@ -30,11 +30,12 @@ async function generateTokens(userId) {
 }
 
 const options = {
+  domain: '.clikn.in',
+  path:"/",
   httpOnly: true,
   secure: true,
   sameSite: "None",
 };
-
 const userRegistration = asyncHandler(async (req, res) => {
   const { code } = req?.query;
   const reqBody = req?.body;
@@ -50,7 +51,6 @@ const userRegistration = asyncHandler(async (req, res) => {
     if (firstName == "" || secondName == "" || email == "" || password == "") {
       throw new apiError(400, "All fields are required");
     }
-
     const userExits = await User.findOne({ email: email });
     if (userExits) {
       if (userExits?.password) {

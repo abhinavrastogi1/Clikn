@@ -7,7 +7,12 @@ export const getUserLinkApi = createAsyncThunk(
   async (_, { dispatch }) => {
     dispatch(setLoadingBar(true));
     try {
-      const response = await axios.get("https://www.clikn.in/url/getuserLinks");
+      const response = await axios.get(
+        "https://www.clikn.in/url/getuserLinks",
+        {
+          withCredentials: true,
+        }
+      );
       dispatch(setLoadingBar(false));
       return response.data.data;
     } catch (error) {

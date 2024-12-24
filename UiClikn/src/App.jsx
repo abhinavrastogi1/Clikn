@@ -31,7 +31,6 @@ function App() {
       navigate(`${location.pathname}`);
     }
   }, [status]);
-
   return (
     <>
       {loggedIn && (
