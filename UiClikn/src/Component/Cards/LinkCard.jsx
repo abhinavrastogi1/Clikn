@@ -1,15 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { MdDelete } from "react-icons/md";
 import { IoMdShare } from "react-icons/io";
 import { MdContentCopy } from "react-icons/md";
 import { CiCalendar } from "react-icons/ci";
 import { IoStatsChartSharp } from "react-icons/io5";
 import browser from "../../assets/browser.png";
-import ShareCard from "./ShareCard.jsx";
 import { deleteLinkCall } from "../../Store/Api/DeleteAPiActions/deleteLinkSlice.js";
 import { useDispatch } from "react-redux";
 import { GiCheckMark } from "react-icons/gi";
 import { IoCopyOutline } from "react-icons/io5";
+import linkedinIcon from "../../assets/linkedinIcon.svg";
+import whatsappIcon from "../../assets/whatsappIcon.svg";
+import twitterIcon from "../../assets/twitterIcon.svg";
+import facebookIcon from "../../assets/facebookIcon.svg";
 function LinkCard({ linkData }) {
   const originalUrl = linkData?.originalLink;
   const shortLink = `clikn.in/${linkData?.shortId}`;
@@ -35,6 +38,36 @@ function LinkCard({ linkData }) {
       console.error("Failed to copy:", error);
     }
   };
+
+  const shareUrl = `https://${shortLink}`;
+  const [showShareIcons, setShowShareIcons] = useState(false);
+  const shareRef = useRef();
+  const shareButtonRef = useRef();
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (
+        shareRef.current &&
+        !shareRef.current.contains(e.target) &&
+        shareButtonRef.current &&
+        !shareButtonRef.current.contains(e.target)
+      ) {
+        setShowShareIcons(false);
+        setAnimateShare(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+  const [animateshare, setAnimateShare] = useState(false);
+  useEffect(() => {
+    if (showShareIcons) {
+      setTimeout(() => {
+        setAnimateShare(true);
+      }, 100);
+    }
+  }, [showShareIcons]);
 
   return (
     <div className=" grid grid-rows-3 sm:grid-rows-1 sm:grid-cols-3 dark:bg-slate-800  shadow-2xl dark:shadow-lg dark:shadow-gray-700 rounded-md relative">
@@ -84,7 +117,7 @@ function LinkCard({ linkData }) {
         </div>
       </div>
 
-      <div className="  flex justify-end p-2 sm:p-4  gap-3 flex-wrap ">
+      <div className="  flex justify-end p-2 sm:p-4  gap-3 flex-wrap relative ">
         <div className="relative h-10 flex  flex-col justify-center items-center">
           {/* Button */}
           <button
@@ -95,9 +128,18 @@ function LinkCard({ linkData }) {
               copyToClipboard(`https://${shortLink}`);
             }}
           >
-           { !copied?
-          <div className="flex justify-center items-center gap-1"> <IoCopyOutline />
-            <span>Copy</span></div>:<div className="flex gap-1 justify-center items-center"><GiCheckMark/><span>Copied</span></div>}
+            {!copied ? (
+              <div className="flex justify-center items-center gap-1">
+                {" "}
+                <IoCopyOutline />
+                <span>Copy</span>
+              </div>
+            ) : (
+              <div className="flex gap-1 justify-center items-center">
+                <GiCheckMark />
+                <span>Copied</span>
+              </div>
+            )}
           </button>
         </div>
 
@@ -106,6 +148,11 @@ function LinkCard({ linkData }) {
          border-[1px] h-10 w-24  border-gray-200 flex gap-2
           dark:bg-white rounded-md font-bold justify-center items-center
           transition transform-all ease-in-out duration-700 hover:scale-110"
+          onClick={() => {
+            setShowShareIcons(!showShareIcons);
+            setAnimateShare(false);
+          }}
+          ref={shareButtonRef}
         >
           <IoMdShare />
           <span>Share</span>
@@ -121,6 +168,90 @@ function LinkCard({ linkData }) {
           <MdDelete className="text-2xl lg:text-xl " />
           <span className="hidden sm:block">Delete</span>
         </button>
+        {showShareIcons && (
+          <div
+            className={`absolute  bg-offwhite shadow-lg dark:shadow-md dark:shadow-white dark:bg-slate-800
+        border-[1px]
+         top-16 sm:top-20  z-50 p-7 rounded-md items-center justify-center 
+          transition transform duration-700 ease-in-out ${
+            animateshare ? "scale-100" : "scale-0"
+          }
+          origin-top-right `}
+            ref={shareRef}
+          >
+            <div className="flex gap-4 w-full sm:flex-col lg:flex-row justify-center items-center">
+              <a
+                href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(
+                  shareUrl
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-400 hover:underline shadow-md rounded-md dark:shadow-white bg-white
+              hover:-translate-y-3 duration-500 ease-in-out 
+              "
+              >
+                <img
+                  src={twitterIcon}
+                  alt="whatsapp Icon"
+                  className="h-10 w-10 "
+                />
+              </a>
+
+              <a
+                href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+                  shareUrl
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 hover:underline shadow-md rounded-md dark:shadow-white bg-white
+                            hover:-translate-y-3 duration-500 ease-in-out 
+ "
+              >
+                <img
+                  src={facebookIcon}
+                  alt="whatsapp Icon"
+                  className="h-10 w-10"
+                />
+              </a>
+
+              {/* WhatsApp */}
+              <a
+                href={`https://wa.me/?text=${encodeURIComponent(
+                  ` ${shareUrl}`
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-green-500 hover:underline shadow-md rounded-md dark:shadow-white bg-white
+                            hover:-translate-y-3 duration-500 ease-in-out 
+"
+              >
+                <img
+                  src={whatsappIcon}
+                  alt="whatsapp Icon"
+                  className="h-10 w-10"
+                />
+              </a>
+
+              {/* LinkedIn */}
+              <a
+                href={`https://www.linkedin.com/shareArticle?url=${encodeURIComponent(
+                  shareUrl
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-700 hover:underline shadow-md rounded-md dark:shadow-white bg-white 
+                            hover:-translate-y-3 duration-500 ease-in-out 
+"
+              >
+                <img
+                  src={linkedinIcon}
+                  className="h-10 w-10"
+                  alt="linkedin Icon"
+                />{" "}
+              </a>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -4,14 +4,10 @@ import { setLoadingBar } from "../../UiActions/LoadingBarSlice";
 
 export const getUserLinkApi = createAsyncThunk(
   "getUserLinkSlice/getUserLinkApi",
-  async (skip, { dispatch }) => {
+  async (_, { dispatch }) => {
     dispatch(setLoadingBar(true));
     try {
-      const response = await axios.get("/user/url/getuserLinks", {
-        params: {
-          skip: skip,
-        },
-      });
+      const response = await axios.get("/user/url/getuserLinks");
       dispatch(setLoadingBar(false));
       return response.data.data;
     } catch (error) {

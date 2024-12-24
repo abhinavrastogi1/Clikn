@@ -183,6 +183,7 @@ const deleteOriginalLink = asyncHandler(async (req, res) => {
   if (!link) {
     throw new apiError(404, "Link does not exist");
   }
+  
   const deleteAnalytics = await Analytics.deleteOne({ linkId: link?._id });
   if (deleteAnalytics.deletedCount === 0) {
     throw new apiError(
@@ -198,8 +199,6 @@ const deleteOriginalLink = asyncHandler(async (req, res) => {
 });
 const getuserLinks = asyncHandler(async (req, res) => {
   const { userId } = req?.user;
-  const { skip } = req?.query;
-
   if (!userId && !skip) {
     throw new apiError(400, "Missing required data");
   }
@@ -219,12 +218,6 @@ const getuserLinks = asyncHandler(async (req, res) => {
       $sort: {
         createdAt: -1,
       },
-    },
-    {
-      $skip: Number(skip),
-    },
-    {
-      $limit: 10,
     },
     {
       $project: {

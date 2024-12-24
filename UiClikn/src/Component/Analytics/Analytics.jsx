@@ -21,8 +21,13 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import CreateLink from "../Link/CreateLink";
+import { getUserLinkApi } from "../../Store/Api/ShortLinkActions/getUserLinksSlice";
 
 function Analytics() {
+  useEffect(() => {
+    dispatch(getUserLinkApi());
+  }, []);
   const { userlinks, status } = useSelector((state) => state.getUserLinkSlice);
   const [apiCallData, setApiCallData] = useState({});
   useEffect(() => {
@@ -259,6 +264,20 @@ function Analytics() {
       dispatch(analyticsApiCall(apiCallData));
     }
   }
+  // create link
+  const [createLink, setCreateLink] = useState(false);
+  const createLinkRef = useRef();
+  useEffect(() => {
+    function handleClick(e) {
+      if (createLinkRef.current && !createLinkRef.current.contains(e.target)) {
+        setCreateLink(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => {
+      document.removeEventListener("mousedown", handleClick);
+    };
+  }, []);
   return (
     <div className="min-h-screen  px-2 sm:px-10 md:px-16 lg:px-20 xl:px-48 overflow-hidden  ">
       <div className="shadow-xl dark:shadow-md  dark:shadow-white ">
@@ -267,12 +286,23 @@ function Analytics() {
             <h1 className="dark:text-white text-gray-900  content-center  text-2xl  md:text-3xl lg:text-4xl font-bold">
               Analytics
             </h1>
-            <button
-              className="bg-blue   w-28 h-10  p-2 sm:h-10
-             text-white rounded-md font-bold  text-md flex justify-center  items-center transition transform ease-in-out duration-700 hover:scale-110"
-            >
-              Create link
-            </button>
+            <div className="relative" ref={createLinkRef}>
+              {" "}
+              <button
+                className="bg-blue   w-28 h-10  p-2 sm:h-10
+             text-white rounded-md font-bold
+               text-md flex justify-center  items-center transition
+                transform ease-in-out duration-700 hover:scale-110"
+                onClick={() => {
+                  setCreateLink(!createLink);
+                }}
+              >
+                Create link
+              </button>
+              {createLink && (
+                <CreateLink formType="link" setCreateLink={setCreateLink} />
+              )}
+            </div>
           </div>
           <div className=" mb-2   mx-auto  sm:px-6 lg:px-8  relative   ">
             <div className="flex lg:justify-between flex-col lg:flex-row items-start gap-1 lg:gap-5 lg:items-center">
@@ -427,7 +457,8 @@ function Analytics() {
                       {showLinks && (
                         <div
                           className="flex flex-col border-[1px] mt-1 
-                         dark:bg-DB bg-offwhite border-white shadow-md dark:shadow-white rounded-md p-2 absolute z-10"
+                         dark:bg-DB bg-offwhite border-white shadow-md dark:shadow-white rounded-md p-2 absolute z-10
+                         max-h-96 overflow-y-auto  scroll"
                         >
                           {userlinks?.map((link) => (
                             <h2
@@ -639,7 +670,7 @@ function Analytics() {
                 </div>
                 <div className="flex flex-row gap-2">
                   {" "}
-                  <div className="w-[100%] lg:w-[50%] flex max-h-[60vh] min-h-[20vh] border-md  overflow-y-auto  border-[1px] rounded-md border-gray-200   ">
+                  <div className="w-[100%] lg:w-[50%] flex max-h-[60vh] min-h-[20vh] border-md  overflow-y-auto scroll  border-[1px] rounded-md border-gray-200   ">
                     {location ? (
                       <div className="w-[100%] h-full rounded-md p-2 pr-0  ">
                         <div className="flex w-full  dark:text-white p-2 pr-0 font-semibold text-lg border-b-[1px] border-gray-400">
@@ -704,7 +735,7 @@ function Analytics() {
                       </div>
                     )}
                   </div>
-                  <div className="w-[50%]  max-h-[60vh] hidden  lg:flex min-h-[20vh] border-md overflow-y-auto   border-[1px] border-gray-200 rounded-md ">
+                  <div className="w-[50%]  max-h-[60vh] hidden  lg:flex min-h-[20vh] border-md overflow-y-auto  scroll border-[1px] border-gray-200 rounded-md ">
                     <div className="w-[100%] h-full rounded-md p-2 pr-0 ">
                       <div className="flex w-full  dark:text-white p-2 pr-0 font-semibold text-lg border-b-[1px] border-gray-400">
                         <div className="w-[75%]"> City</div>

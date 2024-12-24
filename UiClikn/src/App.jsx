@@ -4,9 +4,11 @@ import Footer from "./Component/Footer/Footer.jsx";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import MainHeader from "./Component/Header/MainHeader.jsx";
 import { useDispatch, useSelector } from "react-redux";
-import { verifyLogin } from "./Store/Api/LoginApiActions/loginApiSlice.js";
+import {
+  addUrl,
+  verifyLogin,
+} from "./Store/Api/LoginApiActions/loginApiSlice.js";
 import { createShortLinkApi } from "./Store/Api/ShortLinkActions/createShortLinkSlice.js";
-import { getUserLinkApi } from "./Store/Api/ShortLinkActions/getUserLinksSlice.js";
 function App() {
   const { loggedIn } = useSelector((state) => state.loginSlice);
   const navigate = useNavigate();
@@ -19,6 +21,7 @@ function App() {
     }
     if (formUrl) {
       dispatch(createShortLinkApi({ originalLink: formUrl }));
+      dispatch(addUrl(""));
     }
   }, []);
   useEffect(() => {
