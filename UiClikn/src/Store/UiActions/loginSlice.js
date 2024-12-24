@@ -5,6 +5,7 @@ const loginSlice = createSlice({
   initialState: {
     loginPage: true,
     loggedIn: false,
+    loginMsg: "",
   },
   reducers: {
     loginPageReducer: (state, action) => {
@@ -13,7 +14,10 @@ const loginSlice = createSlice({
     loggedInReducer: (state, action) => {
       state.loggedIn = action.payload;
     },
+    setLoginMsg: (state, action) => {
+      state.loginMsg = action.payload;
+    },
   },
 });
-export const { loginPageReducer, loggedInReducer } = loginSlice.actions;
+export const { loginPageReducer, loggedInReducer,setLoginMsg } = loginSlice.actions;
 export default loginSlice.reducer;

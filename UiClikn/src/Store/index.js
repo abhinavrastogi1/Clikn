@@ -7,6 +7,7 @@ import getUserLinkSlice from "./Api/ShortLinkActions/getUserLinksSlice.js"
 import analyticsSlice from "./Api/AnalyticsApiActions/AnalyticsApiActions.js"
 import deleteLinkSlice from "./Api/DeleteAPiActions/deleteLinkSlice.js"
 import logoutSlice from "./Api/LogoutApiActions/logoutSlice.js"
+import   linkDelete_CreateMsgSlice from "./UiActions/LinkDeleteCreateMsg.js"
 const store = configureStore({
   reducer: {
     loginSlice: loginSlice,
@@ -17,6 +18,8 @@ const store = configureStore({
     analyticsSlice:analyticsSlice,
     deleteLinkSlice:deleteLinkSlice,
     logoutSlice:logoutSlice,
+    linkDelete_CreateMsgSlice:linkDelete_CreateMsgSlice
+
   },
 });
 

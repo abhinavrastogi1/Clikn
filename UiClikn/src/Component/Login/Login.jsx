@@ -12,13 +12,15 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useGoogleLogin } from "@react-oauth/google";
-import { loggedInReducer } from "../../Store/UiActions/loginSlice.js";
+import {
+  loggedInReducer,
+  setLoginMsg,
+} from "../../Store/UiActions/loginSlice.js";
 import {
   loginViaForm,
   setLoadingLogin,
   signUpViaForm,
 } from "../../Store/Api/LoginApiActions/loginApiSlice.js";
-import { createShortLinkApi } from "../../Store/Api/ShortLinkActions/createShortLinkSlice.js";
 function Login() {
   const { loginPage } = useSelector((state) => state.loginSlice);
   const [leftpannel, setLeftPannel] = useState(false);
@@ -49,6 +51,7 @@ function Login() {
   }, [loginPage]);
   const { loggedIn } = useSelector((state) => state.loginSlice);
   const { loadingLogin } = useSelector((state) => state.loginApiSlice);
+  const { loginMsg } = useSelector((state) => state.loginSlice);
   const COLORS_TOP = ["#13FFAA", "#1E67C6", "#CE84CF", "#DD335C"];
   const color = useMotionValue(COLORS_TOP[0]);
   useEffect(() => {
@@ -78,15 +81,13 @@ function Login() {
         );
         if (response.status === 200) {
           dispatch(loggedInReducer(true));
-        
-
         }
       }
     } catch (error) {
-      if (response.status === 409) {
+      if (error.status === 409) {
+        dispatch(setLoginMsg("Email is already in use.login via form"));
       }
       console.error("something went wrong while logging in", error);
-      setErrorMsg(true);
     }
     dispatch(setLoadingLogin(false));
   }
@@ -95,6 +96,11 @@ function Login() {
     onerror: googleResponse,
     flow: "auth-code",
   });
+  useEffect(() => {
+    if (loginMsg) {
+      setErrorMsg(true);
+    }
+  }, [loginMsg]);
   useEffect(() => {
     // Start the transition
     const addMsgTransition = setTimeout(() => {
@@ -105,6 +111,7 @@ function Login() {
     }, 3000);
     const removeMsg = setTimeout(() => {
       setErrorMsg(false); // Remove the message
+      dispatch(setLoginMsg(""));
     }, 4000);
     return () => {
       clearTimeout(removeMsg); // Clear the removal of the message
@@ -147,35 +154,31 @@ function Login() {
       [name]: value,
     });
   }
-
   return (
     <div>
       <motion.section
         style={{
           backgroundImage,
         }}
-        className="relative grid min-h-screen place-content-center overflow-hidden bg-gray-950 px-4 py-24 text-gray-200"
+        className="relative grid min-h-screen place-content-center
+         overflow-hidden bg-gray-950 px-4 py-24 text-gray-200"
       >
-        <div className=" mb-10 flex justify-center items-center w-full h-20 absolute -top-10 md:-top-16">
+        <div className=" mb-10 flex justify-center items-center w-full h-20 absolute  -top-10 md:-top-16">
           {errorMsg && (
             <div
-              className={`border-2 border-blue rounde-md p-3 text-center   w-64
-              transition    transform    ease-in-out font-bold duration-1000 delay-300 z-10 
+              className={`border-2 border-red-500 rounded-md p-3 text-center   w-64
+              transition    transform    ease-in-out font-bold duration-1000 delay-75 !z-50  
                         ${
                           errorMsgTransition
                             ? " translate-y-16 opacity-100 sm:translate-y-20 md:translate-y-24 lg:translate-y-32 "
                             : "translate-y-0 opacity-0"
                         }`}
             >
-              <h2 className="text-blue text-sm md:text-base">{`${
-                signUp
-                  ? "Unable to log in. Please try again"
-                  : "Unable to sign up. Please try again"
-              }`}</h2>
+              <h2 className="text-red-500 text-sm md:text-base">{loginMsg}</h2>
             </div>
           )}
         </div>
-        <div className="flex flex-col  w-full justify-center items-center gap-5  z-50  bg-DB">
+        <div className="flex flex-col  w-full justify-center items-center gap-5  z-20  bg-DB">
           <img
             src="/cliknLogo.png"
             alt="clikn logo"

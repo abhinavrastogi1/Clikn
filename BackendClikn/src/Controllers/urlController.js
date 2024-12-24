@@ -183,13 +183,16 @@ const deleteOriginalLink = asyncHandler(async (req, res) => {
   if (!link) {
     throw new apiError(404, "Link does not exist");
   }
-  
-  const deleteAnalytics = await Analytics.deleteOne({ linkId: link?._id });
-  if (deleteAnalytics.deletedCount === 0) {
-    throw new apiError(
-      500,
-      "Something went wrong while deleting analytics for the url"
-    );
+  const isAnalyticsExist = await Analytics.findOne({ linkId: link?._id });
+
+  if (isAnalyticsExist) {
+    const deleteAnalytics = await Analytics.deleteOne({ linkId: link?._id });
+    if (deleteAnalytics.deletedCount === 0) {
+      throw new apiError(
+        500,
+        "Something went wrong while deleting analytics for the url"
+      );
+    }
   }
   const deleteLink = await Link.deleteOne({ _id: link?._id });
   if (deleteLink.deletedCount === 0) {

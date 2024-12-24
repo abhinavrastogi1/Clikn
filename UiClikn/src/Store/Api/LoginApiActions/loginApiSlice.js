@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { loggedInReducer } from "../../UiActions/loginSlice.js";
+import { loggedInReducer, setLoginMsg } from "../../UiActions/loginSlice.js";
 import axios from "axios";
-import { createShortLinkApi } from "../ShortLinkActions/createShortLinkSlice.js";
 import { setLoadingBar } from "../../UiActions/LoadingBarSlice.js";
 export const verifyLogin = createAsyncThunk(
   "loginApiSlice/verifyLogin",
@@ -33,8 +32,14 @@ export const loginViaForm = createAsyncThunk(
       }
       return response.data.data;
     } catch (error) {
-      if (response.status === 409) {
-      } else if (response.status === 401) {
+      if (error.status === 409) {
+        dispatch(
+          setLoginMsg(
+            "This email is linked to a Google account. Please use Log in with Google to access your account."
+          )
+        );
+      } else if (error.status === 401) {
+        dispatch(setLoginMsg("Invalid password!"));
       }
       console.error("Login failed", error);
       throw error;
@@ -51,7 +56,16 @@ export const signUpViaForm = createAsyncThunk(
       }
       return response.data.data;
     } catch (error) {
-      if (response.status === 409) {
+      if (
+        error.status === 409 &&
+        error.response.data.message === "Email is already in use.login via form"
+      ) {
+        dispatch(setLoginMsg("Email is already in use.login via form"));
+      } else if (
+        error.status === 409 &&
+        error.response.data.message === "Email is already in use.login via google"
+      ) {
+        dispatch(setLoginMsg("Email is already in use.login via google"));
       }
       console.error("Signup failed", error);
       throw error;

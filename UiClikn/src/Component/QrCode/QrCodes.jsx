@@ -39,7 +39,7 @@ function QrCodes() {
               Create Code
             </button>
             {createQr && (
-              <CreateLink formType="link" setCreateLink={createQr} />
+              <CreateLink formType="link" setCreateLink={setCreateQR} />
             )}
           </div>
         </div>

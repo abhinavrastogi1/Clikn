@@ -53,21 +53,22 @@ const userRegistration = asyncHandler(async (req, res) => {
 
     const userExits = await User.findOne({ email: email });
     if (userExits) {
-      throw new apiError(409, "Email is already in use.login via form");
+      if (userExits?.password) {
+        throw new apiError(409, "Email is already in use.login via form");
+      } else if (userExits?.googleId) {
+        throw new apiError(409, "Email is already in use.login via google");
+      }
     }
-
     user = await User.create({
       firstName,
       secondName,
       email,
       password,
     });
-
     if (!user) {
       throw new apiError(500, "Something went wrong while registering user");
     }
   }
-
   //if user used google to register
   else if (code) {
     // google registration
@@ -198,4 +199,4 @@ const userLogout = asyncHandler(async (req, res) => {
   res.status(200).cookie();
 });
 
-export { userRegistration, userLogin, verifyUser,userLogout };
+export { userRegistration, userLogin, verifyUser, userLogout };

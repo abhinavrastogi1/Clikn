@@ -22,7 +22,6 @@ function Links() {
       document.removeEventListener("mousedown", handleClick);
     };
   }, []);
-  
   return (
     <div className="min-h-screen  px-2 sm:px-10 md:px-16 lg:px-20 xl:px-48 relative ">
       <div className="px-4 mx-auto  sm:px-6 lg:px-8">

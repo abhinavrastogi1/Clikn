@@ -12,7 +12,7 @@ import { IoPersonCircleSharp } from "react-icons/io5";
 import { IoIosMail } from "react-icons/io";
 import { FiHome } from "react-icons/fi";
 import { logoutApiCall } from "../../Store/Api/LogoutApiActions/logoutSlice";
-
+import { setLinkDelete_CreateMsg } from "../../Store/UiActions/LinkDeleteCreateMsg";
 function MainHeader() {
   const [hideNav, setHideNav] = useState(false);
   const [theme, setTheme] = useState("dark");
@@ -24,10 +24,16 @@ function MainHeader() {
     }
   }, [theme]);
   const { loading } = useSelector((state) => state.loadingBarSlice);
+  const { linkDelete_CreateMsg } = useSelector(
+    (state) => state.linkDelete_CreateMsgSlice
+  );
+
   const { user = {} } = useSelector((state) => state.loginApiSlice);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { email, firstName, secondName } = user;
+  const [errorMsg, setErrorMsg] = useState(false);
+  const [errorMsgTransition, setErrorMsgTransition] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const [showNavigation, setShowNavigation] = useState(false);
   function capitalizeWord(str) {
@@ -35,7 +41,6 @@ function MainHeader() {
   }
   const profileRef = useRef();
   const navigationRef = useRef();
-
   useEffect(() => {
     function handleClick(e) {
       if (profileRef.current && !profileRef.current.contains(e.target)) {
@@ -60,12 +65,53 @@ function MainHeader() {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
-
+  useEffect(() => {
+    if (linkDelete_CreateMsg) {
+      setErrorMsg(true);
+    }
+  }, [linkDelete_CreateMsg]);
+  useEffect(() => {
+    // Start the transition
+    const addMsgTransition = setTimeout(() => {
+      setErrorMsgTransition(true); // End the transition
+    }, 100);
+    const removeMsgTransition = setTimeout(() => {
+      setErrorMsgTransition(false); // End the transition
+    }, 3000);
+    const removeMsg = setTimeout(() => {
+      setErrorMsg(false); // Remove the message
+      dispatch(setLinkDelete_CreateMsg(""));
+    }, 4000);
+    return () => {
+      clearTimeout(removeMsg); // Clear the removal of the message
+      clearTimeout(removeMsgTransition);
+      clearTimeout(addMsgTransition);
+    };
+  }, [errorMsg]);
   return (
     <>
+      <div className="z-0 absolute items-center w-full -top-16 flex justify-center  ">
+        {" "}
+        {errorMsg && (
+          <div
+            className={`border-2 border-red-500 rounded-md p-3 text-center   w-64
+              transition    transform    ease-in-out font-bold duration-1000 delay-75 
+              dark:bg-DB bg-offwhite dark:shadow-sm dark:shadow-white shadow:xl
+              ${
+                errorMsgTransition
+                  ? " translate-y-32 opacity-100 sm:translate-y-20 md:translate-y-24 lg:translate-y-32 "
+                  : "translate-y-0 opacity-0"
+              }`}
+          >
+            <h2 className="text-red-500 text-sm md:text-base ">
+              {linkDelete_CreateMsg}
+            </h2>
+          </div>
+        )}
+      </div>
       <header
-        className="  lg:pb-0 shadow-xl  dark:shadow-md border-slate-500  h-[10vh]
-     px-2 sm:px-10 md:px-16 lg:px-20 xl:px-48 "
+        className="  lg:pb-0 shadow-xl  dark:shadow-md relative border-slate-500  h-[10vh]
+     px-2 sm:px-10 md:px-16 lg:px-20 xl:px-48 !z-50  "
       >
         <div className="px-4 mx-auto  h-full sm:px-6 lg:px-8 ">
           <nav className="flex items-center justify-between h-full lg:h-full  w-full  ">
@@ -331,7 +377,7 @@ function MainHeader() {
           </nav>
         </div>
       </header>
-      <div className="flex  bg-lightblue h-1 overflow-hidden">
+      <div className="flex  bg-white h-1 overflow-hidden">
         <div
           className={`Loading bg-blue h-full w-[50%] ${
             loading && "left-loader"

@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice, original } from "@reduxjs/toolkit";
 import axios from "axios";
 import { setLoadingBar } from "../../UiActions/LoadingBarSlice";
 import { getUserLinkApi } from "./getUserLinksSlice";
+import { setLinkDelete_CreateMsg } from "../../UiActions/LinkDeleteCreateMsg";
 
 export const createShortLinkApi = createAsyncThunk(
   "createShortLinkSlice/createShortLinkApi",
@@ -25,9 +26,13 @@ export const createShortLinkApi = createAsyncThunk(
         }
       );
       dispatch(getUserLinkApi());
+      dispatch(setLinkDelete_CreateMsg("Your link is ready! 🎉"));
       dispatch(setLoadingBar(false));
       return response.data.data;
     } catch (error) {
+      dispatch(
+        setLinkDelete_CreateMsg(" Failed to create Your link. Try again!")
+      );
       console.error("Failed to create the link. Please try again", error);
       dispatch(setLoadingBar(false));
       throw error;

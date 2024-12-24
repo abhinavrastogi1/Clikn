@@ -11,13 +11,13 @@ function CreateLink({ formType, setCreateLink }) {
     e.preventDefault();
     try {
       new URL(url);
-      dispatch(createShortLinkApi({ originalLink: url, title: urlTitle }));
       setCreateLink(false);
+      dispatch(createShortLinkApi({ originalLink: url, title: urlTitle }));
     } catch (error) {
+      console.error(error)
       setIsUrlWrong(true);
     }
   }
-
   return (
     <div
       className="absolute  top-12 right-0 rounded-md z-50 p-4
@@ -85,7 +85,7 @@ function CreateLink({ formType, setCreateLink }) {
             setCreateLink(false);
           }}
         >
-          Cancle
+          Cancel
         </button>
         <button
           onClick={createShortLink}

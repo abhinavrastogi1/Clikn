@@ -13,6 +13,7 @@ import linkedinIcon from "../../assets/linkedinIcon.svg";
 import whatsappIcon from "../../assets/whatsappIcon.svg";
 import twitterIcon from "../../assets/twitterIcon.svg";
 import facebookIcon from "../../assets/facebookIcon.svg";
+import DeleteLink from "../Link/DeleteLink.jsx";
 function LinkCard({ linkData }) {
   const originalUrl = linkData?.originalLink;
   const shortLink = `clikn.in/${linkData?.shortId}`;
@@ -22,11 +23,8 @@ function LinkCard({ linkData }) {
   const month = date.toLocaleString("default", { month: "short" });
   const year = date.getFullYear();
   const [urlLogo, seturlLogo] = useState(`${originalUrl}/favicon.ico`);
-  const [showShareComponent, setShareComponent] = useState(false);
   const _id = linkData?._id;
-  const dispatch = useDispatch();
   const [copied, setShowCopied] = useState(false);
-
   const copyToClipboard = async (link) => {
     try {
       await navigator.clipboard.writeText(link);
@@ -38,7 +36,6 @@ function LinkCard({ linkData }) {
       console.error("Failed to copy:", error);
     }
   };
-
   const shareUrl = `https://${shortLink}`;
   const [showShareIcons, setShowShareIcons] = useState(false);
   const shareRef = useRef();
@@ -68,6 +65,7 @@ function LinkCard({ linkData }) {
       }, 100);
     }
   }, [showShareIcons]);
+  const [deleteLink, setDeleteLink] = useState(false);
 
   return (
     <div className=" grid grid-rows-3 sm:grid-rows-1 sm:grid-cols-3 dark:bg-slate-800  shadow-2xl dark:shadow-lg dark:shadow-gray-700 rounded-md relative">
@@ -162,7 +160,7 @@ function LinkCard({ linkData }) {
          border-gray-200 text-red-600 flex  gap-2 dark:bg-white rounded-md
           font-bold justify-center items-center transition transform ease-in-out duration-700 hover:scale-110"
           onClick={() => {
-            dispatch(deleteLinkCall(_id));
+            setDeleteLink(true);
           }}
         >
           <MdDelete className="text-2xl lg:text-xl " />
@@ -253,6 +251,7 @@ function LinkCard({ linkData }) {
           </div>
         )}
       </div>
+      {deleteLink && <DeleteLink _id={_id}  setDeleteLink={setDeleteLink}/>}
     </div>
   );
 }

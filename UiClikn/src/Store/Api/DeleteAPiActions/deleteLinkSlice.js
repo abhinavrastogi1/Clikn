@@ -1,17 +1,26 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { getUserLinkApi } from "../ShortLinkActions/getUserLinksSlice";
+import { setLoadingBar } from "../../UiActions/LoadingBarSlice";
+import { setLinkDelete_CreateMsg } from "../../UiActions/LinkDeleteCreateMsg";
 export const deleteLinkCall = createAsyncThunk(
   "deleteLinkSlice/deleteLinkCall",
   async (_id, { dispatch }) => {
+    dispatch(setLoadingBar(true));
     try {
       const response = await axios.get("/user/url/deleteLink", {
         params: {
           _id: _id,
         },
       });
+      dispatch(setLoadingBar(false));
       dispatch(getUserLinkApi());
+      dispatch(setLinkDelete_CreateMsg("Your link is deleted!"));
     } catch (error) {
+      dispatch(setLoadingBar(false));
+      dispatch(
+        setLinkDelete_CreateMsg(" Failed to delete Your link. Try again!")
+      );
       console.error("Something went wrong while deleting link ");
       throw error;
     }

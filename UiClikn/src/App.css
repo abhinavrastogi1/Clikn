@@ -3,16 +3,14 @@
   margin: 0px;
 }
 /* Hide scrollbar */
-html .scroll{
+.scroll{
   scrollbar-width: none; /* For Firefox */
   -ms-overflow-style: none; /* For IE and Edge */
 }
 
-html::-webkit-scrollbar {
+.scroll::-webkit-scrollbar {
   display: none; /* For Chrome, Safari, and Edge */
 }
-
-
 :root {
   --custom-blue: #4395b1;
   --custom-orange: #f26204;

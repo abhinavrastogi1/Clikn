@@ -16,6 +16,7 @@ import linkedinIcon from "../../assets/linkedinIcon.svg";
 import whatsappIcon from "../../assets/whatsappIcon.svg";
 import twitterIcon from "../../assets/twitterIcon.svg";
 import facebookIcon from "../../assets/facebookIcon.svg";
+import DeleteLink from "../Link/DeleteLink";
 function QrCodeCard({ linkData }) {
   const originalUrl = linkData?.originalLink;
   const shortLink = `clikn.in/${linkData?.shortId}`;
@@ -79,10 +80,12 @@ function QrCodeCard({ linkData }) {
       const blob = new Blob([svgString], { type: "image/svg+xml" });
       const link = document.createElement("a");
       link.href = URL.createObjectURL(blob);
-      link.download = `${linkData?.shortId}QRCode.png`; 
-      link.click(); 
+      link.download = `${linkData?.shortId}QRCode.png`;
+      link.click();
     }
   }
+  const [deleteLink, setDeleteLink] = useState(false);
+
   return (
     <div className=" grid grid-rows-3 sm:grid-rows-1 sm:grid-cols-3 dark:bg-slate-800  shadow-2xl dark:shadow-lg dark:shadow-gray-700 rounded-md ">
       <div className=" row-span-2 sm:col-span-2 sm:row-span-1  overflow-hidden p-4 pb-2 border-b-[1px] sm:border-b-0 sm:border-r-[1px] border-gray-200 ">
@@ -201,7 +204,7 @@ function QrCodeCard({ linkData }) {
           text-red-600 flex  gap-2 dark:bg-white rounded-md font-bold justify-center items-center
            transition transform ease-in-out duration-300 hover:scale-110"
           onClick={() => {
-            dispatch(deleteLinkCall(_id));
+            setDeleteLink(true);
           }}
         >
           <MdDelete className="text-2xl  " />
@@ -299,6 +302,8 @@ function QrCodeCard({ linkData }) {
           </div>
         )}
       </div>
+
+      {deleteLink && <DeleteLink _id={_id} setDeleteLink={setDeleteLink} />}
     </div>
   );
 }

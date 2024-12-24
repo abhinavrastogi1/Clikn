@@ -1,20 +1,23 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { setLoadingBar } from "../../UiActions/LoadingBarSlice";
 export const analyticsApiCall = createAsyncThunk(
   "analyticsSlice/analyticsApiCall",
-  async (apiCallData) => {
+  async (apiCallData, { dispatch }) => {
+    dispatch(setLoadingBar(true));
     try {
       const response = await axios.get("/user/analytics", {
         params: apiCallData,
       });
+      dispatch(setLoadingBar(false));
       return response.data.data;
     } catch (error) {
+      dispatch(setLoadingBar(false));
       console.error("Error while fetching Analytics", error);
       throw error;
     }
   }
 );
-
 const analyticsSlice = createSlice({
   name: "analyticsSlice",
   initialState: {
