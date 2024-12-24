@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { MdDelete } from "react-icons/md";
 import { IoMdShare } from "react-icons/io";
 import { MdContentCopy } from "react-icons/md";
@@ -9,7 +9,13 @@ import browser from "../../assets/browser.png";
 import QRCode from "react-qr-code";
 import { deleteLinkCall } from "../../Store/Api/DeleteAPiActions/deleteLinkSlice";
 import { useDispatch } from "react-redux";
-
+import { GiCheckMark } from "react-icons/gi";
+import { IoCopy } from "react-icons/io5";
+import { IoCopyOutline } from "react-icons/io5";
+import linkedinIcon from "../../assets/linkedinIcon.svg";
+import whatsappIcon from "../../assets/whatsappIcon.svg";
+import twitterIcon from "../../assets/twitterIcon.svg";
+import facebookIcon from "../../assets/facebookIcon.svg";
 function QrCodeCard({ linkData }) {
   const originalUrl = linkData?.originalLink;
   const shortLink = `clikn.in/${linkData?.shortId}`;
@@ -22,7 +28,48 @@ function QrCodeCard({ linkData }) {
   const _id = linkData?._id;
 
   const dispatch = useDispatch();
+  const [copied, setShowCopied] = useState(false);
 
+  const copyToClipboard = async (link) => {
+    try {
+      await navigator.clipboard.writeText(link);
+      setShowCopied(true);
+      setTimeout(() => {
+        setShowCopied(false);
+      }, 2000);
+    } catch (error) {
+      console.error("Failed to copy:", error);
+    }
+  };
+  const shareUrl = `https://${shortLink}`;
+  const [showShareIcons, setShowShareIcons] = useState(false);
+  const shareRef = useRef();
+  const shareButtonRef = useRef();
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (
+        shareRef.current &&
+        !shareRef.current.contains(e.target) &&
+        shareButtonRef.current &&
+        !shareButtonRef.current.contains(e.target)
+      ) {
+        setShowShareIcons(false);
+        setAnimateShare(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+  const [animateshare, setAnimateShare] = useState(false);
+  useEffect(() => {
+    if (showShareIcons) {
+      setTimeout(() => {
+        setAnimateShare(true);
+      }, 100);
+    }
+  }, [showShareIcons]);
   return (
     <div className=" grid grid-rows-3 sm:grid-rows-1 sm:grid-cols-3 dark:bg-slate-800  shadow-2xl dark:shadow-lg dark:shadow-gray-700 rounded-md ">
       <div className=" row-span-2 sm:col-span-2 sm:row-span-1  overflow-hidden p-4 pb-2 border-b-[1px] sm:border-b-0 sm:border-r-[1px] border-gray-200 ">
@@ -78,25 +125,64 @@ function QrCodeCard({ linkData }) {
         </div>
       </div>
 
-      <div className="  flex justify-end p-2 pt-4 sm:p-4 sm:pt-8  gap-3 flex-wrap ">
-        <button
-          className="p-1 border-[1px] h-10 w-10 lg:w-24   border-gray-200 flex gap-2 dark:bg-white rounded-md font-bold justify-center 
-        items-center transition transform ease-in-out duration-700 hover:scale-110"
-        >
-          <MdContentCopy className="text-xl  " />
-          <span className="hidden lg:block">Copy</span>
-        </button>
+      <div className="  flex justify-end p-2 pt-4 sm:p-4 sm:pt-8  gap-3 flex-wrap relative">
+        <div className="relative h-10 flex  flex-col justify-center items-center">
+          {/* Button */}
+          <button
+            className="p-1 border-[1px]  h-10 w-10 lg:w-24 border-gray-200
+         flex gap-2 dark:bg-white rounded-md font-bold justify-center items-center 
+         transition transform ease-in-out duration-700 hover:scale-110 lg:hidden"
+            onClick={() => {
+              copyToClipboard(`https://${shortLink}`);
+            }}
+          >
+            {!copied ? (
+              <IoCopyOutline className="text-xl " />
+            ) : (
+              <IoCopy className="text-xl " />
+            )}
+          </button>
+          <button
+            className="p-1 border-[1px] h-10 w-24 border-gray-200  gap-2 dark:bg-white 
+      rounded-md font-bold transition transform ease-in-out 
+      duration-700 hover:scale-110 z-10 relative hidden lg:block"
+            onClick={() => {
+              copyToClipboard(`https://${shortLink}`);
+            }}
+          >
+            {!copied ? (
+              <div className="flex justify-center items-center">
+                {" "}
+                <IoCopyOutline />
+                <span>Copy</span>
+              </div>
+            ) : (
+              <div className="flex justify-center items-center">
+                <GiCheckMark />
+                <span>Copied</span>
+              </div>
+            )}
+          </button>
+        </div>
+
         <button
           className="p-1 border-[1px]  h-10 w-10 lg:w-24 border-gray-200
-         flex gap-2 dark:bg-white rounded-md font-bold justify-center items-center transition transform ease-in-out duration-700 hover:scale-110"
+         flex gap-2 dark:bg-white rounded-md font-bold justify-center items-center 
+         transition transform ease-in-out duration-700 hover:scale-110"
+          onClick={() => {
+            setShowShareIcons(!showShareIcons);
+            setAnimateShare(false);
+          }}
+          ref={shareButtonRef}
         >
           <IoMdShare className="text-xl  " />
           <span className="hidden lg:block">Share</span>
         </button>
+
         <button
           className="p-1 border-[1px] h-10 w-10  border-gray-200
           text-red-600 flex  gap-2 dark:bg-white rounded-md font-bold justify-center items-center
-           transition transform ease-in-out duration-700 hover:scale-110"
+           transition transform ease-in-out duration-300 hover:scale-110"
           onClick={() => {
             dispatch(deleteLinkCall(_id));
           }}
@@ -110,6 +196,90 @@ function QrCodeCard({ linkData }) {
         >
           <IoMdDownload className="text-2xl  " />
         </button>
+        {showShareIcons && (
+          <div
+            className={`absolute  bg-offwhite shadow-lg dark:shadow-md dark:shadow-white dark:bg-slate-800
+        border-[1px]
+         top-16 sm:top-20  z-50 p-7 rounded-md items-center justify-center 
+          transition transform duration-700 ease-in-out ${
+            animateshare ? "scale-100" : "scale-0"
+          }
+          origin-top-right `}
+            ref={shareRef}
+          >
+            <div className="flex gap-4 w-full sm:flex-col lg:flex-row justify-center items-center">
+              <a
+                href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(
+                  shareUrl
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-400 hover:underline shadow-md rounded-md dark:shadow-white bg-white
+              hover:-translate-y-3 duration-500 ease-in-out 
+              "
+              >
+                <img
+                  src={twitterIcon}
+                  alt="whatsapp Icon"
+                  className="h-10 w-10 "
+                />
+              </a>
+
+              <a
+                href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+                  shareUrl
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 hover:underline shadow-md rounded-md dark:shadow-white bg-white
+                            hover:-translate-y-3 duration-500 ease-in-out 
+ "
+              >
+                <img
+                  src={facebookIcon}
+                  alt="whatsapp Icon"
+                  className="h-10 w-10"
+                />
+              </a>
+
+              {/* WhatsApp */}
+              <a
+                href={`https://wa.me/?text=${encodeURIComponent(
+                  ` ${shareUrl}`
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-green-500 hover:underline shadow-md rounded-md dark:shadow-white bg-white
+                            hover:-translate-y-3 duration-500 ease-in-out 
+"
+              >
+                <img
+                  src={whatsappIcon}
+                  alt="whatsapp Icon"
+                  className="h-10 w-10"
+                />
+              </a>
+
+              {/* LinkedIn */}
+              <a
+                href={`https://www.linkedin.com/shareArticle?url=${encodeURIComponent(
+                  shareUrl
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-700 hover:underline shadow-md rounded-md dark:shadow-white bg-white 
+                            hover:-translate-y-3 duration-500 ease-in-out 
+"
+              >
+                <img
+                  src={linkedinIcon}
+                  className="h-10 w-10"
+                  alt="linkedin Icon"
+                />{" "}
+              </a>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

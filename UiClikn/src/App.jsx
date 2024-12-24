@@ -20,7 +20,6 @@ function App() {
     if (formUrl) {
       dispatch(createShortLinkApi({ originalLink: formUrl }));
     }
-    dispatch(getUserLinkApi(0));
   }, []);
   useEffect(() => {
     if (status === "error") {

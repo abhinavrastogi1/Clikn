@@ -1,11 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import LinkCard from "../Cards/LinkCard";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ShareCard from "../Cards/ShareCard";
+import { getUserLinkApi } from "../../Store/Api/ShortLinkActions/getUserLinksSlice";
 
 function Links() {
+  const dispatch=useDispatch()
+  useEffect(()=>{
+    dispatch(getUserLinkApi(0))
+  },[])
   const { userlinks } = useSelector((state) => state.getUserLinkSlice);
-  
   return (
     <div className="min-h-screen  px-2 sm:px-10 md:px-16 lg:px-20 xl:px-48 relative ">
         

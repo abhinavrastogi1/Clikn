@@ -1,8 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import QrCodeCard from "../Cards/QrCodeCard.jsx";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { getUserLinkApi } from "../../Store/Api/ShortLinkActions/getUserLinksSlice.js";
 function QrCodes() {
+  const dispatch=useDispatch()
+  useEffect(()=>{
+    dispatch(getUserLinkApi(0))
+  },[])
   const { userlinks } = useSelector((state) => state.getUserLinkSlice);
 
   return (
