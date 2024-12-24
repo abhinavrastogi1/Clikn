@@ -7,7 +7,7 @@ export const verifyLogin = createAsyncThunk(
   async (_, { dispatch }) => {
     dispatch(setLoadingBar(true));
     try {
-      const response = await axios.get("/user/userVerification", {
+      const response = await axios.get("https://www.clikn.in/user/userVerification", {
         withCredentials: true,
       });
       if (response.status === 200) {
@@ -26,7 +26,7 @@ export const loginViaForm = createAsyncThunk(
   "loginApiSlice/loginViaForm",
   async (loginForm, { dispatch }) => {
     try {
-      const response = await axios.post("/user/login", loginForm);
+      const response = await axios.post("https://www.clikn.in/user/login", loginForm);
       if (response.status === 200) {
         dispatch(loggedInReducer(true));
       }
@@ -50,7 +50,7 @@ export const signUpViaForm = createAsyncThunk(
   "loginApiSlice/signUpViaForm",
   async (signUpFrom, { dispatch }) => {
     try {
-      const response = await axios.post("/user/registration", signUpFrom);
+      const response = await axios.post("https://www.clikn.in/user/registration", signUpFrom);
       if (response.status === 200) {
         dispatch(loggedInReducer(true));
       }

@@ -15,7 +15,7 @@ export const createShortLinkApi = createAsyncThunk(
     try {
       dispatch(setLoadingBar(true));
       const response = await axios.post(
-        "/https://clikn.in/url/generateShortLink",
+        "https://www.clikn.in/url/generateShortLink",
         {},
         {
           params: {
