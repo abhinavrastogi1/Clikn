@@ -1,9 +1,9 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import instagramIcon from "../../assets/instagramIcon.svg"
-import linkedinIcon from "../../assets/linkedinIcon.svg"
+import instagramIcon from "../../assets/instagramIcon.svg";
+import linkedinIcon from "../../assets/linkedinIcon.svg";
 function Footer() {
-  const navigate=useNavigate()
+  const navigate = useNavigate();
   return (
     <footer
       className="footer  text-neutral-content items-center p-4 flex justify-between
@@ -19,39 +19,37 @@ function Footer() {
             className="h-10 w-20 sm:h-16 sm:w-32"
             alt="clikn Logo"
             role="button"
-            onClick={()=>{
-              navigate("/")
+            onClick={() => {
+              navigate("/");
             }}
           />
           <nav className="flex gap-4 md:place-self-center md:justify-self-end  ">
-          <a
-                href="https://www.instagram.com/abh.inav_ras.togi/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-400 hover:underline shadow-md rounded-md dark:shadow-white bg-white
-              hover:-translate-y-3 duration-500 ease-in-out 
+            <a
+              href="https://www.instagram.com/abh.inav_ras.togi/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className=" shadow-md rounded-md 
               "
-              >
-                <img
-                  src={instagramIcon}
-                  alt="instagram Icon"
-                  className="h-10 w-10 "
-                />
-              </a>
-          <a
-                href="https://www.linkedin.com/in/abhinav-rastogi-a664612a3/?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-400 hover:underline shadow-md rounded-md dark:shadow-white bg-white
-              hover:-translate-y-3 duration-500 ease-in-out 
+            >
+              <img
+                src={instagramIcon}
+                alt="instagram Icon"
+                className="h-8 w-8 "
+              />
+            </a>
+            <a
+              href="https://www.linkedin.com/in/abhinav-rastogi-a664612a3/?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
+              target="_blank"
+              rel="noopener noreferrer"
+              className=" shadow-md rounded-md 
               "
-              >
-                <img
-                  src={linkedinIcon}
-                  alt="instagram Icon"
-                  className="h-10 w-10 "
-                />
-              </a>
+            >
+              <img
+                src={linkedinIcon}
+                alt="instagram Icon"
+                className="h-8 w-8 "
+              />
+            </a>
           </nav>
         </aside>
         <p className="w-full text-center font-bold text-lg md:text-xl dark:text-white">
