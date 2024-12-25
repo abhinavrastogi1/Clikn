@@ -20,7 +20,6 @@ export const verifyLogin = createAsyncThunk(
       return response.data.data;
     } catch (error) {
       dispatch(loggedInReducer(false));
-
       console.error("User not verified", error);
       dispatch(setLoadingBar(false));
       throw error;
@@ -48,6 +47,11 @@ export const loginViaForm = createAsyncThunk(
         );
       } else if (error.status === 401) {
         dispatch(setLoginMsg("Invalid password!"));
+      } else if (
+        error.status === 400 &&
+        error.response.data.message === "User not registred"
+      ) {
+        dispatch(setLoginMsg("sign up to create a new account"));
       }
       console.error("Login failed", error);
       throw error;

@@ -127,7 +127,7 @@ const userLogin = asyncHandler(async (req, res) => {
   }
   const userExists = await User.findOne({ email: email });
   if (!userExists) {
-    throw new apiError(400, "Invalid email or password");
+    throw new apiError(400, "User not registred");
   }
   if (userExists?.googleId) {
     throw new apiError(
