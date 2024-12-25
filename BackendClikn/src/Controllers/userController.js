@@ -30,10 +30,9 @@ async function generateTokens(userId) {
 }
 
 const options = {
-  domain: "app.clikn.in",
+  domain:".clikn.in",
   path: "/",
   httpOnly: true,
-  secure: true,
   sameSite: "None",
 };
 
