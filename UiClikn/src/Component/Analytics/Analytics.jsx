@@ -85,17 +85,13 @@ function Analytics() {
       }
       if (window.innerWidth < 625) {
         setPieChartHeight(250);
-        setPieChartOuterRadius(100);
-      }
-      if (window.innerWidth > 625) {
-        setPieChartHeight(300);
-        setPieChartOuterRadius(100);
-      }
-      if (window.innerWidth >= 1024) {
-        setLocationButton(false);
+        setPieChartOuterRadius(70);
       } else {
         setPieChartHeight(400);
         setPieChartOuterRadius(150);
+      }
+      if (window.innerWidth >= 1024) {
+        setLocationButton(false);
       }
     }
     handleSizeChange();
@@ -460,10 +456,7 @@ function Analytics() {
                           </h2>
                         </div>
                       ) : (
-                        <div
-                          
-                          className="rounded-md px-4 py-1 border-[1px]  justify-center items-center "
-                        >
+                        <div className="rounded-md px-4 py-1 border-[1px]  justify-center items-center ">
                           <h2 className="text-lg dark:text-white font-bold flex cursor-pointer justify-center items-center ">
                             No Links
                           </h2>
