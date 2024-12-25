@@ -34,7 +34,7 @@ const options = {
   path: "/",
   httpOnly: true,
   secure: true,
-  sameSite: "Lax",
+  sameSite: "None",
 };
 
 const userRegistration = asyncHandler(async (req, res) => {
