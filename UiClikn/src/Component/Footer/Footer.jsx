@@ -12,7 +12,7 @@ function Footer() {
     dark:shadow-white
     bg-[#f5f3f1] dark:bg-slate-900"
     >
-      <div className="w-full flex flex-col gap-2">
+      <div className="w-full flex flex-col gap-3">
         <aside className="flex items-center justify-between w-full">
           <img
             src="/cliknLogo.png"
@@ -52,7 +52,7 @@ function Footer() {
             </a>
           </nav>
         </aside>
-        <p className="w-full text-center font-bold text-lg md:text-xl dark:text-white">
+        <p className="w-full text-center font-bold text-sm sm:text-lg md:text-xl dark:text-white">
           Copyright © {new Date().getFullYear()} - All right reserved
         </p>
       </div>
