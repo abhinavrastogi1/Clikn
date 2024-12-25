@@ -29,18 +29,12 @@ async function generateTokens(userId) {
   }
 }
 
-// const options = {
-//   domain: 'app.clikn.in',
-//   path:"/",
-//   httpOnly: true,
-//   secure: true,
-//   sameSite: "None",
-// };
 const options = {
+  domain: "app.clikn.in",
+  path: "/",
   httpOnly: true,
-  sameSite:"None" ,
   secure: true,
-  expires: new Date(Date.now() + 86400000),
+  sameSite: "None",
 };
 
 const userRegistration = asyncHandler(async (req, res) => {
