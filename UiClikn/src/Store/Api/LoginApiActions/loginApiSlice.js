@@ -64,7 +64,7 @@ export const signUpViaForm = createAsyncThunk(
     try {
       const response = await axios.post(
         "https://www.clikn.in/user/registration",
-        signUpFrom
+        signUpFrom, { withCredentials: true } 
       );
       if (response.status === 200) {
         dispatch(loggedInReducer(true));
