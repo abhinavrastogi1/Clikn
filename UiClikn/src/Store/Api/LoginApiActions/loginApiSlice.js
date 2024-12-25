@@ -10,7 +10,7 @@ export const verifyLogin = createAsyncThunk(
       const response = await axios.get(
         "https://www.clikn.in/user/userVerification",
         {
-          withCredentials: true,
+          withCredentials: "include",
         }
       );
       if (response.status === 200) {
