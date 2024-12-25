@@ -10,7 +10,7 @@ export const verifyLogin = createAsyncThunk(
       const response = await axios.get(
         "https://www.clikn.in/user/userVerification",
         {
-          withCredentials: "include",
+          withCredentials: true,
         }
       );
       if (response.status === 200) {
@@ -32,7 +32,7 @@ export const loginViaForm = createAsyncThunk(
     try {
       const response = await axios.post(
         "https://www.clikn.in/user/login",
-        loginForm
+        loginForm,{withCredentials:true}
       );
       if (response.status === 200) {
         dispatch(loggedInReducer(true));
