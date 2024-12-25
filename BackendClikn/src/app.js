@@ -14,5 +14,5 @@ app.use(express.urlencoded({ extended: true, limit: "16kb" }));
 app.use(cookieParser());
 app.use("/",linKRouter)
 app.use("/user", userRouter);
-app.use("/",analyticsRouter)
+app.use("/link",analyticsRouter)
 app.use(errorHandler);

@@ -187,11 +187,6 @@ const userLogout = asyncHandler(async (req, res) => {
       new: true,
     }
   );
-  const options = {
-    httpOnly: true,
-    secure: true,
-    sameSite: "None",
-  };
   res
     .status(201)
     .clearCookie("accessToken", options)
