@@ -4,7 +4,7 @@ function Footer() {
   return (
     <footer
       className="footer  text-neutral-content items-center p-4 flex justify-between
-    px-2 sm:px-10 md:px-16 lg:px-20 xl:px-48 mt-6
+    px-2 sm:px-10 md:px-16 lg:px-20 xl:px-36 mt-6
     shadow-xl
     dark:shadow-white
     bg-[#f5f3f1] dark:bg-slate-900"

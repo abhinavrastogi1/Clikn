@@ -111,7 +111,7 @@ function MainHeader() {
       </div>
       <header
         className="  lg:pb-0 shadow-xl  dark:shadow-md relative border-slate-500  h-[10vh]
-     px-2 sm:px-10 md:px-16 lg:px-20 xl:px-48 !z-50  "
+     px-2 sm:px-10 md:px-16 lg:px-20 xl:px-36 !z-50  "
       >
         <div className="px-4 mx-auto  h-full sm:px-6 lg:px-8 ">
           <nav className="flex items-center justify-between h-full lg:h-full  w-full  ">
