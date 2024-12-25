@@ -28,26 +28,26 @@ function Footer() {
               href="https://www.instagram.com/abh.inav_ras.togi/"
               target="_blank"
               rel="noopener noreferrer"
-              className=" shadow-md rounded-md 
+              className=" shadow-md rounded-md  h-8 w-8 sm:h-10 sm:w-10
               "
             >
               <img
                 src={instagramIcon}
                 alt="instagram Icon"
-                className="h-8 w-8 "
+                className="h-full w-full "
               />
             </a>
             <a
               href="https://www.linkedin.com/in/abhinav-rastogi-a664612a3/?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
               target="_blank"
               rel="noopener noreferrer"
-              className=" shadow-md rounded-md 
+              className=" shadow-md rounded-md h-8 w-8 sm:h-10 sm:w-10
               "
             >
               <img
                 src={linkedinIcon}
                 alt="instagram Icon"
-                className="h-6 w-6 "
+                className="h-full w-full "
               />
             </a>
           </nav>
