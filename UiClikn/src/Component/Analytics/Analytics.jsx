@@ -444,16 +444,27 @@ function Analytics() {
                       Links:
                     </h2>
                     <div className="bg-transparent relative ">
-                      <div
-                        onClick={() => {
-                          setShowLinks(!showLinks);
-                        }}
-                        className="rounded-md px-4 py-1 border-[1px]  justify-center items-center "
-                      >
-                        <h2 className="text-lg dark:text-white font-bold flex cursor-pointer justify-center items-center ">
-                          {link}{" "}
-                        </h2>
-                      </div>
+                      {userlinks?.length > 0 ? (
+                        <div
+                          onClick={() => {
+                            setShowLinks(!showLinks);
+                          }}
+                          className="rounded-md px-4 py-1 border-[1px]  justify-center items-center "
+                        >
+                          <h2 className="text-lg dark:text-white font-bold flex cursor-pointer justify-center items-center ">
+                            {link}{" "}
+                          </h2>
+                        </div>
+                      ) : (
+                        <div
+                          
+                          className="rounded-md px-4 py-1 border-[1px]  justify-center items-center "
+                        >
+                          <h2 className="text-lg dark:text-white font-bold flex cursor-pointer justify-center items-center ">
+                            No Links
+                          </h2>
+                        </div>
+                      )}
                       {showLinks && (
                         <div
                           className="flex flex-col border-[1px] mt-1 
