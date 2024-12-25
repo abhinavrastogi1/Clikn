@@ -12,7 +12,7 @@ function Footer() {
     dark:shadow-white
     bg-[#f5f3f1] dark:bg-slate-900"
     >
-      <div className="w-full">
+      <div className="w-full flex flex-col gap-2">
         <aside className="flex items-center justify-between w-full">
           <img
             src="/cliknLogo.png"
@@ -47,7 +47,7 @@ function Footer() {
               <img
                 src={linkedinIcon}
                 alt="instagram Icon"
-                className="h-8 w-8 "
+                className="h-6 w-6 "
               />
             </a>
           </nav>
