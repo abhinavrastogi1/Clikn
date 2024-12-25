@@ -84,6 +84,10 @@ function Analytics() {
         setLocation(true);
       }
       if (window.innerWidth < 625) {
+        setPieChartHeight(250);
+        setPieChartOuterRadius(100);
+      }
+      if (window.innerWidth > 625) {
         setPieChartHeight(300);
         setPieChartOuterRadius(100);
       }
