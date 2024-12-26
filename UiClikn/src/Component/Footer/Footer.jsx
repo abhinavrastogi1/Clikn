@@ -20,7 +20,7 @@ function Footer() {
             alt="clikn Logo"
             role="button"
             onClick={() => {
-              navigate("/");
+              navigate("/home");
             }}
           />
           <nav className="flex gap-4 md:place-self-center md:justify-self-end  ">
