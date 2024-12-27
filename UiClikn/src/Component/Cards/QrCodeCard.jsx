@@ -90,6 +90,17 @@ function QrCodeCard({ linkData }) {
     // }
     const canvas = document.querySelector("#qrcode-canvas");
     if (!canvas) throw new Error("<canvas> not found in the DOM");
+    const newWidth = 200; // Change this to your desired width
+    const newHeight = 200; // Change this to your desired height
+
+    canvas.width = newWidth;
+    canvas.height = newHeight;
+
+    // Optionally, you can also scale the content (QR code) if needed
+    const context = canvas.getContext("2d");
+    if (context) {
+      context.scale(newWidth / canvas.width, newHeight / canvas.height); // Scale the QR code content if necessary
+    }
     const pngUrl = canvas
       .toDataURL("image/png")
       .replace("image/png", "image/octet-stream");
@@ -116,11 +127,10 @@ function QrCodeCard({ linkData }) {
             <QRCodeCanvas
               id="qrcode-canvas"
               level="H"
-              size={200}
+              size={100}
               value={`https://${shortLink} `}
               className="h-full w-auto"
             />
-            
           </div>
           <div>
             <div className="m-2 ml-0">
