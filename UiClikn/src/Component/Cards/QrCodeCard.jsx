@@ -78,38 +78,38 @@ function QrCodeCard({ linkData }) {
   }, [showShareIcons]);
   const qrCodeRef = useRef();
   function downloadQRCode() {
-    // if (qrCodeRef.current) {
-    //   const svgString = new XMLSerializer().serializeToString(
-    //     qrCodeRef.current
-    //   );
-    //   const blob = new Blob([svgString], { type: "image/svg+xml" });
-    //   const link = document.createElement("a");
-    //   link.href = URL.createObjectURL(blob);
-    //   link.download = `${linkData?.shortId}QRCode.jpeg`;
-    //   link.click();
-    // }
-    const canvas = document.querySelector("#qrcode-canvas");
-    if (!canvas) throw new Error("<canvas> not found in the DOM");
-    const newWidth = 200; // Change this to your desired width
-    const newHeight = 200; // Change this to your desired height
-
-    canvas.width = newWidth;
-    canvas.height = newHeight;
-
-    // Optionally, you can also scale the content (QR code) if needed
-    const context = canvas.getContext("2d");
-    if (context) {
-      context.scale(newWidth / canvas.width, newHeight / canvas.height); // Scale the QR code content if necessary
+    if (qrCodeRef.current) {
+      const svgString = new XMLSerializer().serializeToString(
+        qrCodeRef.current
+      );
+      const blob = new Blob([svgString], { type: "image/svg+xml" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = `${linkData?.shortId}QRCode.png`;
+      link.click();
     }
-    const pngUrl = canvas
-      .toDataURL("image/png")
-      .replace("image/png", "image/octet-stream");
-    const downloadLink = document.createElement("a");
-    downloadLink.href = pngUrl;
-    downloadLink.download = "QR code.png";
-    document.body.appendChild(downloadLink);
-    downloadLink.click();
-    document.body.removeChild(downloadLink);
+    // const canvas = document.querySelector("#qrcode-canvas");
+    // if (!canvas) throw new Error("<canvas> not found in the DOM");
+    // const newWidth = 200; // Change this to your desired width
+    // const newHeight = 200; // Change this to your desired height
+
+    // canvas.width = newWidth;
+    // canvas.height = newHeight;
+
+    // // Optionally, you can also scale the content (QR code) if needed
+    // const context = canvas.getContext("2d");
+    // if (context) {
+    //   context.scale(newWidth / canvas.width, newHeight / canvas.height); // Scale the QR code content if necessary
+    // }
+    // const pngUrl = canvas
+    //   .toDataURL("image/png")
+    //   .replace("image/png", "image/octet-stream");
+    // const downloadLink = document.createElement("a");
+    // downloadLink.href = pngUrl;
+    // downloadLink.download = "QR code.png";
+    // document.body.appendChild(downloadLink);
+    // downloadLink.click();
+    // document.body.removeChild(downloadLink);
   }
   const [deleteLink, setDeleteLink] = useState(false);
 
@@ -119,18 +119,18 @@ function QrCodeCard({ linkData }) {
         <div className="flex flex-row gap-3  overflow-hidden  ">
           <div className="bg-white  p-1 h-[108px] shadow-lg">
             {" "}
-            {/* <QRCode
+            <QRCode
               value={`https://${shortLink} `}
               size={100}
               ref={qrCodeRef}
-            /> */}
-            <QRCodeCanvas
+            />
+            {/* <QRCodeCanvas
               id="qrcode-canvas"
               level="H"
               size={100}
               value={`https://${shortLink} `}
               className="h-full w-auto"
-            />
+            /> */}
           </div>
           <div>
             <div className="m-2 ml-0">
