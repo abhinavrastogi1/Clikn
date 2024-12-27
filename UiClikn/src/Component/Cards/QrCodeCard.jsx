@@ -120,7 +120,7 @@ function QrCodeCard({ linkData }) {
               size={100}
               value={`https://${shortLink} `}
             />
-            s
+            
           </div>
           <div>
             <div className="m-2 ml-0">
