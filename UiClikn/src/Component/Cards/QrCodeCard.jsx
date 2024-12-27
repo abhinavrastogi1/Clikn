@@ -90,7 +90,6 @@ function QrCodeCard({ linkData }) {
     // }
     const canvas = document.querySelector("#qrcode-canvas");
     if (!canvas) throw new Error("<canvas> not found in the DOM");
-
     const pngUrl = canvas
       .toDataURL("image/png")
       .replace("image/png", "image/octet-stream");
@@ -117,8 +116,9 @@ function QrCodeCard({ linkData }) {
             <QRCodeCanvas
               id="qrcode-canvas"
               level="H"
-              size={100}
+              size={200}
               value={`https://${shortLink} `}
+              className="h-full w-auto"
             />
             
           </div>
