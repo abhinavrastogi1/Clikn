@@ -48,7 +48,7 @@ function QrCodeCard({ linkData }) {
   const [showShareIcons, setShowShareIcons] = useState(false);
   const shareRef = useRef();
   const shareButtonRef = useRef();
-  const navigate =useNavigate()
+  const navigate = useNavigate();
   useEffect(() => {
     function handleClickOutside(e) {
       if (
@@ -77,16 +77,35 @@ function QrCodeCard({ linkData }) {
   const qrCodeRef = useRef();
   function downloadQRCode() {
     if (qrCodeRef.current) {
-      const svgString = new XMLSerializer().serializeToString(
-        qrCodeRef.current
-      );
-      const blob = new Blob([svgString], { type: "image/svg+xml" });
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = `${linkData?.shortId}QRCode.png`;
-      link.click();
+      const svgElement = qrCodeRef.current;
+
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+
+      const size = 200;
+      canvas.width = size;
+      canvas.height = size;
+
+      const svgString = new XMLSerializer().serializeToString(svgElement);
+      const svgUrl = `data:image/svg+xml;base64,${btoa(svgString)}`;
+
+      const img = new Image();
+      img.onload = () => {
+        ctx.clearRect(0, 0, size, size);
+        ctx.drawImage(img, 0, 0, size, size);
+
+        const pngUrl = canvas.toDataURL("image/png");
+
+        const link = document.createElement("a");
+        link.href = pngUrl;
+        link.download = `${linkData?.shortId}QRCode.png`;
+        link.click();
+      };
+
+      img.src = svgUrl;
     }
   }
+
   const [deleteLink, setDeleteLink] = useState(false);
 
   return (
