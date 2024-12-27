@@ -105,7 +105,7 @@ function LinkCard({ linkData }) {
                 {originalUrl}
               </a>
             </div>
-            <div className="flex gap-2 mt-4 justify-center items-start ">
+            <div className="flex gap-2 mt-4 justify-start items-center ">
               <IoStatsChartSharp className="dark:text-white cursor-pointer" onClick={()=>{
                 dispatch(setShortLink(linkData?.shortId))
                 navigate("/home/analytics")
