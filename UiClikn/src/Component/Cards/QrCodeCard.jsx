@@ -117,7 +117,7 @@ function QrCodeCard({ linkData }) {
             <QRCodeCanvas
               id="qrcode-canvas"
               level="H"
-              size={200}
+              size={100}
               value={`https://${shortLink} `}
             />
             s
