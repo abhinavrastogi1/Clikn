@@ -14,6 +14,8 @@ import whatsappIcon from "../../assets/whatsappIcon.svg";
 import twitterIcon from "../../assets/twitterIcon.svg";
 import facebookIcon from "../../assets/facebookIcon.svg";
 import DeleteLink from "../Link/DeleteLink.jsx";
+import { setShortLink } from "../../Store/Api/ShortLinkActions/createShortLinkSlice.js";
+import { useNavigate } from "react-router-dom";
 function LinkCard({ linkData }) {
   const originalUrl = linkData?.originalLink;
   const shortLink = `clikn.in/${linkData?.shortId}`;
@@ -25,6 +27,8 @@ function LinkCard({ linkData }) {
   const [urlLogo, seturlLogo] = useState(`${originalUrl}/favicon.ico`);
   const _id = linkData?._id;
   const [copied, setShowCopied] = useState(false);
+  const dispatch=useDispatch()
+   const navigate =useNavigate()
   const copyToClipboard = async (link) => {
     try {
       await navigator.clipboard.writeText(link);
@@ -102,7 +106,10 @@ function LinkCard({ linkData }) {
               </a>
             </div>
             <div className="flex gap-2 mt-4 justify-center items-center ">
-              <IoStatsChartSharp className="dark:text-white cursor-pointer" />
+              <IoStatsChartSharp className="dark:text-white cursor-pointer" onClick={()=>{
+                dispatch(setShortLink(linkData?.shortId))
+                navigate("/home/analytics")
+              }}/>
               <div className="dark:text-white flex  justify-center items-center cursor-pointer">
                 <CiCalendar className="font-bold  text-xl " />
                 <span className="mt-1">

@@ -45,8 +45,13 @@ const createShortLinkSlice = createSlice({
     status: "idle",
     error: null,
     linkData: {},
+    shortLink:"",
   },
-  reducers: {},
+  reducers: {
+    setShortLink: (state, action) => {
+      state.shortLink = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(createShortLinkApi.fulfilled, (state, action) => {
@@ -62,4 +67,5 @@ const createShortLinkSlice = createSlice({
       });
   },
 });
+export const { setShortLink } = createShortLinkSlice.actions;
 export default createShortLinkSlice.reducer;

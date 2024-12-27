@@ -29,14 +29,19 @@ function Analytics() {
     dispatch(getUserLinkApi());
   }, []);
   const { userlinks, status } = useSelector((state) => state.getUserLinkSlice);
+  const { shortLink } = useSelector((state) => state.createShortLinkSlice);
   const [apiCallData, setApiCallData] = useState({});
   useEffect(() => {
     if (status === "success") {
+      let shortId = userlinks?.[0]?.shortId;
+      if (shortLink) {
+        shortId = shortLink;
+      }
       const date = new Date();
       dispatch(
         analyticsApiCall({
           year: date.getFullYear(),
-          shortId: userlinks?.[0]?.shortId,
+          shortId: shortId,
         })
       );
     }
@@ -102,7 +107,7 @@ function Analytics() {
   }, [window]);
 
   const [filter, setFilter] = useState("Filter");
-  const [link, setLink] = useState(userlinks?.[0]?.shortId);
+  const [link, setLink] = useState(shortLink ||userlinks?.[0]?.shortId);
   const [showFilter, setShowFilter] = useState(false);
   const [showLinks, setShowLinks] = useState(false);
   const [showcalender, setshowCalender] = useState(false);
@@ -186,7 +191,7 @@ function Analytics() {
     };
   }, []);
   useEffect(() => {
-    setLink(userlinks?.[0]?.shortId);
+    setLink( shortLink || userlinks?.[0]?.shortId);
   }, [userlinks]);
   const [selectDate, setSelectDate] = useState(new Date());
   const [lineChartValue, setlineChartValue] = useState("month");

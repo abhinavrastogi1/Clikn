@@ -17,6 +17,8 @@ import whatsappIcon from "../../assets/whatsappIcon.svg";
 import twitterIcon from "../../assets/twitterIcon.svg";
 import facebookIcon from "../../assets/facebookIcon.svg";
 import DeleteLink from "../Link/DeleteLink";
+import { setShortLink } from "../../Store/Api/ShortLinkActions/createShortLinkSlice";
+import { useNavigate } from "react-router-dom";
 function QrCodeCard({ linkData }) {
   const originalUrl = linkData?.originalLink;
   const shortLink = `clikn.in/${linkData?.shortId}`;
@@ -46,6 +48,7 @@ function QrCodeCard({ linkData }) {
   const [showShareIcons, setShowShareIcons] = useState(false);
   const shareRef = useRef();
   const shareButtonRef = useRef();
+  const navigate =useNavigate()
   useEffect(() => {
     function handleClickOutside(e) {
       if (
@@ -132,7 +135,13 @@ function QrCodeCard({ linkData }) {
               </a>
             </div>
             <div className="flex gap-2 mt-4 justify-center items-center ">
-              <IoStatsChartSharp className="dark:text-white cursor-pointer" />
+              <IoStatsChartSharp
+                className="dark:text-white cursor-pointer"
+                onClick={() => {
+                  dispatch(setShortLink(linkData?.shortId));
+                  navigate("/home/analytics");
+                }}
+              />
               <div className="dark:text-white flex  justify-center items-center cursor-pointer">
                 <CiCalendar className="font-bold  text-xl " />
                 <span className="mt-1">
