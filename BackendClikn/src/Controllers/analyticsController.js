@@ -278,7 +278,9 @@ const getDateAnalytics = asyncHandler(async (req, res) => {
           clicks: [
             {
               $project: {
-                month: { $month: "$clikedLink.date" },
+                month: {
+                  $month: "$clikedLink.date",
+                },
                 _id: 0,
               },
             },
@@ -292,16 +294,38 @@ const getDateAnalytics = asyncHandler(async (req, res) => {
             },
             {
               $addFields: {
-                month: "$_id",
+                month: {
+                  $arrayElemAt: [
+                    [
+                      "Jan",
+                      "Feb",
+                      "Mar",
+                      "Apr",
+                      "May",
+                      "Jun",
+                      "Jul",
+                      "Aug",
+                      "Sep",
+                      "Oct",
+                      "Nov",
+                      "Dec",
+                    ],
+                    {
+                      $subtract: ["$_id", 1],
+                    },
+                  ],
+                },
+              },
+            },
+            {
+              $sort: {
+                _id: 1,
               },
             },
             {
               $project: {
                 _id: 0,
               },
-            },
-            {
-              $sort: { month: 1 },
             },
           ],
           browser: [
