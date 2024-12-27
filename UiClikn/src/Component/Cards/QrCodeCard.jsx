@@ -134,7 +134,7 @@ function QrCodeCard({ linkData }) {
                 {originalUrl}
               </a>
             </div>
-            <div className="flex gap-2 mt-4 justify-center items-center ">
+            <div className="flex gap-2 mt-4 justify-center items-start ">
               <IoStatsChartSharp
                 className="dark:text-white cursor-pointer"
                 onClick={() => {
