@@ -8,6 +8,8 @@ import { IoMdDownload } from "react-icons/io";
 import browser from "../../assets/browser.png";
 import QRCode from "react-qr-code";
 import { deleteLinkCall } from "../../Store/Api/DeleteAPiActions/deleteLinkSlice";
+import { QRCodeCanvas } from "qrcode.react";
+
 import { useDispatch } from "react-redux";
 import { GiCheckMark } from "react-icons/gi";
 import { IoCopy } from "react-icons/io5";
@@ -48,7 +50,7 @@ function QrCodeCard({ linkData }) {
   const [showShareIcons, setShowShareIcons] = useState(false);
   const shareRef = useRef();
   const shareButtonRef = useRef();
-  const navigate =useNavigate()
+  const navigate = useNavigate();
   useEffect(() => {
     function handleClickOutside(e) {
       if (
@@ -76,16 +78,28 @@ function QrCodeCard({ linkData }) {
   }, [showShareIcons]);
   const qrCodeRef = useRef();
   function downloadQRCode() {
-    if (qrCodeRef.current) {
-      const svgString = new XMLSerializer().serializeToString(
-        qrCodeRef.current
-      );
-      const blob = new Blob([svgString], { type: "image/svg+xml" });
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = `${linkData?.shortId}QRCode.jpeg`;
-      link.click();
-    }
+    // if (qrCodeRef.current) {
+    //   const svgString = new XMLSerializer().serializeToString(
+    //     qrCodeRef.current
+    //   );
+    //   const blob = new Blob([svgString], { type: "image/svg+xml" });
+    //   const link = document.createElement("a");
+    //   link.href = URL.createObjectURL(blob);
+    //   link.download = `${linkData?.shortId}QRCode.jpeg`;
+    //   link.click();
+    // }
+    const canvas = document.querySelector("#qrcode-canvas");
+    if (!canvas) throw new Error("<canvas> not found in the DOM");
+
+    const pngUrl = canvas
+      .toDataURL("image/png")
+      .replace("image/png", "image/octet-stream");
+    const downloadLink = document.createElement("a");
+    downloadLink.href = pngUrl;
+    downloadLink.download = "QR code.png";
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
   }
   const [deleteLink, setDeleteLink] = useState(false);
 
@@ -95,11 +109,18 @@ function QrCodeCard({ linkData }) {
         <div className="flex flex-row gap-3  overflow-hidden  ">
           <div className="bg-white  p-1 h-[108px] shadow-lg">
             {" "}
-            <QRCode
+            {/* <QRCode
               value={`https://${shortLink} `}
               size={100}
               ref={qrCodeRef}
+            /> */}
+            <QRCodeCanvas
+              id="qrcode-canvas"
+              level="H"
+              size={200}
+              value={`https://${shortLink} `}
             />
+            s
           </div>
           <div>
             <div className="m-2 ml-0">
