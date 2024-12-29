@@ -10,19 +10,21 @@ import { Analytics } from "../Models/analyticsModel.js";
 import { User } from "../Models/userModel.js";
 const generateShortLink = asyncHandler(async (req, res) => {
   const { originalLink } = req?.query;
-  let { title } = req?.query || null;
+  let { title } = req?.query || {};
   const { userId } = req?.user;
   if (!originalLink) {
     throw new apiError(400, "Missing required data");
   }
   if (!title) {
-    const { data } = await axios.get(originalLink);
-    if (data) {
-      const $ = cheerio.load(data);
-      title = $("title").text() || null;
-    }
-    // Use $ as a constant bcz it is common way in jQuery
-    else {
+    try {
+      const { data } = await axios.get(originalLink);
+      if (data) {
+        const $ = cheerio.load(data);
+        title = $("title").text().trim() || null; // Set to null if title is empty
+      } else {
+        title = null;
+      }
+    } catch (error) {
       title = null;
     }
   }
