@@ -23,17 +23,9 @@ const generateShortLink = asyncHandler(async (req, res) => {
     }
     // Use $ as a constant bcz it is common way in jQuery
     else {
-      title = "unknown";
+      title = null;
     }
   }
-  if (!title) {
-    userId;
-    throw new apiError(
-      400,
-      "something went wrong while getting title or link is wrong "
-    );
-  }
-
   const charSet =
     "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890";
   let generateShortId = "";
@@ -51,7 +43,7 @@ const generateShortLink = asyncHandler(async (req, res) => {
   const qrCodeLink = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://clikn.in/${generateShortId}`;
   const link = await Link.create({
     user: new mongoose.Types.ObjectId(userId),
-    title: title,
+    title: title||null,
     qrCodeLink: qrCodeLink,
     shortId: generateShortId,
     originalLink: originalLink,

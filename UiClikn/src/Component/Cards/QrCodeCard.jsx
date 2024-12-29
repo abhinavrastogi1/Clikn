@@ -144,7 +144,7 @@ function QrCodeCard({ linkData }) {
               />
             </div>
             <h2 className="dark:text-white font-bold text-xl capitalize">
-              {title}
+              {title || "No Title"}
             </h2>
             <div>
               <a
