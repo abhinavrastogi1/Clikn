@@ -19,7 +19,7 @@ const generateShortLink = asyncHandler(async (req, res) => {
     const { data } = await axios.get(originalLink);
     if (data) {
       const $ = cheerio.load(data);
-      title = $("title").text();
+      title = $("title").text() || null;
     }
     // Use $ as a constant bcz it is common way in jQuery
     else {
@@ -55,7 +55,7 @@ const generateShortLink = asyncHandler(async (req, res) => {
     new apiResponse(
       200,
       {
-        title: link.title,
+        title: link?.title || null,
         qrCodeLink: link.qrCodeLink,
         shortId: link.shortId,
         originalLink: link.originalLink,
