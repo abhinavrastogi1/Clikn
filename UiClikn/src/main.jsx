@@ -37,7 +37,6 @@ const router = createBrowserRouter([
   {
     path: " /privacy-policy",
     element: <PrivacyPolicy />,
-    children: [{ path: "/privacy-policy", element: <PrivacyPolicy /> }],
   },
 ]);
 createRoot(document.getElementById("root")).render(
