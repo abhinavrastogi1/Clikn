@@ -13,6 +13,7 @@ import Analytics from "./Component/Analytics/Analytics.jsx";
 import store from "./Store/index.js";
 import { Provider } from "react-redux";
 import LandingPageApp from "./Component/Landing/LandingPageApp.jsx";
+import PrivacyPolicy from "./Component/Home/PrivacyPolicy.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -21,6 +22,7 @@ const router = createBrowserRouter([
       { path: "/", element: <LandingPage /> },
       { path: "/login", element: <Login /> },
       { path: "/signup", element: <Login /> },
+      { path: "/privacy-policy", element: <PrivacyPolicy /> },
     ],
   },
   {

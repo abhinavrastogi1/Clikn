@@ -53,7 +53,15 @@ function Footer() {
           </nav>
         </aside>
         <p className="w-full text-center font-bold text-sm sm:text-lg md:text-xl dark:text-white">
-          Copyright © {new Date().getFullYear()} - All right reserved
+          Copyright © {new Date().getFullYear()} - All rights reserved -
+          <button
+            onClick={() => {
+              navigate("/privacy-policy");
+            }}
+            className="text-blue-500 hover:text-blue-700 underline"
+          >
+            Privacy Policy
+          </button>
         </p>
       </div>
     </footer>
