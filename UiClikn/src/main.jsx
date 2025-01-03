@@ -22,7 +22,6 @@ const router = createBrowserRouter([
       { path: "/", element: <LandingPage /> },
       { path: "/login", element: <Login /> },
       { path: "/signup", element: <Login /> },
-      { path: "/privacy-policy", element: <PrivacyPolicy /> },
     ],
   },
   {
@@ -34,6 +33,11 @@ const router = createBrowserRouter([
       { path: "/home/qrcodes", element: <QrCodes /> },
       { path: "/home/analytics", element: <Analytics /> },
     ],
+  },
+  {
+    path: " /privacy-policy",
+    element: <PrivacyPolicy />,
+    children: [{ path: "/privacy-policy", element: <PrivacyPolicy /> }],
   },
 ]);
 createRoot(document.getElementById("root")).render(
