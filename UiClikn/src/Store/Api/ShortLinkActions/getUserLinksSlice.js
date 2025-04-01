@@ -1,14 +1,15 @@
 import { createAsyncThunk, createSlice, original } from "@reduxjs/toolkit";
 import axios from "axios";
 import { setLoadingBar } from "../../UiActions/LoadingBarSlice";
-
+const API_URL=import.meta.env.VITE_API_URL
+console.log()
 export const getUserLinkApi = createAsyncThunk(
   "getUserLinkSlice/getUserLinkApi",
   async (_, { dispatch }) => {
     dispatch(setLoadingBar(true));
     try {
       const response = await axios.get(
-        "https://www.clikn.in/url/getuserLinks",
+       `${API_URL}/url/getuserLinks`,
         {
           withCredentials: true,
         }

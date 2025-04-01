@@ -1,6 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { loggedInReducer, setLoginMsg } from "../../UiActions/loginSlice.js";
 import axios from "axios";
+const API_URL=import.meta.env.VITE_API_URL
+
 import { setLoadingBar } from "../../UiActions/LoadingBarSlice.js";
 export const verifyLogin = createAsyncThunk(
   "loginApiSlice/verifyLogin",
@@ -8,7 +10,7 @@ export const verifyLogin = createAsyncThunk(
     dispatch(setLoadingBar(true));
     try {
       const response = await axios.get(
-        "https://www.clikn.in/user/userVerification",
+        `${API_URL}/user/userVerification`,
         {
           withCredentials: true,
         }
@@ -31,7 +33,7 @@ export const loginViaForm = createAsyncThunk(
   async (loginForm, { dispatch }) => {
     try {
       const response = await axios.post(
-        "https://www.clikn.in/user/login",
+        `${API_URL}/user/login`,
         loginForm,{withCredentials:true}
       );
       if (response.status === 200) {
@@ -63,7 +65,7 @@ export const signUpViaForm = createAsyncThunk(
   async (signUpFrom, { dispatch }) => {
     try {
       const response = await axios.post(
-        "https://www.clikn.in/user/registration",
+        `${API_URL}/user/registration`,
         signUpFrom, { withCredentials: true } 
       );
       if (response.status === 200) {

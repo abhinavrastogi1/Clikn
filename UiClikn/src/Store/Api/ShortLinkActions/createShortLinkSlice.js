@@ -3,6 +3,7 @@ import axios from "axios";
 import { setLoadingBar } from "../../UiActions/LoadingBarSlice";
 import { getUserLinkApi } from "./getUserLinksSlice";
 import { setLinkDelete_CreateMsg } from "../../UiActions/LinkDeleteCreateMsg";
+const API_URL=import.meta.env.VITE_API_URL
 
 export const createShortLinkApi = createAsyncThunk(
   "createShortLinkSlice/createShortLinkApi",
@@ -15,7 +16,7 @@ export const createShortLinkApi = createAsyncThunk(
     try {
       dispatch(setLoadingBar(true));
       const response = await axios.post(
-        "https://www.clikn.in/url/generateShortLink",
+        `${API_URL}/url/generateShortLink`,
         {},
         {
           params: {

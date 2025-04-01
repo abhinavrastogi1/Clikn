@@ -9,7 +9,7 @@ async function startServer() {
     app.get("/", (req, res) => {
       res.status(302).redirect("https://app.clikn.in");
     });
-    app.listen(port, () => {
+    app.listen(port, "0.0.0.0",() => {
       console.log("your server is running at Port no:", port);
       console.log(`http://localhost:${port}`);
     });

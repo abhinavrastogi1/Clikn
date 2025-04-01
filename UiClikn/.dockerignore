@@ -1,0 +1,8 @@
+node_modules
+.env
+.env.development
+.env.production
+.git
+.gitignore
+Dockerfile
+docker-compose.yml

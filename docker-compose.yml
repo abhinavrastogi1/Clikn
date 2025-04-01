@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+
+    frontend:
+        image: abhianv1/frontend
+        ports:
+            - 5173:5173
+        networks:
+            - clikn
+        container_name: frontend
+        environment:
+            - VITE_API_URL=http://localhost:8000
+
+    backend:
+        build:
+            context: ./BackendClikn/.
+        ports:
+            - 8080:8000
+            - 8000:8000
+        container_name: backend
+        env_file:
+            - BackendClikn/src/.env
+        networks:
+            - clikn
+
+networks:
+  clikn:
+   name: clikn

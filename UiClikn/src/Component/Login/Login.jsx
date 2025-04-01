@@ -3,6 +3,7 @@ import Google from "../../assets/Google.svg";
 import { Stars } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import axios from "axios";
+const API_URL=import.meta.env.VITE_API_URL
 import {
   useMotionTemplate,
   useMotionValue,
@@ -71,7 +72,7 @@ function Login() {
       dispatch(setLoadingLogin(true));
       if (authresult["code"]) {
         const response = await axios.post(
-          "https://www.clikn.in/user/registration",
+          `${API_URL}/user/registration`,
           {},
           {
             params: {

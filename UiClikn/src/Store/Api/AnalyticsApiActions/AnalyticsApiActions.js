@@ -1,12 +1,14 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+const API_URL=import.meta.env.VITE_API_URL
+
 import { setLoadingBar } from "../../UiActions/LoadingBarSlice";
 export const analyticsApiCall = createAsyncThunk(
   "analyticsSlice/analyticsApiCall",
   async (apiCallData, { dispatch }) => {
     dispatch(setLoadingBar(true));
     try {
-      const response = await axios.get("https://www.clikn.in/link/analytics", {
+      const response = await axios.get(`${API_URL}/link/analytics`, {
         params: apiCallData,
         withCredentials: true,
       });

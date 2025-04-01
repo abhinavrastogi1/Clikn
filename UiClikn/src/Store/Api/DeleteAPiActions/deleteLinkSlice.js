@@ -3,12 +3,14 @@ import axios from "axios";
 import { getUserLinkApi } from "../ShortLinkActions/getUserLinksSlice";
 import { setLoadingBar } from "../../UiActions/LoadingBarSlice";
 import { setLinkDelete_CreateMsg } from "../../UiActions/LinkDeleteCreateMsg";
+const API_URL=import.meta.env.VITE_API_URL
+
 export const deleteLinkCall = createAsyncThunk(
   "deleteLinkSlice/deleteLinkCall",
   async (_id, { dispatch }) => {
     dispatch(setLoadingBar(true));
     try {
-      const response = await axios.get("https://www.clikn.in/url/deleteLink", {
+      const response = await axios.get(`{$API_URL}/url/deleteLink`, {
         params: {
           _id: _id,
         },

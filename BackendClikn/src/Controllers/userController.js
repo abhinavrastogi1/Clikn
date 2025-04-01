@@ -28,14 +28,14 @@ async function generateTokens(userId) {
     );
   }
 }
-
+const isProduction = process.env.PRODUCTION === "true";
 const options = {
-  domain: ".clikn.in",
+  domain: isProduction ? ".clikn.in" : "localhost", // Change from "frontend" to "localhost"
   path: "/",
   httpOnly: true,
-  secure: true,
-  sameSite: "None",
-  maxAge: 24 * 60 * 60 * 1000
+  secure: isProduction, // Set to true in production with HTTPS
+  sameSite: isProduction ? "None" : "Lax", // Use "None" if frontend and backend are on different domains
+  maxAge: 24 * 60 * 60 * 1000,
 };
 
 const userRegistration = asyncHandler(async (req, res) => {

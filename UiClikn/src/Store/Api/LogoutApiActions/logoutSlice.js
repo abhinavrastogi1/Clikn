@@ -2,11 +2,13 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { verifyLogin } from "../LoginApiActions/loginApiSlice";
 import { loggedInReducer } from "../../UiActions/loginSlice";
+const API_URL=import.meta.env.VITE_API_URL
+
 export const logoutApiCall = createAsyncThunk(
   "logoutSlice/logoutApiCall",
   async (_, { dispatch }) => {
     try {
-      const response = await axios.get("https://www.clikn.in/user/logout", {
+      const response = await axios.get(`${API_URL}/user/logout`, {
         withCredentials: true,
       });
       dispatch(verifyLogin());
