@@ -13,10 +13,12 @@ variables:
 build_docker_images:
     stage: build
     script: 
-        - docker build -t "$DOCKER_USERNAME/frontend" ./UiClikn
+        - docker build -t "frontend" ./UiClikn
 push_to_docker_hub:
      stage: push
      script :
          - docker login -u $DOCKER_USERNAME -p $DOCKER_PSA
+         - docker info
+         - docker tag  frontend:latest "$DOCKER_USERNAME/frontend:latest"
          - docker push "$DOCKER_USERNAME/frontend:latest"
 
