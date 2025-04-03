@@ -11,12 +11,16 @@ stages:
 
 variables:
   DOCKER_USERNAME: abhianv1
+  ACCESS_TOKEN_EXPIRE_DATE: 1d
+  PORT: 8000
+  REFRESH_TOKEN_EXPIRE_DATE: 30d
+  PRODUCTION : true
 
 build_docker_images:
   stage: build
   script: 
-    - ls -la ./UiClikn
-    - docker build -t "frontend:latest" ./UiClikn
+    - docker build -t --no-cache "backend:latest"  ./BackendClikn
+    - docker build -t --no-cache "frontend:latest" ./UiClikn
     - rm -rf temp-files || true
   tags:
     - docker
@@ -27,7 +31,9 @@ push_to_docker_hub:
     - echo "$DOCKER_PSA" | docker login -u "$DOCKER_USERNAME" --password-stdin
     - docker info
     - docker tag frontend:latest "$DOCKER_USERNAME/frontend:latest"
+    - docker tag backend:latest "$DOCKER_USERNAME/backend:latest"
     - docker push "$DOCKER_USERNAME/frontend:latest"
+    - docker push "$DOCKER_USERNAME/backend:latest"
     - rm -rf temp-files || true
   tags:
     - docker
@@ -39,8 +45,23 @@ deploy_to_ec2:
     - chmod 400 Docker-image.pem
     - |
       ssh -o StrictHostKeyChecking=no -i "Docker-image.pem" ubuntu@ec2-3-93-179-156.compute-1.amazonaws.com <<EOF
-      pwd
-      mkdir createfile
+      sudo apt install docker-compose-plugin -y
+      docker compose version
+      mkdir -p ~/BackendClikn/src
+      cd ~/BackendClikn/src
+      echo "ACCESS_TOKEN_EXPIRE_DATE=$ACCESS_TOKEN_EXPIRE_DATE" > .env
+      echo "PORT=$PORT" >> .env
+      echo "REFRESH_TOKEN_EXPIRE_DATE=$REFRESH_TOKEN_EXPIRE_DATE" >> .env
+      echo "PRODUCTION=$PRODUCTION" >> .env
+      echo "ACCESS_TOKEN=$ACCESS_TOKEN" >> .env
+      echo "GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID" >> .env
+      echo "GOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_SECRET" >> .env
+      echo "MONGODB_URI=$MONGODB_URI" >> .env
+      echo "REFRESH_TOKEN=$REFRESH_TOKEN" >> .env
+      curl -O https://gitlab.com/abhinavrastogi986/clikn/-/blob/main/docker-compose.yml
+      docker compose down
+      docker compose  up --build 
+      docker ps -a
       EOF
 
 
