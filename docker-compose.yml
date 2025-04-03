@@ -10,8 +10,15 @@ services:
             - clikn
         container_name: frontend
         environment:
-            - VITE_API_URL=http://localhost:8000
-
+            - VITE_API_URL =https://3.93.179.156:8000
+        depends_on:
+             - backend 
+        healthcheck:
+            test: ["CMD-SHELL", "curl -f http://backend:8000 || exit 1"]
+            interval: 1m30s
+            timeout: 30s
+            retries: 5
+            start_period: 30s
     backend:
         build:
             context: ./BackendClikn/.
@@ -23,7 +30,6 @@ services:
             - BackendClikn/src/.env
         networks:
             - clikn
-
 networks:
-  clikn:
-   name: clikn
+    clikn:
+        name: clikn
