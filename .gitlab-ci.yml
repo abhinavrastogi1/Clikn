@@ -19,8 +19,8 @@ variables:
 build_docker_images:
   stage: build
   script: 
-    - docker build -t --no-cache "backend:latest"  ./BackendClikn
-    - docker build -t --no-cache "frontend:latest" ./UiClikn
+    - docker build  --no-cache -t "backend:latest"  ./BackendClikn
+    - docker build  --no-cache -t "frontend:latest" ./UiClikn
     - rm -rf temp-files || true
   tags:
     - docker
