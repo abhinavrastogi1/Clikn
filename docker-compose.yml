@@ -10,7 +10,7 @@ services:
             - clikn
         container_name: frontend
         environment:
-            - VITE_API_URL=https://3.93.179.156:8000
+            - VITE_API_URL=http://3.93.179.156:8000
         depends_on:
             - backend
         healthcheck:
