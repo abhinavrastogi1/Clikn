@@ -21,7 +21,7 @@ services:
             start_period: 30s
     backend:
         build:
-            context: ./BackendClikn/.
+            context: abhianv1/backend
         ports:
             - 8080:8000
             - 8000:8000
