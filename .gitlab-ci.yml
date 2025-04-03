@@ -20,11 +20,15 @@ build_docker_images:
 push_to_docker_hub:
      stage: push
      script :
-         - docker login -u $DOCKER_USERNAME -p $DOCKER_PSA
+         - echo $DOCKER_PSA  | docker login -u "$DOCKER_USERNAME" --password-stdin
          - docker info
          - docker tag  frontend:latest "$DOCKER_USERNAME/frontend:latest"
          - docker push "$DOCKER_USERNAME/frontend:latest"
-
      tags:
          - docker
-
+deploy_to_ec2:
+        - echo "$EC2_PEM" | base64 -d > Docker-image.pem
+        - chmod 400  Docker-image.pem
+        - ssh  -o StrictHostKeyChecking=no -i "Docker-image.pem"  ubuntu@ec2-3-93-179-156.compute-1.amazonaws.com 
+        - mkdir checkingfile
+    
