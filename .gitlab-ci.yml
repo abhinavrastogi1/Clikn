@@ -15,6 +15,8 @@ build_docker_images:
     script: 
         - ls -la ./UiClikn
         - docker build -t "frontend:latest" ./UiClikn
+    tags:
+        - docker
 push_to_docker_hub:
      stage: push
      script :
@@ -22,4 +24,7 @@ push_to_docker_hub:
          - docker info
          - docker tag  frontend:latest "$DOCKER_USERNAME/frontend:latest"
          - docker push "$DOCKER_USERNAME/frontend:latest"
+
+     tags:
+         - docker
 
