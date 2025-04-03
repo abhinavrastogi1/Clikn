@@ -48,7 +48,6 @@ deploy_to_ec2:
       sudo apt install docker-compose-plugin -y
       docker compose version
       mkdir -p ~/BackendClikn/src
-      
       cat <<EOT > ~/BackendClikn/src/.env
       ACCESS_TOKEN_EXPIRE_DATE=$ACCESS_TOKEN_EXPIRE_DATE
       PORT=$PORT
@@ -60,7 +59,7 @@ deploy_to_ec2:
       MONGODB_URI=$MONGODB_URI
       REFRESH_TOKEN=$REFRESH_TOKEN
       EOT
-      curl -O https://gitlab.com/abhinavrastogi986/clikn/-/blob/main/docker-compose.yml
+      curl -O https://gitlab.com/abhinavrastogi986/clikn/-/raw/main/docker-compose.yml
       docker compose down
       docker compose  up --build 
       docker ps -a
