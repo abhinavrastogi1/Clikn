@@ -13,7 +13,8 @@ variables:
 build_docker_images:
     stage: build
     script: 
-        - docker build -t "frontend" ./UiClikn
+        - ls -la ./UiClikn
+        - docker build -t "frontend:latest" ./UiClikn
 push_to_docker_hub:
      stage: push
      script :
