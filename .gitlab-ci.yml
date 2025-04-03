@@ -15,6 +15,7 @@ build_docker_images:
     script: 
         - ls -la ./UiClikn
         - docker build -t "frontend:latest" ./UiClikn
+        - rm -rf temp-files || true
     tags:
         - docker
 push_to_docker_hub:
@@ -32,5 +33,4 @@ deploy_to_ec2:
         - echo "$EC2_PEM" | base64 -d > Docker-image.pem
         - chmod 400  Docker-image.pem
         - ssh  -o StrictHostKeyChecking=no -i "Docker-image.pem"  ubuntu@ec2-3-93-179-156.compute-1.amazonaws.com 
-        - mkdir checkingfile
-    
+        - mkdir home/ubuntu/checkedfolder
