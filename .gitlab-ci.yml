@@ -25,6 +25,7 @@ push_to_docker_hub:
          - docker info
          - docker tag  frontend:latest "$DOCKER_USERNAME/frontend:latest"
          - docker push "$DOCKER_USERNAME/frontend:latest"
+         - rm -rf temp-files || true
      tags:
          - docker
 deploy_to_ec2:
