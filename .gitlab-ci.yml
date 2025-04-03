@@ -19,8 +19,8 @@ variables:
 build_docker_images:
   stage: build
   script: 
-    - docker build  --no-cache -t "backend:latest"  ./BackendClikn
-    - docker build  --no-cache -t "frontend:latest" ./UiClikn
+    - docker build   -t "backend:latest"  ./BackendClikn
+    - docker build   -t "frontend:latest" ./UiClikn
     - rm -rf temp-files || true
   tags:
     - docker
@@ -48,16 +48,18 @@ deploy_to_ec2:
       sudo apt install docker-compose-plugin -y
       docker compose version
       mkdir -p ~/BackendClikn/src
-      cd ~/BackendClikn/src
-      echo "ACCESS_TOKEN_EXPIRE_DATE=$ACCESS_TOKEN_EXPIRE_DATE" > .env
-      echo "PORT=$PORT" >> .env
-      echo "REFRESH_TOKEN_EXPIRE_DATE=$REFRESH_TOKEN_EXPIRE_DATE" >> .env
-      echo "PRODUCTION=$PRODUCTION" >> .env
-      echo "ACCESS_TOKEN=$ACCESS_TOKEN" >> .env
-      echo "GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID" >> .env
-      echo "GOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_SECRET" >> .env
-      echo "MONGODB_URI=$MONGODB_URI" >> .env
-      echo "REFRESH_TOKEN=$REFRESH_TOKEN" >> .env
+      
+      cat <<EOT > ~/BackendClikn/src/.env
+      ACCESS_TOKEN_EXPIRE_DATE=$ACCESS_TOKEN_EXPIRE_DATE
+      PORT=$PORT
+      REFRESH_TOKEN_EXPIRE_DATE=$REFRESH_TOKEN_EXPIRE_DATE
+      PRODUCTION=$PRODUCTION
+      ACCESS_TOKEN=$ACCESS_TOKEN
+      GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID
+      GOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_SECRET
+      MONGODB_URI=$MONGODB_URI
+      REFRESH_TOKEN=$REFRESH_TOKEN
+      EOT
       curl -O https://gitlab.com/abhinavrastogi986/clikn/-/blob/main/docker-compose.yml
       docker compose down
       docker compose  up --build 
