@@ -14,11 +14,11 @@ variables:
   ACCESS_TOKEN_EXPIRE_DATE: 1d
   PORT: 8000
   REFRESH_TOKEN_EXPIRE_DATE: 30d
-  PRODUCTION : true
+  PRODUCTION: true
 
 build_docker_images:
   stage: build
-  script: 
+  script:
     - docker build   -t "backend:latest"  ./BackendClikn
     - docker build   -t "frontend:latest" ./UiClikn
     - rm -rf temp-files || true
@@ -65,5 +65,5 @@ deploy_to_ec2:
       docker ps -a
       exit
       EOF
-
-
+  tags:
+    - docker
