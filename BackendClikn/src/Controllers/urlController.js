@@ -8,13 +8,65 @@ import apiResponse from "../Utils/apiResponse.js";
 import mongoose from "mongoose";
 import { Analytics } from "../Models/analyticsModel.js";
 import { User } from "../Models/userModel.js";
+// Google Safe Browsing API URL
+const SAFE_BROWSING_API_URL = "https://safebrowsing.googleapis.com/v4/threatMatches:find";
+// Google Safe Browsing API Key
+const apiKey = process.env.GOOGLE_SAFE_BROWSING_API_KEY;
+// Function to check if URL is safe using Google Safe Browsing API
+const isSafeLink = async (url) => {
+  try {
+    const response = await axios.post(
+      SAFE_BROWSING_API_URL,
+      {
+        client: {
+          clientId: "moceiofn-fnkdnfj-wjieojweifn-ww", // Use your client ID (can be anything for personal use)
+          clientVersion: "1.0",
+        },
+        threatInfo: {
+          threatTypes: ["MALWARE", "SOCIAL_ENGINEERING"],
+          platformTypes: ["WINDOWS", "LINUX", "ANDROID", "IOS"],
+          threatEntryTypes: ["URL"],
+          threatEntries: [
+            {
+              url: url,
+            },
+          ],
+        },
+      },
+      {
+        params: {
+          key: apiKey,
+        },
+      }
+    );
+    // If response has matches, the URL is not safe
+    if (response.data.matches && response.data.matches.length > 0) {
+      return false; // Not safe
+    }
+
+    return true; // Safe
+  } catch (error) {
+    console.error("Error checking URL with Safe Browsing API:", error);
+    return false; // If there's an error, consider the link unsafe
+  }
+};
+
+// Function to generate short link
 const generateShortLink = asyncHandler(async (req, res) => {
   const { originalLink } = req?.query;
   let { title } = req?.query || {};
   const { userId } = req?.user;
+
   if (!originalLink) {
     throw new apiError(400, "Missing required data");
   }
+
+  // Check if the link is safe
+  const isSafe = await isSafeLink(originalLink);
+  if (!isSafe) {
+    throw new apiError(400, "The link is not safe and cannot be shortened.");
+  }
+
   if (!title) {
     try {
       const { data } = await axios.get(originalLink);
@@ -28,6 +80,7 @@ const generateShortLink = asyncHandler(async (req, res) => {
       title = null;
     }
   }
+
   const charSet =
     "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890";
   let generateShortId = "";
@@ -42,17 +95,21 @@ const generateShortLink = asyncHandler(async (req, res) => {
       break;
     }
   }
+
   const qrCodeLink = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://clikn.in/${generateShortId}`;
+  
   const link = await Link.create({
     user: new mongoose.Types.ObjectId(userId),
-    title: title||null,
+    title: title || null,
     qrCodeLink: qrCodeLink,
     shortId: generateShortId,
     originalLink: originalLink,
   });
+
   if (!link) {
-    throw new apiError(500, "Something went wrog while generating short Link");
+    throw new apiError(500, "Something went wrong while generating short Link");
   }
+
   res.status(200).json(
     new apiResponse(
       200,
@@ -62,10 +119,11 @@ const generateShortLink = asyncHandler(async (req, res) => {
         shortId: link.shortId,
         originalLink: link.originalLink,
       },
-      "Link  successfully generated"
+      "Link successfully generated"
     )
   );
 });
+
 const getOriginalLink = asyncHandler(async (req, res) => {
   const { shortId } = req?.params;
   if (!shortId) {
