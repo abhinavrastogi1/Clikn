@@ -3,7 +3,7 @@ import axios from "axios";
 import { setLoadingBar } from "../../UiActions/LoadingBarSlice";
 import { getUserLinkApi } from "./getUserLinksSlice";
 import { setLinkDelete_CreateMsg } from "../../UiActions/LinkDeleteCreateMsg";
-const API_URL=import.meta.env.VITE_API_URL
+const API_URL = import.meta.env.VITE_API_URL;
 
 export const createShortLinkApi = createAsyncThunk(
   "createShortLinkSlice/createShortLinkApi",
@@ -31,9 +31,17 @@ export const createShortLinkApi = createAsyncThunk(
       dispatch(setLoadingBar(false));
       return response.data.data;
     } catch (error) {
-      dispatch(
-        setLinkDelete_CreateMsg(" Failed to create Your link. Try again!")
-      );
+      if (error.response && error.response.status === 400) {
+        dispatch(
+          setLinkDelete_CreateMsg(
+            "The link is not safe and cannot be shortened⚠️☠️🚨"
+          )
+        );
+      } else {
+        dispatch(
+          setLinkDelete_CreateMsg(" Failed to create Your link. Try again!")
+        );
+      }
       console.error("Failed to create the link. Please try again", error);
       dispatch(setLoadingBar(false));
       throw error;
@@ -46,7 +54,7 @@ const createShortLinkSlice = createSlice({
     status: "idle",
     error: null,
     linkData: {},
-    shortLink:"",
+    shortLink: "",
   },
   reducers: {
     setShortLink: (state, action) => {
