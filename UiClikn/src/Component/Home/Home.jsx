@@ -51,7 +51,7 @@ function Home() {
   };
   const navigate = useNavigate();
   return (
-    <div className="min-h-screen w-full  text-white px-2 sm:px-10 md:px-16 lg:px-20 xl:px-36   ">
+    <div className="min-h-screen w-full  text-white px-2 sm:px-10 md:px-16 lg:px-20 xl:px-36  mb-6 ">
       <div className="px-4 mx-auto  sm:px-6 lg:px-8 ">
         <div className="flex flex-col gap-3">
           <h1

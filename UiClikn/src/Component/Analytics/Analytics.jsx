@@ -284,7 +284,7 @@ function Analytics() {
     };
   }, []);
   return (
-    <div className="min-h-screen  px-2 sm:px-10 md:px-16 lg:px-20 xl:px-36 overflow-hidden  ">
+    <div className="min-h-screen  px-2 sm:px-10 md:px-16 lg:px-20 xl:px-36 overflow-hidden  mb-6 ">
       <div className="shadow-xl dark:shadow-md  dark:shadow-white ">
         <div className="px-2 mx-auto  sm:px-6 lg:px-8  border-b-[1px] border-gray-200 ">
           <div className="flex justify-between my-3 sm:my-4 p-4   px-4 mx-auto  sm:px-6 lg:px-8 ">

@@ -10,7 +10,7 @@ export const deleteLinkCall = createAsyncThunk(
   async (_id, { dispatch }) => {
     dispatch(setLoadingBar(true));
     try {
-      const response = await axios.get(`{$API_URL}/url/deleteLink`, {
+      const response = await axios.delete(`${API_URL}/url/deleteLink`, {
         params: {
           _id: _id,
         },

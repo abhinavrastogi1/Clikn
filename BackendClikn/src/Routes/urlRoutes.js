@@ -11,6 +11,6 @@ const linKRouter = Router();
 
 linKRouter.get("/:shortId", getOriginalLink);
 linKRouter.post("/url/generateShortLink", verifyJwt, generateShortLink);
-linKRouter.get("/url/deleteLink", verifyJwt, deleteOriginalLink);
+linKRouter.delete("/url/deleteLink", verifyJwt, deleteOriginalLink);
 linKRouter.get("/url/getuserLinks", verifyJwt, getuserLinks);
 export default linKRouter;

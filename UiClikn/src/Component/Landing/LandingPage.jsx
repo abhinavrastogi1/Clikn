@@ -12,6 +12,7 @@ import Header from "../Header/Header";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addUrl } from "../../Store/Api/LoginApiActions/loginApiSlice";
+import Footer from "../Footer/Footer.jsx";
 const COLORS_TOP = ["#13FFAA", "#1E67C6", "#CE84CF", "#DD335C"];
 
 export const LandingPage = () => {
@@ -138,6 +139,7 @@ export const LandingPage = () => {
           </div>
         </motion.section>
       </div>
+     <Footer/>
     </>
   );
 };

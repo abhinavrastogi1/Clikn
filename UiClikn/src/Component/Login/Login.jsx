@@ -184,7 +184,10 @@ function Login() {
           <img
             src="/cliknLogo.png"
             alt="clikn logo"
-            className="h-10 w-20 sm:h-20 sm:w-40"
+            className="h-10 w-20 sm:h-20 sm:w-40 cursor-pointer"
+            onClick={() => {
+              navigate("/");
+            }}
           />
           <motion.div
             style={{
