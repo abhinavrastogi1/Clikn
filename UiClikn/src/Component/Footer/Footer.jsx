@@ -55,7 +55,7 @@ function Footer() {
         <p className="w-full text-center font-bold text-sm sm:text-lg md:text-xl dark:text-white">
           Copyright © {new Date().getFullYear()} - All rights reserved -
           <a
-            href="https://app.clikn.in/privacy-policy"
+            href="/privacy-policy.html"
             className="text-blue-500 hover:text-blue-700 underline"
             target="_blank"
           >

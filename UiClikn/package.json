@@ -22,6 +22,7 @@
     "axios": "^1.7.9",
     "dayjs": "^1.11.13",
     "framer-motion": "^11.14.1",
+    "lucide-react": "^0.513.0",
     "qrcode": "^1.5.4",
     "qrcode.react": "^4.2.0",
     "react": "^18.3.1",

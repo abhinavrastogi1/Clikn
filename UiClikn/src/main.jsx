@@ -13,7 +13,7 @@ import Analytics from "./Component/Analytics/Analytics.jsx";
 import store from "./Store/index.js";
 import { Provider } from "react-redux";
 import LandingPageApp from "./Component/Landing/LandingPageApp.jsx";
-import PrivacyPolicy from "./Component/Home/PrivacyPolicy.jsx";
+import NotFound from "./Component/NotFound/NotFound.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -33,11 +33,10 @@ const router = createBrowserRouter([
       { path: "/home/qrcodes", element: <QrCodes /> },
       { path: "/home/analytics", element: <Analytics /> },
     ],
-  },
-  {
-    path: "/privacy-policy",
-    element: <PrivacyPolicy />,
-  },
+  },{
+    path:"*",
+    element:<NotFound/>
+  }
 ]);
 createRoot(document.getElementById("root")).render(
   <Provider store={store}>
